@@ -30,3 +30,16 @@
 *.exe
 *.out
 *.app
+
+*.pdb
+*.idb
+*.ilk
+*.exp
+*.obj
+*.dll
+*.nativecodeanalysis.xml
+.vs
+.clangd
+
+docs
+settings.json
