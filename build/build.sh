@@ -18,6 +18,7 @@ fi
 echo "Compilation Succeeded"
 echo "-----------------------------------------------"
 
+rm -rf ./docs/*
 echo "Generating XML Docs.."
 doxygen.exe ./build/Doxyfile
 echo "Successfully generated XML Docs"

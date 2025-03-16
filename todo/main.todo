@@ -1,0 +1,20 @@
+## Alt+Enter for new tasks, Alt+D to (un)complete
+
+Project:
+    ✔ Github Repo @done(25-03-16 21:47)
+    ✔ Basic project setup readme @done(25-03-16 21:47)
+    ☐ Set up collaborators
+
+Build System:
+    Generate Docs:
+        ☐ Generate todo file based on todo tags on doc comments in code
+        ☐ Investigate way to mark classes/functions for lua only
+    Generate Lua Globals:
+        ☐ Keep working on python script to parse all types
+
+Alkaline Engine:
+    ☐ Rename Actor to Entity (PTSD too strong)
+    ☐ Create Entity Registry/Manager to create and keep track of them
+
+Script System:
+    ☐ Generalize how to expose stuff to Lua

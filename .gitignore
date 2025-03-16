@@ -35,8 +35,6 @@
 *.idb
 *.ilk
 *.exp
-*.obj
-*.dll
 *.nativecodeanalysis.xml
 .vs
 .clangd
