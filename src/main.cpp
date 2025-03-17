@@ -14,9 +14,9 @@
 #define SPRITES_PATH "assets/sprites/"
 
 /**
- * @brief Actor
+ * @brief Entity
  */
-struct Actor
+struct Entity
 {
     /**
      * @brief unique identifier
@@ -26,16 +26,16 @@ struct Actor
     unsigned short id;
 
     /**
-     * @brief Readable name of the actor (dev-only)
+     * @brief Readable name of the entity (dev-only)
      * 
      * @todo generate base on class + id (?)
      */
     const char *name;
 
-    Actor() : id(0), name("None") {}
+    Entity() : id(0), name("None") {}
 
     /**
-     * @brief Checks if it's a valid actor reference
+     * @brief Checks if it's a valid entity reference
      *
      * @return true
      * @return false
@@ -46,7 +46,7 @@ struct Actor
     }
 
     /**
-     * @brief Returns the actor name - debug purposes only
+     * @brief Returns the entity name - debug purposes only
      * 
      * @return const char* 
      */
@@ -125,11 +125,11 @@ int main()
     lua["Debug"].get_or_create<sol::table>()
         .set_function("Log", Debug::Log);
 
-    lua.new_usertype<Actor>("Actor")
-        .set_function("IsValid", &Actor::IsValid)
-        .set_function("GetName", &Actor::GetName);
+    lua.new_usertype<Entity>("Entity")
+        .set_function("IsValid", &Entity::IsValid)
+        .set_function("GetName", &Entity::GetName);
 
-    lua.set_function("Actor", [](){ return new Actor(); });
+    lua.set_function("Entity", [](){ return new Entity(); });
 
     // Load script
     lua.script_file("scripts/main.lua");

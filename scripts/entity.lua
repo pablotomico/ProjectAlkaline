@@ -1,8 +1,8 @@
 local Entity = {}
 
 function Entity:OnStart()
-    local actor = Actor()
-    Debug.Log("Actor '", actor:GetName(), "' isValid=", actor:IsValid())
+    local entity = Entity()
+    Debug.Log("Entity '", entity:GetName(), "' isValid=", entity:IsValid())
 end
 
 return Entity
