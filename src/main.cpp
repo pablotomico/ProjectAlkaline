@@ -32,7 +32,7 @@ struct Actor
      */
     const char *name;
 
-    Actor() : id(0) {}
+    Actor() : id(0), name("None") {}
 
     /**
      * @brief Checks if it's a valid actor reference
@@ -44,6 +44,16 @@ struct Actor
     {
         return id > 0;
     }
+
+    /**
+     * @brief Returns the actor name - debug purposes only
+     * 
+     * @return const char* 
+     */
+    const char * GetName()
+    {
+        return name;
+    }
 };
 
 /**
@@ -54,15 +64,45 @@ namespace Debug
 {
     /**
      * @brief logs debug message to standard output
-     * @param msg
      * @param args
-     * 
-     * @todo process args to build string
      */
-    void Log(const char *msg, sol::variadic_args args)
+    void Log(sol::variadic_args args)
     {
-        auto lua_args = sol::as_args(args);
-        ALK_LOG(msg, lua_args);
+        char textBuffer[8192] = {};
+        
+        for (std::size_t i = 0; i < args.size(); ++i)
+        {
+            auto var = args[i];
+            sol::type type = var.get_type();
+            if (type == sol::type::string)
+            {
+                sprintf(textBuffer, "%s%s", textBuffer, var.as<std::string>().c_str());
+            }
+            else if (type == sol::type::number)
+            {
+                if (var.is<int>())
+                {
+                    sprintf(textBuffer, "%s%d", textBuffer, var.as<int>());
+                }
+                else if (var.is<double>())
+                {
+                    sprintf(textBuffer, "%s%f", textBuffer, var.as<double>());
+                }
+            }
+            else if (type == sol::type::boolean)
+            {
+                if (var.as<bool>()) 
+                {
+                    sprintf(textBuffer, "%strue", textBuffer);
+                }
+                else
+                {
+                    sprintf(textBuffer, "%sfalse", textBuffer);
+                }
+            }
+        }
+
+        ALK_LOG(textBuffer);
     }
 }
 
@@ -85,8 +125,10 @@ int main()
     lua["Debug"].get_or_create<sol::table>()
         .set_function("Log", Debug::Log);
 
-    sol::usertype<Actor> actor_type = lua.new_usertype<Actor>("Actor");
-    actor_type.set_function("IsValid", &Actor::IsValid);
+    lua.new_usertype<Actor>("Actor")
+        .set_function("IsValid", &Actor::IsValid)
+        .set_function("GetName", &Actor::GetName);
+
     lua.set_function("Actor", [](){ return new Actor(); });
 
     // Load script

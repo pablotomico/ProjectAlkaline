@@ -2,7 +2,7 @@ local Entity = {}
 
 function Entity:OnStart()
     local actor = Actor()
-    print(actor:IsValid())
+    Debug.Log("Actor '", actor:GetName(), "' isValid=", actor:IsValid())
 end
 
 return Entity
