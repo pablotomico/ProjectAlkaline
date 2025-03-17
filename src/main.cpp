@@ -138,7 +138,8 @@ int main()
 
     // -------------
 
-    InitWindow(1920, 1080, "Alkaline");
+    SetTraceLogLevel(LOG_NONE);
+    InitWindow(1600, 900, "Alkaline");
     SetTargetFPS(144);
 
     // -------------
@@ -150,6 +151,8 @@ int main()
     {
         BeginDrawing();
         ClearBackground(RAYWHITE);
+
+        DrawEllipse(50, 50, 20, 20, BLUE);
 
         // start ImGui Conent
         rlImGuiBegin();
