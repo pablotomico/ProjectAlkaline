@@ -5,6 +5,11 @@ local Constants =
 }
 
 local System = {
+	--- Creates a merged copy of the given tables
+	--- Replaces all functions with chained functions which are called in the order of the inheritance chain
+	---@param self any
+	---@param ... table
+	---@return table
 	CreateChainedInheritanceScript = function(self, ...)
 		local scripts = {...}
 		local extractedFunctionLists = {}
@@ -37,6 +42,10 @@ local System = {
 		return createdScript
 	end,
 
+	--- Creates a single function which calls every function in the given function list in order
+	---@param self any
+	---@param functionList table
+	---@return function
 	CreateChainedFunction = function(self, functionList)
 		return function(...)
 			for index, func in ipairs(functionList) do
