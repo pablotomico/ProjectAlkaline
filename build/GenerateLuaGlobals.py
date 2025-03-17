@@ -61,11 +61,11 @@ def parse_namespace_function(namespace, tree):
         paramname = param.find('declname').text
         type = Types[cpptype]
 
+        if type == "...":
+            paramname = "..."
+
         if paramtext == "":
             paramtext += paramname
-        elif type == "...":
-            paramname = "..."
-            paramtext += ", ..."
         else:
             paramtext += f", {paramname}"
             
