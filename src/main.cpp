@@ -11,6 +11,7 @@
 #include "alkaline_lib.h"
 #include "entities/BaseEntity.h"
 #include "components/SpriteComponent.h"
+#include "components/TransformComponent.h"
 
 #define SCRIPTS_PATH "scripts/"
 #define SPRITES_PATH "assets/sprites/"
@@ -106,13 +107,14 @@ int main()
     rlImGuiSetup(true);
     // ImGui::StyleColorsDark();
 
-    BaseEntity entity;
-    entity.AddComponent<SpriteComponent>();
-    if (entity.HasComponent<SpriteComponent>())
+    BaseEntity* entity = new BaseEntity();
+    entity->AddComponent<SpriteComponent>()->SetOwner(entity);
+    entity->AddComponent<TransformComponent>()->SetOwner(entity);
+    if(entity->GetComponent<SpriteComponent>()->LoadSprite("images/grass_center_N.png"))
     {
-        entity.RemoveComponent<SpriteComponent>();
+        std::cout << "Successfully loaded sprite" << std::endl;
     }
-    
+
     while (!WindowShouldClose()) // Detect window close button or ESC key
     {
         BeginDrawing();
@@ -127,12 +129,14 @@ int main()
         bool open = true;
         ImGui::ShowDemoWindow(&open);
 
+        entity->GetComponent<SpriteComponent>()->Draw();
+        
         // end ImGui Content
         rlImGuiEnd();
 
         EndDrawing();
 
-        entity.Update(1);
+        entity->Update(1);
     }
 
     CloseWindow();

@@ -3,6 +3,7 @@
 #include "include/raylib.h"
 #include "components/BaseComponent.h"
 #include <typeindex>
+#include <unordered_map>
 
 /**
  * @brief BaseEntity

@@ -1,19 +1,30 @@
 #pragma once
 
-#include "BaseComponent.h"
-#include "raylib.h"
 #include <iostream>
+#include "BaseComponent.h"
+#include "TransformComponent.h"
+#include "include/raylib.h"
+
+// Custom deleter for unique_ptr
+struct TextureDeleter {
+    void operator()(Texture2D* texture) const {
+        if (texture) {
+            UnloadTexture(*texture);  // Free texture memory
+            delete texture;
+        }
+    }
+};
 
 class SpriteComponent : public BaseComponent
 {
+private:
+    std::unique_ptr<Texture2D, TextureDeleter> texture;
+
 public:
-    SpriteComponent(){
-        std::cout << "Sprite Component Created!" << std::endl;
-    };
-    ~SpriteComponent(){
-        std::cout << "Sprite Component Destroyed!" << std::endl;
-    };
-    void Update(float deltaTime) override {
-        //std::cout << "Sprite Component Updated!" << std::endl;
-    };
+    SpriteComponent();
+    ~SpriteComponent();
+
+    void Update(const float deltaTime) override;
+    void Draw();
+    bool LoadSprite(const char* filename);
 };
