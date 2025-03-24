@@ -18,6 +18,7 @@ fi
 echo "Compilation Succeeded"
 echo "-----------------------------------------------"
 
+mkdir -p ./docs/
 rm -rf ./docs/*
 echo "Generating XML Docs.."
 doxygen.exe ./build/Doxyfile
@@ -25,6 +26,8 @@ echo "Successfully generated XML Docs"
 
 echo "-----------------------------------------------"
 
+mkdir -p ./scripts/Meta/
+rm -rf ./scripts/Meta/*
 echo "Generating Lua Globals.."
 python ./build/GenerateLuaGlobals.py -quiet
 echo "Successfully generated globals.lua"
