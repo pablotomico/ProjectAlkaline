@@ -9,52 +9,12 @@
 #include "include/raylib.h"
 
 #include "alkaline_lib.h"
+#include "entities/BaseEntity.h"
+#include "components/SpriteComponent.h"
+#include "components/TransformComponent.h"
 
 #define SCRIPTS_PATH "scripts/"
 #define SPRITES_PATH "assets/sprites/"
-
-/**
- * @brief Entity
- */
-struct Entity
-{
-    /**
-     * @brief unique identifier
-     * 
-     * @todo generate automatically via register
-     */
-    unsigned short id;
-
-    /**
-     * @brief Readable name of the entity (dev-only)
-     * 
-     * @todo generate base on class + id (?)
-     */
-    const char *name;
-
-    Entity() : id(0), name("None") {}
-
-    /**
-     * @brief Checks if it's a valid entity reference
-     *
-     * @return true
-     * @return false
-     */
-    bool IsValid()
-    {
-        return id > 0;
-    }
-
-    /**
-     * @brief Returns the entity name - debug purposes only
-     * 
-     * @return const char* 
-     */
-    const char * GetName()
-    {
-        return name;
-    }
-};
 
 /**
  * @brief lua debug functions
@@ -125,11 +85,11 @@ int main()
     lua["Debug"].get_or_create<sol::table>()
         .set_function("Log", Debug::Log);
 
-    lua.new_usertype<Entity>("Entity")
-        .set_function("IsValid", &Entity::IsValid)
-        .set_function("GetName", &Entity::GetName);
+    lua.new_usertype<BaseEntity>("BaseEntity")
+        .set_function("IsValid", &BaseEntity::IsValid)
+        .set_function("GetName", &BaseEntity::GetName);
 
-    lua.set_function("Entity", [](){ return new Entity(); });
+    lua.set_function("BaseEntity", [](){ return new BaseEntity(); });
 
     // Load script
     lua.script_file("scripts/main.lua");
@@ -147,6 +107,14 @@ int main()
     rlImGuiSetup(true);
     // ImGui::StyleColorsDark();
 
+    BaseEntity* entity = new BaseEntity();
+    entity->AddComponent<SpriteComponent>()->SetOwner(entity);
+    entity->AddComponent<TransformComponent>()->SetOwner(entity);
+    if(entity->GetComponent<SpriteComponent>()->LoadSprite("assets/sprites/grass_center_N.png"))
+    {
+        std::cout << "Successfully loaded sprite" << std::endl;
+    }
+
     while (!WindowShouldClose()) // Detect window close button or ESC key
     {
         BeginDrawing();
@@ -161,10 +129,14 @@ int main()
         bool open = true;
         ImGui::ShowDemoWindow(&open);
 
+        entity->GetComponent<SpriteComponent>()->Draw();
+        
         // end ImGui Content
         rlImGuiEnd();
 
         EndDrawing();
+
+        entity->Update(1);
     }
 
     CloseWindow();

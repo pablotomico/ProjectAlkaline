@@ -1,8 +1,8 @@
-local Entity = {}
+local entity = {}
 
-function Entity:OnStart()
-    local entity = Entity()
-    Debug.Log("Entity '", entity:GetName(), "' isValid=", entity:IsValid())
+function entity:OnStart()
+    local testEntity = BaseEntity()
+    Debug.Log("Entity '", testEntity:GetName(), "' isValid=", testEntity:IsValid())
 end
 
-return Entity
+return entity
