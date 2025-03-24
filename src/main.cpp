@@ -110,7 +110,7 @@ int main()
     BaseEntity* entity = new BaseEntity();
     entity->AddComponent<SpriteComponent>()->SetOwner(entity);
     entity->AddComponent<TransformComponent>()->SetOwner(entity);
-    if(entity->GetComponent<SpriteComponent>()->LoadSprite("images/grass_center_N.png"))
+    if(entity->GetComponent<SpriteComponent>()->LoadSprite("assets/sprites/grass_center_N.png"))
     {
         std::cout << "Successfully loaded sprite" << std::endl;
     }
