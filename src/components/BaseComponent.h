@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+
 class BaseEntity;
 
 class BaseComponent

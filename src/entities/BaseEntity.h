@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include "include/raylib.h"
 #include "components/BaseComponent.h"
 #include <typeindex>

@@ -1,20 +1,16 @@
 #define SOL_ALL_SAFETIES_ON 1 // Remove whenever
 
 #include <sstream>
+#include <iostream>
+#include <chrono>
 #include "sol.hpp"
 
-#include "imgui.h"
-#include "rlImGui.h"
-
-#include "include/raylib.h"
-
 #include "alkaline_lib.h"
-#include "entities/BaseEntity.h"
-#include "components/SpriteComponent.h"
-#include "components/TransformComponent.h"
+#include "AlkalineApplication.h"
 
 #define SCRIPTS_PATH "scripts/"
 #define SPRITES_PATH "assets/sprites/"
+constexpr float fixedUpdateFPS = 60.0f;
 
 /**
  * @brief lua debug functions
@@ -98,49 +94,33 @@ int main()
 
     // -------------
 
-    SetTraceLogLevel(LOG_NONE);
-    InitWindow(1600, 900, "Alkaline");
-    SetTargetFPS(144);
-
-    // -------------
-    // ImGui
-    rlImGuiSetup(true);
-    // ImGui::StyleColorsDark();
-
-    BaseEntity* entity = new BaseEntity();
-    entity->AddComponent<SpriteComponent>()->SetOwner(entity);
-    entity->AddComponent<TransformComponent>()->SetOwner(entity);
-    if(entity->GetComponent<SpriteComponent>()->LoadSprite("assets/sprites/grass_center_N.png"))
+    AlkalineApplication* alkalineApplication = new AlkalineApplication();
+    bool success = alkalineApplication->Initialize();
+    if(!success)
     {
-        std::cout << "Successfully loaded sprite" << std::endl;
+        std::cout << "ERROR - Critical failure during initialization, closing application" << std::endl;
+        return 1;
     }
 
-    while (!WindowShouldClose()) // Detect window close button or ESC key
+    float const fixedTimeStep = 1 / fixedUpdateFPS;
+    float nextFixedUpdate = 0;
+
+    while (!alkalineApplication->ShouldClose()) // Detect window close button or ESC key
     {
-        BeginDrawing();
-        ClearBackground(RAYWHITE);
+        float deltaTime = GetFrameTime();
+        alkalineApplication->Update(deltaTime);
 
-        DrawEllipse(50, 50, 20, 20, BLUE);
-
-        // start ImGui Conent
-        rlImGuiBegin();
-
-        // show ImGui Content
-        bool open = true;
-        ImGui::ShowDemoWindow(&open);
-
-        entity->GetComponent<SpriteComponent>()->Draw();
-        
-        // end ImGui Content
-        rlImGuiEnd();
-
-        EndDrawing();
-
-        entity->Update(1);
+        float currentTime = GetTime();
+        if (currentTime > nextFixedUpdate)
+        {
+            alkalineApplication->FixedUpdate(fixedTimeStep);
+            nextFixedUpdate = currentTime + fixedTimeStep;
+        }
+        alkalineApplication->Draw();
     }
 
-    CloseWindow();
+    alkalineApplication->Close();
 
-    rlImGuiShutdown();
+    delete alkalineApplication;
     return 0;
 }
