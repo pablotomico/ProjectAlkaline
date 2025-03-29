@@ -96,12 +96,7 @@ int main()
 
     // -------------
 
-    bool success = application.Initialize();
-    if(!success)
-    {
-        ALK_LOG("ERROR - Critical failure during initialization, closing application");
-        return 1;
-    }
+    ALK_ASSERT(application.Initialize(), "Critical failure during initialization, closing application");
 
     float const fixedTimeStep = 1 / fixedUpdateFPS;
     float nextFixedUpdate = 0;
