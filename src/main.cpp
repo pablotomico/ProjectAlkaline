@@ -1,15 +1,15 @@
 #define SOL_ALL_SAFETIES_ON 1 // Remove whenever
 
 #include <sstream>
-#include <iostream>
-#include <chrono>
 #include "sol.hpp"
 
 #include "alkaline_lib.h"
-#include "AlkalineApplication.h"
+#include "Application.h"
+#include "include/raylib.h"
 
 #define SCRIPTS_PATH "scripts/"
 #define SPRITES_PATH "assets/sprites/"
+
 constexpr float fixedUpdateFPS = 60.0f;
 
 /**
@@ -62,6 +62,8 @@ namespace Debug
     }
 }
 
+alk::Application application;
+
 int main()
 {
     // -------------
@@ -81,46 +83,44 @@ int main()
     lua["Debug"].get_or_create<sol::table>()
         .set_function("Log", Debug::Log);
 
-    lua.new_usertype<BaseEntity>("BaseEntity")
-        .set_function("IsValid", &BaseEntity::IsValid)
-        .set_function("GetName", &BaseEntity::GetName);
+    // lua.new_usertype<BaseEntity>("BaseEntity")
+    //     .set_function("IsValid", &BaseEntity::IsValid)
+    //     .set_function("GetName", &BaseEntity::GetName);
 
-    lua.set_function("BaseEntity", [](){ return new BaseEntity(); });
+    // lua.set_function("BaseEntity", [](){ return new BaseEntity(); });
 
-    // Load script
-    lua.script_file("scripts/main.lua");
+    // // Load script
+    // lua.script_file("scripts/main.lua");
 
-    lua["TestEntity"]["OnStart"]();
+    // lua["TestEntity"]["OnStart"]();
 
     // -------------
 
-    AlkalineApplication* alkalineApplication = new AlkalineApplication();
-    bool success = alkalineApplication->Initialize();
+    bool success = application.Initialize();
     if(!success)
     {
-        std::cout << "ERROR - Critical failure during initialization, closing application" << std::endl;
+        ALK_LOG("ERROR - Critical failure during initialization, closing application");
         return 1;
     }
 
     float const fixedTimeStep = 1 / fixedUpdateFPS;
     float nextFixedUpdate = 0;
 
-    while (!alkalineApplication->ShouldClose()) // Detect window close button or ESC key
+    while (!application.QueryShutdown()) // Detect window close button or ESC key
     {
         float deltaTime = GetFrameTime();
-        alkalineApplication->Update(deltaTime);
+        application.Update(deltaTime);
 
         float currentTime = GetTime();
         if (currentTime > nextFixedUpdate)
         {
-            alkalineApplication->FixedUpdate(fixedTimeStep);
+            application.FixedUpdate(fixedTimeStep);
             nextFixedUpdate = currentTime + fixedTimeStep;
         }
-        alkalineApplication->Draw();
+        application.Draw();
     }
 
-    alkalineApplication->Close();
+    application.Shutdown();
 
-    delete alkalineApplication;
     return 0;
 }
