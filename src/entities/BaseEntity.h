@@ -1,10 +1,12 @@
 #pragma once
 
-#include <memory>
-#include "include/raylib.h"
-#include "components/BaseComponent.h"
 #include <typeindex>
 #include <unordered_map>
+
+#include "include/raylib.h"
+
+#include "systems/GameLogic.h"
+#include "components/BaseComponent.h"
 
 /**
  * @brief BaseEntity
@@ -78,6 +80,8 @@ public:
         // Create and add the new component
         auto comp = std::make_shared<T>(std::forward<Args>(args)...);
         components[type] = comp;
+
+        alk::GameLogic::NotifyCallbacks<T>(comp.get());
         return comp;
     }
 
