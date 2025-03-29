@@ -5,7 +5,7 @@ warnings="-Wno-writable-strings -Wno-format-security -Wno-deprecated-declaration
 libs="-Llib -lmsvcrt -llua54 -lraylib -lOpenGL32 -lGdi32 -lWinMM -lkernel32 -lshell32 -lUser32 -Xlinker /NODEFAULTLIB:libcmt"
 includes="-Isrc/include/sol -Isrc/include/imgui -Isrc/include -Isrc/ -Iexternal/ -Iexternal/rlImGui"
 
-clang++ $options -g src/main.cpp src/AlkalineApplication.cpp src/components/*.cpp external/rlImGui/*.cpp external/imgui/*.cpp -o bin/alkaline.exe $warnings $includes $libs
+clang++ $options -g src/main.cpp src/components/*.cpp external/rlImGui/*.cpp external/imgui/*.cpp -o bin/alkaline.exe $warnings $includes $libs
 
 if [ "$?" -ne 0 ] 
 then
