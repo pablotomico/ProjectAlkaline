@@ -28,6 +28,7 @@ enum TextColor
     TEXT_COLOR_COUNT
 };
 
+using uint = unsigned int;
 #define b8 char
 #define BIT(x) 1 << (x)
 #define KB(x) ((unsigned long long)1024 * x)
