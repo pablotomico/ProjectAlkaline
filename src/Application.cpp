@@ -32,6 +32,8 @@ namespace alk
         rlImGuiSetup(true);
         // ImGui::StyleColorsDark();
 
+        alk::GameLogic::Initialize();
+
         entity->AddComponent<SpriteComponent>()->SetOwner(entity);
         entity->AddComponent<TransformComponent>()->SetOwner(entity);
         if(entity->GetComponent<SpriteComponent>()->LoadSprite("assets/sprites/grass_center_N.png"))
@@ -48,6 +50,7 @@ namespace alk
      */
     void Application::Update(const float deltaTime)
     {
+        alk::GameLogic::Update(deltaTime);
     }
 
     /**
@@ -65,10 +68,10 @@ namespace alk
     {
         BeginDrawing();
 
-        ClearBackground(RAYWHITE);
+        ClearBackground(BLACK);
 
-        DrawEllipse(50, 50, 20, 20, BLUE);
-        entity->GetComponent<SpriteComponent>()->Draw();
+        // DrawEllipse(50, 50, 20, 20, BLUE);
+        // entity->GetComponent<SpriteComponent>()->Draw();
 
         // start ImGui Conent
         rlImGuiBegin();
@@ -77,6 +80,8 @@ namespace alk
         ImGui::ShowDemoWindow(&open);
         // end ImGui Content
         rlImGuiEnd();
+
+        alk::GameLogic::Draw();
 
         EndDrawing();
     }

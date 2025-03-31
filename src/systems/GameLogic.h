@@ -4,6 +4,8 @@
 #include <functional>
 #include <typeindex>
 
+#include "alkaline_lib.h"
+
 class BaseComponent;
 
 template <typename T>
@@ -11,18 +13,22 @@ using Callback = std::function<void(T*)>;
 
 namespace alk
 {
-    class GameLogicSystem;
-
     namespace GameLogic
     {
-        static std::vector<GameLogicSystem *> subsystems;
+        class GameLogicSystem;
+
+        inline std::vector<GameLogicSystem *>& GetSystems()
+        {
+            static std::vector<GameLogicSystem *> subsystems;
+            return subsystems;
+        }
 
         template <typename T>
-        static std::unordered_map<std::type_index, std::vector<Callback<T>>> callbacks;
+        inline static std::unordered_map<std::type_index, std::vector<Callback<T>>> callbacks;
 
         inline void AddSystem(GameLogicSystem *system)
         {
-            subsystems.emplace_back(system);
+            GetSystems().emplace_back(system);
         }
 
         template <typename T>
@@ -42,5 +48,9 @@ namespace alk
                 callback(obj);
             }
         }
+
+        void Initialize();
+        void Update(const float deltaTime);
+        void Draw();
     }
 }
