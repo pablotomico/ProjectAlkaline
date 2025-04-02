@@ -1,5 +1,7 @@
 #pragma once
 
+#include "systems/Scene.h"
+
 class BaseEntity; // Forward Declaration
 
 namespace alk
@@ -8,6 +10,8 @@ namespace alk
     {
     private:
         BaseEntity* entity;
+
+        alk::GameLogic::Scene scene;
     
     public:
         Application();
