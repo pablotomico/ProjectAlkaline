@@ -12,7 +12,7 @@ namespace alk
         BaseEntity* entity;
 
         alk::GameLogic::Scene scene;
-    
+
     public:
         Application();
         ~Application();

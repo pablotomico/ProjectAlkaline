@@ -4,17 +4,19 @@
 #include <iostream>
 #include "include/raylib.h"
 
-class TransformComponent : public BaseComponent {
+namespace alk
+{
+    class TransformComponent : public BaseComponent {
 
-    std::shared_ptr<Vector2> position = std::make_unique<Vector2>(50, 50);
+        Vector2 position = { 50, 50 };
 
-public:
-    TransformComponent(){
-        std::cout << "Transform Component Created!" << std::endl;
+    public:
+        TransformComponent(){
+            ALK_LOG("Transform Component Created!");
+        };
+        ~TransformComponent(){
+        };
+        void Update(float deltaTime) override {};
+        const Vector2 GetPosition() const { return position; };
     };
-    ~TransformComponent(){
-        std::cout << "Transform Component Destroyed!" << std::endl;
-    };
-    void Update(float deltaTime) override {};
-    std::weak_ptr<Vector2> GetPosition() const { return position; };
-};
+}

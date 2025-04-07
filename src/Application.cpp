@@ -1,17 +1,25 @@
 #include "Application.h"
+
+// Libs
 #include "imgui.h"
 #include "rlImGui.h"
 #include "include/raylib.h"
-#include "entities/BaseEntity.h"
-#include "components/SpriteComponent.h"
-#include "components/TransformComponent.h"
 #include "alkaline_lib.h"
+
+// Entities
+#include "entities/BaseEntity.h"
+
+// Components
+#include "components/RenderComponent.h"
+#include "components/TransformComponent.h"
+
+// Systems
+#include "systems/RenderSystem.h"
 
 namespace alk
 {
     Application::Application()
     {
-        entity = new BaseEntity();
     }
     Application::~Application()
     {
@@ -30,16 +38,15 @@ namespace alk
 
         // ImGui
         rlImGuiSetup(true);
-        // ImGui::StyleColorsDark();
 
         alk::GameLogic::Initialize();
+        alk::RenderSystem::Initialize();
 
-        entity->AddComponent<SpriteComponent>()->SetOwner(entity);
-        entity->AddComponent<TransformComponent>()->SetOwner(entity);
-        if(entity->GetComponent<SpriteComponent>()->LoadSprite("assets/sprites/grass_center_N.png"))
-        {
-            ALK_SUCCESS("Successfully loaded sprite");
-        }
+        entity = new BaseEntity();
+        entity->AddComponent<RenderComponent>(RenderSystem::RenderType::Sprite, "assets/sprites/test_building.png");
+        entity->AddComponent<TransformComponent>();
+        auto myPair = std::make_pair(entity->GetComponent<RenderComponent>(), entity->GetComponent<TransformComponent>());
+        alk::RenderSystem::AddToScreen(myPair);
 
         return true;
     }
@@ -70,18 +77,18 @@ namespace alk
 
         ClearBackground(BLACK);
 
-        // DrawEllipse(50, 50, 20, 20, BLUE);
-        // entity->GetComponent<SpriteComponent>()->Draw();
-
         // start ImGui Conent
         rlImGuiBegin();
-        // show ImGui Content
-        bool open = true;
-        ImGui::ShowDemoWindow(&open);
+
+        ImGui::Begin("Performance");
+        ImGui::Text("FPS: %d", GetFPS());
+        ImGui::End();
+
         // end ImGui Content
         rlImGuiEnd();
 
-        alk::GameLogic::Draw();
+        // alk::GameLogic::Draw();
+        alk::RenderSystem::Draw();
 
         EndDrawing();
     }
@@ -91,6 +98,7 @@ namespace alk
      */
     void Application::Shutdown()
     {
+        alk::RenderSystem::Shutdown();
         CloseWindow();
         rlImGuiShutdown();
     }
