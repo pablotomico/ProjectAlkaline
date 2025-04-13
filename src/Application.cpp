@@ -6,13 +6,6 @@
 #include "include/raylib.h"
 #include "alkaline_lib.h"
 
-// Entities
-#include "entities/BaseEntity.h"
-
-// Components
-#include "components/RenderComponent.h"
-#include "components/TransformComponent.h"
-
 // Systems
 #include "systems/RenderSystem.h"
 
@@ -39,15 +32,9 @@ namespace alk
         // ImGui
         rlImGuiSetup(true);
 
-        alk::GameLogic::Initialize();
         alk::RenderSystem::Initialize();
-
-        entity = new BaseEntity();
-        entity->AddComponent<RenderComponent>(RenderSystem::RenderType::Sprite, "assets/sprites/test_building.png");
-        entity->AddComponent<TransformComponent>();
-        auto myPair = std::make_pair(entity->GetComponent<RenderComponent>(), entity->GetComponent<TransformComponent>());
-        alk::RenderSystem::AddToScreen(myPair);
-
+        alk::GameLogic::Initialize();
+        
         return true;
     }
 
@@ -87,7 +74,7 @@ namespace alk
         // end ImGui Content
         rlImGuiEnd();
 
-        // alk::GameLogic::Draw();
+        //alk::GameLogic::Draw();
         alk::RenderSystem::Draw();
 
         EndDrawing();
