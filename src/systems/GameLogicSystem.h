@@ -27,7 +27,6 @@ namespace alk
 
             virtual void Initialize() {};
             virtual void Update() {};
-            virtual void Draw() {}; // TODO: remove
             virtual void Shutdown() {};
 
             const char *GetName()

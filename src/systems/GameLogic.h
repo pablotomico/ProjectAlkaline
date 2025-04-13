@@ -51,6 +51,5 @@ namespace alk
 
         void Initialize();
         void Update(const float deltaTime);
-        void Draw();
     }
 }

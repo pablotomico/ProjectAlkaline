@@ -1,6 +1,7 @@
 #include "RenderSystem.h"
 #include "components/RenderComponent.h"
 #include "components/TransformComponent.h"
+#include "entities/BaseEntity.h"
 
 namespace alk
 {
@@ -10,6 +11,15 @@ namespace alk
 
     void RenderSystem::Shutdown()
     {
+    }
+
+    void RenderSystem::AddToScreen(BaseEntity* entity)
+    {
+        RenderSystemData& renderData = GetRenderSystemData();
+        auto componentPair = std::make_pair(entity->GetComponent<RenderComponent>(), entity->GetComponent<TransformComponent>());
+        renderData.drawables.push_back(componentPair);
+        renderData.dirtyLayers = true;
+        ALK_LOG("Added entity to screen");
     }
 
     void RenderSystem::Draw()
@@ -32,6 +42,9 @@ namespace alk
                     break;
                 case RenderSystem::RenderType::SpriteArray:
                     DrawSpriteArray(renderComponent, transformComponent);
+                    break;
+                case RenderSystem::RenderType::Grid:
+                    DrawGrid(renderComponent, transformComponent);
                     break;
             }
         }
@@ -56,6 +69,23 @@ namespace alk
     {
     }
 
+    void RenderSystem::DrawGrid(std::weak_ptr<RenderComponent> renderComponent, std::weak_ptr<TransformComponent> transformComponent)
+    {
+        std::vector<Vector2>& positionArray = transformComponent.lock()->GetPositionArray();
+        auto renderData = renderComponent.lock()->GetRenderData<GridRenderData>()->get();
+
+        for (Vector2 point : positionArray)
+        {
+            auto endPosX = point.x + renderData.tileWidthHalf;
+            auto endPosY = point.y + renderData.tileHeightHalf;
+            DrawLine(point.x, point.y, endPosX, endPosY, WHITE);
+            DrawLine(point.x - renderData.tileWidthHalf, point.y + renderData.tileHeightHalf, endPosX - renderData.tileWidthHalf, endPosY + renderData.tileHeightHalf, WHITE);
+
+            DrawLine(point.x, point.y, point.x - renderData.tileWidthHalf, point.y + renderData.tileHeightHalf, WHITE);
+            DrawLine(endPosX, endPosY, endPosX - renderData.tileWidthHalf, endPosY + renderData.tileHeightHalf, WHITE);
+        }
+    }
+
     Texture2D RenderSystem::LoadRenderSystemTexture(const char* filename)
     {
         RenderSystemData& renderData = GetRenderSystemData();
@@ -70,11 +100,5 @@ namespace alk
         Texture2D texture = LoadTexture(filename);
         renderData.loadedTextures.insert({filename, texture});
         return texture;
-    }
-    void RenderSystem::AddToScreen(std::pair<std::weak_ptr<RenderComponent>, std::weak_ptr<TransformComponent>> componentPair)
-    {
-        RenderSystemData& renderData = GetRenderSystemData();
-        renderData.drawables.push_back(componentPair);
-        renderData.dirtyLayers = true;
     }
 }

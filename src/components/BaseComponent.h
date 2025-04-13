@@ -1,20 +1,21 @@
 #pragma once
 
-#include <iostream>
-
-class BaseEntity;
-
-class BaseComponent
+namespace alk
 {
-protected:
-    BaseEntity* owner;
-public:
-    virtual ~BaseComponent() = default;
-    virtual void Update(const float deltaTime) {
-        std::cout << "Base Component Updated!" << std::endl;
-    };
+    class BaseEntity;
+    
+    class BaseComponent
+    {
+    protected:
+        BaseEntity* owner;
+    public:
+        virtual ~BaseComponent() = default;
+        virtual void Update(const float deltaTime) {
+            ALK_LOG("Base Component Created");
+        };
 
-    void SetOwner(BaseEntity* entity){
-        owner = entity;
-    }
-};
+        void SetOwner(BaseEntity* entity){
+            owner = entity;
+        }
+    };
+}

@@ -9,6 +9,7 @@ namespace alk
 {
     class RenderComponent;
     class TransformComponent;
+    class BaseEntity;
 
     namespace RenderSystem
     {
@@ -28,12 +29,13 @@ namespace alk
         {
             Sprite,
             SpriteArray,
+            Grid,
         };
     
         struct SpriteRenderData
         {
             std::unique_ptr<Texture2D, TextureDeleter> texture;
-            uint32_t drawLayer = 0;
+            uint32_t drawLayer = 500;
             SpriteRenderData(){};
             SpriteRenderData(const char* spriteFilename){
                 texture = std::unique_ptr<Texture2D, TextureDeleter>(
@@ -44,8 +46,17 @@ namespace alk
             };
         };
 
+        struct GridRenderData
+        {
+            uint32_t drawLayer = 100;
+            uint tileWidthHalf;
+            uint tileHeightHalf;
+            GridRenderData(){};
+            GridRenderData(uint tileWidthHalf, uint tileHeightHalf) : tileWidthHalf(tileWidthHalf), tileHeightHalf(tileHeightHalf){};
+        };
+
         // Variant data types simplifies the use of different types of render data through the same system
-        using VariantRenderData = std::variant<SpriteRenderData>;
+        using VariantRenderData = std::variant<SpriteRenderData, GridRenderData>;
 
         struct RenderSystemData
         {
@@ -69,8 +80,8 @@ namespace alk
         void Draw();
         void DrawSprite(std::weak_ptr<RenderComponent> renderComponent, std::weak_ptr<TransformComponent> transformComponent);
         void DrawSpriteArray(std::weak_ptr<RenderComponent> renderComponent, std::weak_ptr<TransformComponent> transformComponent);
+        void DrawGrid(std::weak_ptr<RenderComponent> renderComponent, std::weak_ptr<TransformComponent> transformComponent);
 
-        // TODO: Figure out nicer way to add to screen
-        void AddToScreen(std::pair<std::weak_ptr<RenderComponent>, std::weak_ptr<TransformComponent>> componentPair);
+        void AddToScreen(BaseEntity* entity);
     }
 }

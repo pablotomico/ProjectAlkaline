@@ -17,6 +17,10 @@ namespace alk
 
     public:
     
+        RenderComponent()
+        {
+            ALK_LOG("RenderComponent created successfully");
+        }
         // Constructor for sprite type render component
         RenderComponent(RenderSystem::RenderType renderType, const char* spriteFileName) : renderType(renderType)
         {
@@ -30,6 +34,21 @@ namespace alk
 
             ALK_LOG("RenderComponent created successfully");
         }
+
+        // Constructor for grid type render component
+        RenderComponent(RenderSystem::RenderType renderType, uint tileWidthHalf, uint tileHeightHalf) : renderType(renderType)
+        {
+            switch(renderType)
+            {
+                case RenderSystem::RenderType::Grid:
+                    renderData.emplace<RenderSystem::GridRenderData>(tileWidthHalf, tileHeightHalf);
+                    ALK_LOG("Added Grid Render data to component");
+                    break;
+            }
+
+            ALK_LOG("RenderComponent created successfully");
+        }
+
         ~RenderComponent() override {
             std::cout << "Render Component Destroyed!" << std::endl;
         }
@@ -37,7 +56,7 @@ namespace alk
         const RenderSystem::RenderType GetRenderType() const { return renderType; };
 
         template <typename T>
-        std::optional<std::reference_wrapper<const T>> GetRenderData() const {
+        const std::optional<std::reference_wrapper<const T>> GetRenderData() const {
             if (auto ptr = std::get_if<T>(&renderData)) {
                 return std::cref(*ptr);
             }

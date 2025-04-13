@@ -9,8 +9,6 @@ namespace alk
     class Application
     {
     private:
-        BaseEntity* entity;
-
         alk::GameLogic::Scene scene;
 
     public:

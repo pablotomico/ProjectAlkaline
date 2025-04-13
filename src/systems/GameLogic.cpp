@@ -17,11 +17,3 @@ void alk::GameLogic::Update(const float deltaTime)
         system->Update();
     }
 }
-
-void alk::GameLogic::Draw()
-{
-    for (GameLogicSystem* system : GetSystems())
-    {
-        system->Draw();
-    }
-}

@@ -1,12 +1,15 @@
 #pragma once
 
 #include "include/raylib.h"
-
+#include "entities/BaseEntity.h"
 #include "alkaline_lib.h"
+
+#include "components/RenderComponent.h"
+#include "components/TransformComponent.h"
 
 namespace alk
 {
-    struct Grid
+    struct Grid : public BaseEntity
     {
         uint gridWidth;
         uint gridHeight;
@@ -24,29 +27,20 @@ namespace alk
                                                                          tileHeight(tileSize / 2), tileHeightHalf(tileSize / 4),
                                                                          gridScreenPosition(position)
         {
+            AddComponent<TransformComponent>(width * height);
+
+            std::vector<Vector2>& positionArray = GetComponent<TransformComponent>()->GetPositionArray();
             for (int i = 0; i < gridWidth; ++i)
             {
                 for (int j = 0; j < gridHeight; ++j)
                 {
                     auto startPosX = gridScreenPosition.x + tileWidthHalf * j - tileWidthHalf * i;
                     auto startPosY = gridScreenPosition.y + tileHeightHalf * j + tileHeightHalf * i;
-                    points.push_back(Vector2{startPosX, startPosY});
+                    positionArray.emplace_back(Vector2{startPosX, startPosY});
                 }
             }
-        }
 
-        void Draw()
-        {
-            for (Vector2 point : points)
-            {
-                auto endPosX = point.x + tileWidthHalf;
-                auto endPosY = point.y + tileHeightHalf;
-                DrawLine(point.x, point.y, endPosX, endPosY, WHITE);
-                DrawLine(point.x - tileWidthHalf, point.y + tileHeightHalf, endPosX - tileWidthHalf, endPosY + tileHeightHalf, WHITE);
-
-                DrawLine(point.x, point.y, point.x - tileWidthHalf, point.y + tileHeightHalf, WHITE);
-                DrawLine(endPosX, endPosY, endPosX - tileWidthHalf, endPosY + tileHeightHalf, WHITE);
-            }
+            AddComponent<RenderComponent>(RenderSystem::RenderType::Grid, tileWidthHalf, tileHeightHalf);
         }
 
         Vector2 ScreenToGridPosition(Vector2 screen)
@@ -65,8 +59,5 @@ namespace alk
                 return Vector2{-1, -1};
             }
         }
-
-    private:
-        std::vector<Vector2> points;
     };
 }
