@@ -7,6 +7,12 @@ namespace alk
 {
     void RenderSystem::Initialize()
     {
+        Camera2D& mainCamera = RenderSystem::GetMainCamera();
+        mainCamera = { 0 };
+        mainCamera.target = Vector2{ 0.0f, 0.0f };
+        mainCamera.offset = Vector2{ 0.0f, 0.0f };
+        mainCamera.rotation = 0.0f;
+        mainCamera.zoom = 1.0f;
     }
 
     void RenderSystem::Shutdown()
@@ -24,6 +30,8 @@ namespace alk
 
     void RenderSystem::Draw()
     {
+        BeginMode2D(RenderSystem::GetMainCamera());
+
         RenderSystemData& renderData = GetRenderSystemData();
         if (renderData.dirtyLayers)
         {
@@ -48,6 +56,8 @@ namespace alk
                     break;
             }
         }
+
+        EndMode2D();
     }
 
     void RenderSystem::DrawSprite(std::weak_ptr<RenderComponent> renderComponent, std::weak_ptr<TransformComponent> transformComponent)

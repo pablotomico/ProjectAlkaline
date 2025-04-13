@@ -75,6 +75,12 @@ namespace alk
             return drawableData;
         }
 
+        inline Camera2D& GetMainCamera()
+        {
+            static Camera2D mainCamera;
+            return mainCamera;
+        }
+
         void Initialize();
         void Shutdown();
         void Draw();
