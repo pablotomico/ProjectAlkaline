@@ -28,7 +28,6 @@ namespace alk
         enum struct RenderType
         {
             Sprite,
-            SpriteArray,
             Grid,
         };
     
@@ -85,7 +84,6 @@ namespace alk
         void Shutdown();
         void Draw();
         void DrawSprite(std::weak_ptr<RenderComponent> renderComponent, std::weak_ptr<TransformComponent> transformComponent);
-        void DrawSpriteArray(std::weak_ptr<RenderComponent> renderComponent, std::weak_ptr<TransformComponent> transformComponent);
         void DrawGrid(std::weak_ptr<RenderComponent> renderComponent, std::weak_ptr<TransformComponent> transformComponent);
 
         void AddToScreen(BaseEntity* entity);

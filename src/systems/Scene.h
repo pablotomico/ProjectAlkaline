@@ -15,6 +15,8 @@ namespace alk
         private:
             Grid* grid;
             BaseEntity* entity;
+            BaseEntity* army;
+            const int armySize = 50000;
         public:
             Scene() : GameLogicSystem("Scene Subsystem") {}
 
@@ -29,6 +31,24 @@ namespace alk
                 entity->AddComponent<RenderComponent>(RenderSystem::RenderType::Sprite, "assets/sprites/test_building.png");
                 entity->AddComponent<TransformComponent>(Vector2{50, 50});
                 alk::RenderSystem::AddToScreen(entity);
+
+                army = new BaseEntity();
+                army->AddComponent<RenderComponent>(RenderSystem::RenderType::Sprite, "assets/sprites/test_unit.png");
+                army->AddComponent<TransformComponent>(armySize);
+
+                std::vector<Vector2>& positionArray = army->GetComponent<TransformComponent>()->GetPositionArray();
+                for (int i = 0; i < armySize; ++i)
+                {
+                    int rx = std::rand() % 50;
+                    int ry = std::rand() % 50;
+                    Vector2 gridPosition = grid->GridToScreenPosition(Vector2{float(rx), float(ry)});
+
+                    float dx = grid->tileWidthHalf - (std::rand() % grid->tileWidth);
+                    float dy = grid->tileHeightHalf - (std::rand() % grid->tileHeight);
+
+                    positionArray.emplace_back(Vector2{gridPosition.x - dx, gridPosition.y - dy});
+                }
+                alk::RenderSystem::AddToScreen(army);
 
                 alk::GameLogic::SubscribeToComponent<TransformComponent>([this](TransformComponent *t)
                                                                          { OnTransformAdded(t); });

@@ -59,5 +59,13 @@ namespace alk
                 return Vector2{-1, -1};
             }
         }
+
+        Vector2 GridToScreenPosition(Vector2 gridPosition)
+        {
+            Vector2 screenPosition;
+            screenPosition.x = ((gridPosition.x - gridPosition.y) * tileWidthHalf) + gridScreenPosition.x;
+            screenPosition.y = ((gridPosition.x + gridPosition.y) * tileHeightHalf) + gridScreenPosition.y;
+            return screenPosition;
+        }
     };
 }

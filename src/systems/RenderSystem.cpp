@@ -48,9 +48,6 @@ namespace alk
                 case RenderSystem::RenderType::Sprite:
                     DrawSprite(renderComponent, transformComponent);
                     break;
-                case RenderSystem::RenderType::SpriteArray:
-                    DrawSpriteArray(renderComponent, transformComponent);
-                    break;
                 case RenderSystem::RenderType::Grid:
                     DrawGrid(renderComponent, transformComponent);
                     break;
@@ -62,21 +59,20 @@ namespace alk
 
     void RenderSystem::DrawSprite(std::weak_ptr<RenderComponent> renderComponent, std::weak_ptr<TransformComponent> transformComponent)
     {
-        const Vector2 position = transformComponent.lock()->GetPosition();
+        std::vector<Vector2>& positionArray = transformComponent.lock()->GetPositionArray();
         auto renderData = renderComponent.lock()->GetRenderData<SpriteRenderData>();
         if (renderData)
         {
             const SpriteRenderData& data = renderData->get();
-            DrawTexture(*data.texture, position.x, position.y, WHITE);
+            for (Vector2& position : positionArray)
+            {
+                DrawTexture(*data.texture, position.x, position.y, WHITE);
+            }
         }
         else
         {
             // TODO Throw error for missing sprite render data
         }
-    }
-
-    void RenderSystem::DrawSpriteArray(std::weak_ptr<RenderComponent> renderComponent, std::weak_ptr<TransformComponent> transformComponent)
-    {
     }
 
     void RenderSystem::DrawGrid(std::weak_ptr<RenderComponent> renderComponent, std::weak_ptr<TransformComponent> transformComponent)
