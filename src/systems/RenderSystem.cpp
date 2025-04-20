@@ -5,6 +5,8 @@
 #include "systems/GameLogic.h"
 #include "systems/Scene.h"
 
+// #include "tracy/Tracy.hpp"
+
 namespace alk
 {
     void RenderSystem::Initialize()
@@ -32,6 +34,7 @@ namespace alk
 
     void RenderSystem::Draw()
     {
+        // ZoneScoped;
         BeginMode2D(RenderSystem::GetMainCamera());
 
         RenderSystemData &renderData = GetRenderSystemData();
@@ -87,15 +90,18 @@ namespace alk
 
     void RenderSystem::DrawSprite(RenderComponent &renderComponent, TransformComponent &transformComponent)
     {
+        // ZoneScoped;
         RenderSystemData &renderSystemData = GetRenderSystemData();
         std::vector<Vector2> &positionArray = transformComponent.GetPositionArray();
         auto renderData = renderComponent.GetRenderData<SpriteRenderData>();
         if (renderData)
         {
             const SpriteRenderData &data = renderData->get();
+            auto tex = renderSystemData.loadedTextures[data.texHandler];
+            // ZoneValue(positionArray.size());
             for (Vector2 &position : positionArray)
             {
-                DrawTexture(renderSystemData.loadedTextures[data.texHandler], position.x, position.y, WHITE);
+                DrawTexture(tex, position.x, position.y, WHITE);
             }
         }
         else
@@ -106,6 +112,7 @@ namespace alk
 
     void RenderSystem::DrawGrid(RenderComponent &renderComponent, TransformComponent &transformComponent)
     {
+        // ZoneScoped;
         std::vector<Vector2> &positionArray = transformComponent.GetPositionArray();
         auto renderData = renderComponent.GetRenderData<GridRenderData>()->get();
 
