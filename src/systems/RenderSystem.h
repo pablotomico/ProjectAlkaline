@@ -7,13 +7,15 @@
 
 namespace alk
 {
+    using TextureHandler = uint32_t;
+
     class RenderComponent;
     class TransformComponent;
-    class BaseEntity;
+    class Entity;
 
     namespace RenderSystem
     {
-        Texture2D LoadRenderSystemTexture(const char* filename);
+        TextureHandler LoadRenderSystemTexture(const char* filename);
 
         struct TextureDeleter
         {
@@ -33,14 +35,11 @@ namespace alk
     
         struct SpriteRenderData
         {
-            std::unique_ptr<Texture2D, TextureDeleter> texture;
+            TextureHandler texHandler;
             uint32_t drawLayer = 500;
             SpriteRenderData(){};
             SpriteRenderData(const char* spriteFilename){
-                texture = std::unique_ptr<Texture2D, TextureDeleter>(
-                    new Texture2D(LoadRenderSystemTexture(spriteFilename)),
-                    TextureDeleter{}
-                );
+                texHandler = LoadRenderSystemTexture(spriteFilename);
                 ALK_LOG("Created Sprite Render Data");
             };
         };
@@ -65,13 +64,20 @@ namespace alk
             };
             std::vector<std::pair<std::weak_ptr<RenderComponent>, std::weak_ptr<TransformComponent>>> drawables;
             bool dirtyLayers = false;
-            std::unordered_map<const char*, Texture2D> loadedTextures;
+            std::unordered_map<const char*, TextureHandler> loadedHandlers;
+            std::unordered_map<TextureHandler, Texture2D> loadedTextures;
         };
 
         inline RenderSystemData& GetRenderSystemData()
         {
             static RenderSystemData drawableData;
             return drawableData;
+        }
+
+        inline TextureHandler GetNextTextureHandler()
+        {
+            static TextureHandler textureHandler = 0;
+            return ++textureHandler;
         }
 
         inline Camera2D& GetMainCamera()
@@ -83,9 +89,9 @@ namespace alk
         void Initialize();
         void Shutdown();
         void Draw();
-        void DrawSprite(std::weak_ptr<RenderComponent> renderComponent, std::weak_ptr<TransformComponent> transformComponent);
-        void DrawGrid(std::weak_ptr<RenderComponent> renderComponent, std::weak_ptr<TransformComponent> transformComponent);
+        void DrawSprite(RenderComponent& renderComponent, TransformComponent& transformComponent);
+        void DrawGrid(RenderComponent& renderComponent, TransformComponent& transformComponent);
 
-        void AddToScreen(BaseEntity* entity);
+        void AddToScreen(Entity& entity);
     }
 }

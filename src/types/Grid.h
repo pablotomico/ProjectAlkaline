@@ -1,7 +1,7 @@
 #pragma once
 
 #include "include/raylib.h"
-#include "entities/BaseEntity.h"
+#include "entities/Entity.h"
 #include "alkaline_lib.h"
 
 #include "components/RenderComponent.h"
@@ -9,8 +9,9 @@
 
 namespace alk
 {
-    struct Grid : public BaseEntity
+    class Grid : public Entity
     {
+    public:
         uint gridWidth;
         uint gridHeight;
 
@@ -27,20 +28,20 @@ namespace alk
                                                                          tileHeight(tileSize / 2), tileHeightHalf(tileSize / 4),
                                                                          gridScreenPosition(position)
         {
-            AddComponent<TransformComponent>(width * height);
+            // AddComponent<TransformComponent>(width * height);
 
-            std::vector<Vector2>& positionArray = GetComponent<TransformComponent>()->GetPositionArray();
-            for (int i = 0; i < gridWidth; ++i)
-            {
-                for (int j = 0; j < gridHeight; ++j)
-                {
-                    auto startPosX = gridScreenPosition.x + tileWidthHalf * j - tileWidthHalf * i;
-                    auto startPosY = gridScreenPosition.y + tileHeightHalf * j + tileHeightHalf * i;
-                    positionArray.emplace_back(Vector2{startPosX, startPosY});
-                }
-            }
+            // std::vector<Vector2>& positionArray = GetComponent<TransformComponent>()->GetPositionArray();
+            // for (int i = 0; i < gridWidth; ++i)
+            // {
+            //     for (int j = 0; j < gridHeight; ++j)
+            //     {
+            //         auto startPosX = gridScreenPosition.x + tileWidthHalf * j - tileWidthHalf * i;
+            //         auto startPosY = gridScreenPosition.y + tileHeightHalf * j + tileHeightHalf * i;
+            //         positionArray.emplace_back(Vector2{startPosX, startPosY});
+            //     }
+            // }
 
-            AddComponent<RenderComponent>(RenderSystem::RenderType::Grid, tileWidthHalf, tileHeightHalf);
+            // AddComponent<RenderComponent>(RenderSystem::RenderType::Grid, tileWidthHalf, tileHeightHalf);
         }
 
         Vector2 ScreenToGridPosition(Vector2 screen)

@@ -5,6 +5,7 @@
 #include <typeindex>
 
 #include "alkaline_lib.h"
+#include "systems/Scene.h"
 
 class BaseComponent;
 
@@ -51,5 +52,19 @@ namespace alk
 
         void Initialize();
         void Update(const float deltaTime);
+
+        // Scene
+        inline std::unordered_map<std::string, Scene>& GetScenes()
+        {
+            static std::unordered_map<std::string, Scene> scenes;
+            return scenes;
+        }
+
+        inline Scene*& GetActiveScene()
+        {
+            static Scene* activeScene;
+            return activeScene;
+        }
+
     }
 }

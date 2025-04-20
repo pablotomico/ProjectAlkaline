@@ -83,11 +83,11 @@ int main()
     lua["Debug"].get_or_create<sol::table>()
         .set_function("Log", Debug::Log);
 
-    // lua.new_usertype<BaseEntity>("BaseEntity")
-    //     .set_function("IsValid", &BaseEntity::IsValid)
-    //     .set_function("GetName", &BaseEntity::GetName);
+    // lua.new_usertype<Entity>("Entity")
+    //     .set_function("IsValid", &Entity::IsValid)
+    //     .set_function("GetName", &Entity::GetName);
 
-    // lua.set_function("BaseEntity", [](){ return new BaseEntity(); });
+    // lua.set_function("Entity", [](){ return new Entity(); });
 
     // // Load script
     // lua.script_file("scripts/main.lua");
