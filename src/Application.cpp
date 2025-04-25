@@ -7,6 +7,7 @@
 #include "alkaline_lib.h"
 
 // Systems
+#include "systems/GameLogic.h"
 #include "systems/RenderSystem.h"
 
 namespace alk
@@ -27,7 +28,7 @@ namespace alk
     {
         SetTraceLogLevel(LOG_NONE);
         InitWindow(1600, 900, "Alkaline");
-        SetTargetFPS(144);
+        SetTargetFPS(200);
 
         // ImGui
         rlImGuiSetup(true);

@@ -2,19 +2,19 @@
 
 namespace alk
 {
-    class BaseEntity;
+    class Entity;
     
     class BaseComponent
     {
     protected:
-        BaseEntity* owner;
+        Entity* owner;
     public:
         virtual ~BaseComponent() = default;
         virtual void Update(const float deltaTime) {
             ALK_LOG("Base Component Created");
         };
 
-        void SetOwner(BaseEntity* entity){
+        void SetOwner(Entity* entity){
             owner = entity;
         }
     };
