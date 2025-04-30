@@ -65,6 +65,5 @@ namespace alk
             static Scene* activeScene;
             return activeScene;
         }
-
     }
 }

@@ -25,10 +25,12 @@ namespace alk
 
     void RenderSystem::AddToScreen(Entity &entity)
     {
-        // RenderSystemData& renderData = GetRenderSystemData();
-        // auto componentPair = std::make_pair(entity.GetComponent<RenderComponent>(), entity.GetComponent<TransformComponent>());
-        // renderData.drawables.push_back(componentPair);
-        // renderData.dirtyLayers = true;
+        alk::GameLogic::Scene *activeScene = alk::GameLogic::GetActiveScene();
+        World &world = activeScene->GetWorld();
+        world.GetComponent<RenderComponent>(entity)->SetVisible(true);
+        RenderSystemData &renderData = GetRenderSystemData();
+        renderData.dirtyLayers = true;
+
         ALK_LOG("Added entity to screen");
     }
 
@@ -53,6 +55,11 @@ namespace alk
         for (auto i = 0; i < renderComponents->components.size(); ++i)
         {
             RenderComponent &renderComponent = renderComponents->components[i];
+            if(!renderComponent.GetVisible())
+            {
+                continue;
+            }
+
             EntityId id = renderComponents->entities[i];
 
             ALK_ASSERT(world.HasComponent<TransformComponent>(id), "{} doesn't have a TransformComponent!", world.GetEntity(id).name.c_str());
@@ -70,21 +77,6 @@ namespace alk
             }
         }
 
-        // for (auto it = renderData.drawables.begin(); it != renderData.drawables.end(); ++it) {
-        //     std::weak_ptr<RenderComponent> renderComponent = it->first;
-        //     std::weak_ptr<TransformComponent> transformComponent = it->second;
-
-        //     switch(renderComponent.lock()->GetRenderType())
-        //     {
-        //         case RenderSystem::RenderType::Sprite:
-        //             DrawSprite(renderComponent, transformComponent);
-        //             break;
-        //         case RenderSystem::RenderType::Grid:
-        //             DrawGrid(renderComponent, transformComponent);
-        //             break;
-        //     }
-        // }
-
         EndMode2D();
     }
 
@@ -94,6 +86,7 @@ namespace alk
         RenderSystemData &renderSystemData = GetRenderSystemData();
         std::vector<Vector2> &positionArray = transformComponent.GetPositionArray();
         auto renderData = renderComponent.GetRenderData<SpriteRenderData>();
+        Color color = renderComponent.GetColor();
         if (renderData)
         {
             const SpriteRenderData &data = renderData->get();
@@ -101,7 +94,7 @@ namespace alk
             // ZoneValue(positionArray.size());
             for (Vector2 &position : positionArray)
             {
-                DrawTexture(tex, position.x, position.y, WHITE);
+                DrawTexture(tex, position.x, position.y, color);
             }
         }
         else

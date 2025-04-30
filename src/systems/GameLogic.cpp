@@ -18,7 +18,10 @@ void alk::GameLogic::Update(const float deltaTime)
 {
     for (GameLogicSystem* system : GetSystems())
     {
-        system->Update();
+        if (system)
+        {
+            system->Update();
+        }
     }
 
     Scene* activeScene = GetActiveScene();

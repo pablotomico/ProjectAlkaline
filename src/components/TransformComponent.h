@@ -29,6 +29,7 @@ namespace alk
         };
         void Update(float deltaTime) override {};
         const Vector2 GetPosition() const { return positionArray[0]; };
+        void SetPosition(Vector2 newPosition) { positionArray[0] = newPosition; };
 
         std::vector<Vector2>& GetPositionArray() { return positionArray; };
         const std::vector<Vector2>& GetPositionArray() const { return positionArray; };

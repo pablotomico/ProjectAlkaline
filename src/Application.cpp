@@ -90,7 +90,7 @@ namespace alk
     {
         BeginDrawing();
 
-        ClearBackground(BLACK);
+        ClearBackground(PINK);
 
         // start ImGui Conent
         rlImGuiBegin();
