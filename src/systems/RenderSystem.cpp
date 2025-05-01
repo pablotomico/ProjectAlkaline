@@ -44,9 +44,7 @@ namespace alk
             renderData.dirtyLayers = false;
         }
 
-        alk::GameLogic::Scene *activeScene = alk::GameLogic::GetActiveScene();
-
-        World &world = activeScene->GetWorld();
+        World &world = alk::GameLogic::GetWorld();
         auto renderComponents = world.GetComponents<RenderComponent>();
         auto transformComponents = world.GetComponents<TransformComponent>();
 

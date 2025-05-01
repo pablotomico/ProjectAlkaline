@@ -66,5 +66,9 @@ namespace alk
             return activeScene;
         }
 
+        inline World& GetWorld()
+        {
+            return GetActiveScene()->GetWorld();
+        }
     }
 }

@@ -1,12 +1,13 @@
 #!/bin/bash
 
-options="-std=c++20"
-warnings="-Wno-writable-strings -Wno-format-security -Wno-deprecated-declarations -Wno-switch"
-libs="-Llib -lmsvcrt -llua54 -lraylib -lOpenGL32 -lGdi32 -lWinMM -lkernel32 -lshell32 -lUser32 -Xlinker /NODEFAULTLIB:libcmt"
-includes="-Isrc/include/sol -Isrc/include/imgui -Isrc/include -Isrc/ -Iexternal/ -Iexternal/rlImGui"
+options="-std=c++20 -DTRACY_ENABLE"
+warnings="-Wno-writable-strings -Wno-format-security -Wno-deprecated-declarations -Wno-switch -Wno-microsoft-cast"
+libs="-Llib -lmsvcrt -llua54 -lraylib -lOpenGL32 -lGdi32 -lWinMM -lkernel32 -lshell32 -lUser32 -Xlinker /NODEFAULTLIB:libcmt -ldbghelp"
+includes="-Isrc/include/sol -Isrc/include/imgui -Isrc/include -Isrc/ -Iexternal/ -Iexternal/rlImGui -Iexternal/tracy/public"
 
 external="external/rlImGui/*.cpp \
         external/imgui/*.cpp \
+        external/tracy/public/TracyClient.cpp \
         "
 source="$(find src/ -name "*.cpp")"
 
