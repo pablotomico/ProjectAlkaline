@@ -14,7 +14,9 @@ namespace alk
     private:
         RenderSystem::RenderType renderType;
         RenderSystem::VariantRenderData renderData;
-
+        bool visible = false;
+        Color color = WHITE;
+        Vector2 dimensions;
     public:
     
         RenderComponent()
@@ -22,7 +24,9 @@ namespace alk
             ALK_LOG("RenderComponent created successfully");
         }
         // Constructor for sprite type render component
-        RenderComponent(RenderSystem::RenderType renderType, const char* spriteFileName) : renderType(renderType)
+        RenderComponent(RenderSystem::RenderType renderType, const char* spriteFileName, Color colorOverride = WHITE) 
+            : renderType(renderType),
+            color(colorOverride)
         {
             switch(renderType)
             {
@@ -57,6 +61,21 @@ namespace alk
                 return std::cref(*ptr);
             }
             return std::nullopt;
+        }
+
+        void SetVisible(bool newVisibility)
+        {
+            visible = newVisibility;
+        }
+
+        inline const bool GetVisible() const
+        {
+            return visible;
+        }
+
+        inline const Color GetColor() const
+        {
+            return color;
         }
     };
 }

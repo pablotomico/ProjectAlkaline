@@ -1,6 +1,5 @@
 #pragma once
 #include "alkaline_lib.h"
-#include "GameLogic.h"
 
 namespace alk
 {
@@ -12,17 +11,8 @@ namespace alk
             const char *name;
 
         public:
-            GameLogicSystem(const char *name) : name(name)
-            {
-                ALK_LOG("Registering %s", name);
-                alk::GameLogic::AddSystem(this);
+            GameLogicSystem(const char *name);
 
-                // Just C++ things...
-                // this
-                // alk::GameLogic::SubscribeToComponent<TransformComponent>([this](TransformComponent* t) { OnTransformAdded(t); });
-                // or
-                // alk::GameLogic::SubscribeToComponent<TransformComponent>(std::bind(&TestSystem::OnTransformAdded, this, std::placeholders::_1));
-            }
             ~GameLogicSystem() {}
 
             virtual void Initialize() {};

@@ -33,29 +33,6 @@ namespace alk
             Grid,
         };
     
-        struct SpriteRenderData
-        {
-            TextureHandler texHandler;
-            uint32_t drawLayer = 500;
-            SpriteRenderData(){};
-            SpriteRenderData(const char* spriteFilename){
-                texHandler = LoadRenderSystemTexture(spriteFilename);
-                ALK_LOG("Created Sprite Render Data");
-            };
-        };
-
-        struct GridRenderData
-        {
-            uint32_t drawLayer = 100;
-            uint tileWidthHalf;
-            uint tileHeightHalf;
-            GridRenderData(){};
-            GridRenderData(uint tileWidthHalf, uint tileHeightHalf) : tileWidthHalf(tileWidthHalf), tileHeightHalf(tileHeightHalf){};
-        };
-
-        // Variant data types simplifies the use of different types of render data through the same system
-        using VariantRenderData = std::variant<SpriteRenderData, GridRenderData>;
-
         struct RenderSystemData
         {
             RenderSystemData()
@@ -73,6 +50,34 @@ namespace alk
             static RenderSystemData drawableData;
             return drawableData;
         }
+
+        struct SpriteRenderData
+        {
+            TextureHandler texHandler;
+            uint32_t drawLayer = 500;
+            uint16_t width;
+            uint16_t height;
+
+            SpriteRenderData(){};
+            SpriteRenderData(const char* spriteFilename){
+                texHandler = LoadRenderSystemTexture(spriteFilename);
+                width = GetRenderSystemData().loadedTextures[texHandler].width;
+                height = GetRenderSystemData().loadedTextures[texHandler].height;
+                ALK_LOG("Created Sprite Render Data");
+            };
+        };
+
+        struct GridRenderData
+        {
+            uint32_t drawLayer = 100;
+            uint tileWidthHalf;
+            uint tileHeightHalf;
+            GridRenderData(){};
+            GridRenderData(uint tileWidthHalf, uint tileHeightHalf) : tileWidthHalf(tileWidthHalf), tileHeightHalf(tileHeightHalf){};
+        };
+
+        // Variant data types simplifies the use of different types of render data through the same system
+        using VariantRenderData = std::variant<SpriteRenderData, GridRenderData>;
 
         inline TextureHandler GetNextTextureHandler()
         {

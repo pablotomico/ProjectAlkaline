@@ -60,9 +60,27 @@ namespace alk
             return entityIndices.find(entity) != entityIndices.end();
         }
 
-        void Remove(EntityId entity) override
+        void Remove(EntityId entity)
         {
-            ALK_NOT_IMPLEMENTED("ComponentArray::Remove not implemented");
+            auto it = entityIndices.find(entity);
+            if (it == entityIndices.end())
+            {
+                return;
+            }
+
+            size_t indexToRemove = it->second;
+            size_t lastIndex = components.size() - 1;
+
+            if (indexToRemove != lastIndex)
+            {
+                components[indexToRemove] = std::move(components[lastIndex]);
+                entities[indexToRemove] = entities[lastIndex];
+                entityIndices[entities[indexToRemove]] = indexToRemove;
+            }
+
+            components.pop_back();
+            entities.pop_back();
+            entityIndices.erase(it);
         }
 
         std::vector<T> components;
@@ -102,6 +120,10 @@ namespace alk
         void DestroyEntity(Entity &entity)
         {
             ALK_ASSERT(IsValid(entity), "World::DestroyEntity entity is not valid!");
+            for (auto& [type, array] : componentArrays)
+            {
+                array->Remove(entity.id);
+            }
             entities[entity.id].valid = false;
         }
 
@@ -109,6 +131,12 @@ namespace alk
         void AddComponent(Entity &entity, Args &&...args)
         {
             GetOrCreateComponentArray<T>()->Add(entity.id, std::move(T(std::forward<Args>(args)...)));
+        }
+
+        template <typename T>
+        void RemoveComponent(Entity &entity)
+        {
+            GetOrCreateComponentArray<T>()->Remove(entity.id);
         }
 
         template <typename T>

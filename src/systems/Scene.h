@@ -1,9 +1,8 @@
 #pragma once
 
 #include "alkaline_lib.h"
-
 #include "systems/World.h"
-#include "types/Grid.h"
+#include "systems/GridSystem.h"
 
 namespace alk
 {
@@ -12,12 +11,18 @@ namespace alk
         class Scene
         {
         private:
-            Grid grid{50, 50, 32, Vector2{800.0f, 50.0f}};
-            Entity entity;
-            Entity army;
+            // TODO: Investigate better way to render grid without requiring an entity
+            Entity gridRenderEntity;
+            // Entity entity;
+            // Entity army;
             const int armySize = 50000;
             
             World world;
+            GridSystem* gridSystem;
+            
+            Entity gridPlacementEntity;
+
+            std::vector<Entity> buildings;
 
         public:
             Scene() = default;
