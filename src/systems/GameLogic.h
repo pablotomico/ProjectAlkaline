@@ -65,5 +65,10 @@ namespace alk
             static Scene* activeScene;
             return activeScene;
         }
+
+        inline World& GetWorld()
+        {
+            return GetActiveScene()->GetWorld();
+        }
     }
 }

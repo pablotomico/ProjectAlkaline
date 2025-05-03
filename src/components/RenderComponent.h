@@ -53,10 +53,6 @@ namespace alk
             ALK_LOG("RenderComponent created successfully");
         }
 
-        ~RenderComponent() override {
-            std::cout << "Render Component Destroyed!" << std::endl;
-        }
-
         const RenderSystem::RenderType GetRenderType() const { return renderType; };
 
         template <typename T>

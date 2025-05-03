@@ -25,8 +25,7 @@ namespace alk
             positionArray.reserve(elementCount);
             ALK_LOG("Transform Component Created!");
         };
-        ~TransformComponent(){
-        };
+
         void Update(float deltaTime) override {};
         const Vector2 GetPosition() const { return positionArray[0]; };
         void SetPosition(Vector2 newPosition) { positionArray[0] = newPosition; };

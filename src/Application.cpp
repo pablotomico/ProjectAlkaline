@@ -10,6 +10,8 @@
 #include "systems/GameLogic.h"
 #include "systems/RenderSystem.h"
 
+#include "tracy/Tracy.hpp"
+
 namespace alk
 {
     Application::Application()
@@ -106,6 +108,7 @@ namespace alk
         alk::RenderSystem::Draw();
 
         EndDrawing();
+        FrameMark;
     }
 
     /**
