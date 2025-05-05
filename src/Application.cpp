@@ -5,6 +5,7 @@
 #include "rlImGui.h"
 #include "include/raylib.h"
 #include "alkaline_lib.h"
+#include "Debug/DebugUI.h"
 
 // Systems
 #include "systems/GameLogic.h"
@@ -91,21 +92,10 @@ namespace alk
     void Application::Draw()
     {
         BeginDrawing();
-
         ClearBackground(PINK);
 
-        // start ImGui Conent
-        rlImGuiBegin();
-
-        ImGui::Begin("Performance");
-        ImGui::Text("FPS: %d", GetFPS());
-        ImGui::End();
-
-        // end ImGui Content
-        rlImGuiEnd();
-
-        //alk::GameLogic::Draw();
         alk::RenderSystem::Draw();
+        alk::Debug::UI::Draw();
 
         EndDrawing();
         FrameMark;

@@ -11,7 +11,7 @@ external="external/rlImGui/*.cpp \
         "
 source="$(find src/ -name "*.cpp")"
 
-clang++ $options -g $source $external -o bin/alkaline.exe $warnings $includes $libs
+clang++ -DDEBUG_BUILD=1 $options -g $source $external -o bin/alkaline.exe $warnings $includes $libs
 
 if [ "$?" -ne 0 ] 
 then
