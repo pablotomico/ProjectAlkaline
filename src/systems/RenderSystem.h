@@ -69,11 +69,16 @@ namespace alk
 
         struct GridRenderData
         {
+            TextureHandler validTileTexHandler;
+            TextureHandler invalidTileTexHandler;
             uint32_t drawLayer = 100;
             uint tileWidthHalf;
             uint tileHeightHalf;
             GridRenderData(){};
-            GridRenderData(uint tileWidthHalf, uint tileHeightHalf) : tileWidthHalf(tileWidthHalf), tileHeightHalf(tileHeightHalf){};
+            GridRenderData(uint tileWidthHalf, uint tileHeightHalf, const char* validTileTexFilename, const char* invalidTileTexFilename) : tileWidthHalf(tileWidthHalf), tileHeightHalf(tileHeightHalf){
+                validTileTexHandler = LoadRenderSystemTexture(validTileTexFilename);
+                invalidTileTexHandler = LoadRenderSystemTexture(invalidTileTexFilename);
+            };
         };
 
         // Variant data types simplifies the use of different types of render data through the same system

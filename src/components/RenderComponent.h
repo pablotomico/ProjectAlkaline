@@ -40,12 +40,12 @@ namespace alk
         }
 
         // Constructor for grid type render component
-        RenderComponent(RenderSystem::RenderType renderType, uint tileWidthHalf, uint tileHeightHalf) : renderType(renderType)
+        RenderComponent(RenderSystem::RenderType renderType, uint tileWidthHalf, uint tileHeightHalf, const char* validTileTexFilename, const char* invalidTileTexFilename) : renderType(renderType)
         {
             switch(renderType)
             {
                 case RenderSystem::RenderType::Grid:
-                    renderData.emplace<RenderSystem::GridRenderData>(tileWidthHalf, tileHeightHalf);
+                    renderData.emplace<RenderSystem::GridRenderData>(tileWidthHalf, tileHeightHalf, validTileTexFilename, invalidTileTexFilename);
                     ALK_LOG("Added Grid Render data to component");
                     break;
             }
