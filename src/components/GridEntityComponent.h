@@ -2,6 +2,7 @@
 
 #include "BaseComponent.h"
 #include "include/raylib.h"
+#include "alkaline_lib.h"
 #include <vector>
 
 namespace alk

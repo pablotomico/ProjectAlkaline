@@ -75,7 +75,7 @@ namespace alk
                     {
                         continue;
                     }
-                    gridState[(int)gridPosition.x][(int)gridPosition.y] = GridHelpers::GRID_POINT_FILLED;
+                    gridState[(int)gridPosition.x][(int)gridPosition.y] = GridHelpers::GridPointState::GRID_POINT_FILLED;
                 }
                 
             }
