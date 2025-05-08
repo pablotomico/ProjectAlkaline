@@ -4,7 +4,9 @@
 #include "components/TransformComponent.h"
 #include "components/RenderComponent.h"
 #include "components/GridPreviewComponent.h"
+#include "components/GridEntityComponent.h"
 #include "Debug/DebugUI.h"
+#include "misc/GridHelpers.h"
 
 namespace alk
 {
@@ -19,7 +21,7 @@ namespace alk
 
             // TODO: Figure out a better way to render the grid on screen
             gridRenderEntity = world.CreateEntity();
-            world.AddComponent<RenderComponent>(gridRenderEntity, RenderSystem::RenderType::Grid, TILE_WIDTH_HALF, TILE_HEIGHT_HALF);
+            world.AddComponent<RenderComponent>(gridRenderEntity, RenderSystem::RenderType::Grid, TILE_WIDTH_HALF, TILE_HEIGHT_HALF, "assets/sprites/test_validGrid.png", "assets/sprites/test_invalidGrid.png");
             world.AddComponent<TransformComponent>(gridRenderEntity, gridSystem->GetGridArray().size());
             world.GetComponent<TransformComponent>(gridRenderEntity)->GetPositionArray() = gridSystem->GetGridArray();
             alk::RenderSystem::AddToScreen(gridRenderEntity);
@@ -41,15 +43,24 @@ namespace alk
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
                 if(world.IsValid(gridPlacementEntity))
                 {
+                    auto gridPreviewComponent = world.GetComponent<GridPreviewComponent>(gridPlacementEntity);
+                    if(!gridPreviewComponent->QueryValidPlacement())
+                    {
+                        ALK_LOG("Invalid placement");
+                        return;
+                    }
+                    
                     Entity newBuilding = world.CreateEntity();
                     buildings.push_back(newBuilding);
                     world.AddComponent<RenderComponent>(newBuilding, RenderSystem::RenderType::Sprite, "assets/sprites/test_castle.png", Color{ 255, 255, 255, 255 });
 
                     Vector2 position = world.GetComponent<TransformComponent>(gridPlacementEntity)->GetPosition();
-
                     world.AddComponent<TransformComponent>(newBuilding, position);
                     alk::RenderSystem::AddToScreen(newBuilding);
 
+                    world.AddComponent<GridEntityComponent>(newBuilding);
+                    world.GetComponent<GridEntityComponent>(newBuilding)->ConvertPreviewToGridMap(gridPreviewComponent->GetValidMap());
+                    
                     world.DestroyEntity(gridPlacementEntity);
                 }
             }

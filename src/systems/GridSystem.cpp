@@ -3,7 +3,7 @@
 #include "systems/GameLogicSystem.h"
 #include "components/TransformComponent.h"
 #include "components/RenderComponent.h"
-#include "components/GridPreviewComponent.h"
+#include "components/GridEntityComponent.h"
 
 namespace alk
 {
@@ -33,14 +33,11 @@ namespace alk
             auto renderComponents = world.GetComponents<RenderComponent>();
             auto transformComponents = world.GetComponents<TransformComponent>();
             auto gridPreviewComponents = world.GetComponents<GridPreviewComponent>();
-
-            if (gridPreviewComponents->components.size() == 0)
-            {
-                return;
-            }
+            auto gridEntityComponents = world.GetComponents<GridEntityComponent>();
 
             for (auto i = 0; i < gridPreviewComponents->components.size(); ++i)
             {
+                GridPreviewComponent &gridPreviewComponent = gridPreviewComponents->components[i];
                 EntityId id = gridPreviewComponents->entities[i];
 
                 size_t tranformIndex = transformComponents->entityIndices[id];
@@ -54,17 +51,90 @@ namespace alk
                 auto gridPosition = GridHelpers::WorldToGridPosition(worldPosition);
                 auto worldPlacementPosition = GridHelpers::GridToWorldPosition(gridPosition);
 
+                // TODO Improve this so we don't directly reference render system
+                // Set the preview sprite position to the center of the selected tile position
                 const alk::RenderSystem::SpriteRenderData &renderData = renderComponent.GetRenderData<RenderSystem::SpriteRenderData>()->get();
                 worldPlacementPosition.x -= (renderData.width/2);
                 worldPlacementPosition.y = worldPlacementPosition.y - renderData.height + (TILE_HEIGHT * 2);
 
                 transformComponent.SetPosition(worldPlacementPosition);
+                gridPreviewComponent.SetGridPosition(gridPosition);
+                
+                EvaluateGridPreviewPlacement(gridPreviewComponent);
             }
+
+            //TODO - Update to use notification rather than checking every frame
+            for (auto i = 0; i < gridEntityComponents->components.size(); ++i)
+            {
+                GridEntityComponent &gridEntityComponent = gridEntityComponents->components[i];
+                std::vector<Vector2> tileMap = gridEntityComponent.GetTileMap();
+                for (size_t i = 0; i < tileMap.size(); i++)
+                {
+                    Vector2 gridPosition = tileMap[i];
+                    if (gridPosition.x < 0 || gridPosition.x >= GRID_WIDTH || gridPosition.y < 0 || gridPosition.y >= GRID_HEIGHT)
+                    {
+                        continue;
+                    }
+                    gridState[(int)gridPosition.x][(int)gridPosition.y] = GridHelpers::GridPointState::GRID_POINT_FILLED;
+                }
+                
+            }
+            
         }
 
         void GridSystem::Shutdown()
         {
             ALK_LOG("Shutting down Grid subsystem");
+        }
+
+        void GridSystem::EvaluateGridPreviewPlacement(GridPreviewComponent &gridPreviewComponent)
+        {
+            std::vector<std::pair<Vector2, bool>>& validMap = gridPreviewComponent.GetValidMap();
+            Vector2 gridPosition = gridPreviewComponent.GetGridPosition();
+            Vector2 centerOffset = CalculateGridPreviewEntityCenterOffset(gridPreviewComponent);
+
+            int tileIndex = 0;
+            for (int i = 0; i < gridPreviewComponent.GetDimensions().x; ++i)
+            {
+                for (int j = 0; j < gridPreviewComponent.GetDimensions().y; ++j)
+                {
+                    Vector2 gridPositionOffset = { static_cast<float>(i + gridPosition.x - centerOffset.x),  static_cast<float>(j + gridPosition.y - centerOffset.y) };
+                    if (EvaluateTileValid(gridPositionOffset))
+                    {
+                        validMap[tileIndex].first = {gridPositionOffset.x, gridPositionOffset.y};
+                        validMap[tileIndex].second = true;
+                    }
+                    else
+                    {
+                        validMap[tileIndex].first = {gridPositionOffset.x, gridPositionOffset.y};
+                        validMap[tileIndex].second = false;
+                    }
+                    tileIndex++;
+                }
+            }
+        }
+
+        bool GridSystem::EvaluateTileValid(Vector2 gridPosition)
+        {
+            if(gridPosition.x < 0 || gridPosition.x >= GRID_WIDTH || gridPosition.y < 0 || gridPosition.y >= GRID_HEIGHT)
+            {
+                return false;
+            }
+            if (gridState[(int)gridPosition.x][(int)gridPosition.y] != GridHelpers::GRID_POINT_EMPTY)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        Vector2 GridSystem::CalculateGridPreviewEntityCenterOffset(GridPreviewComponent &gridPreviewComponent)
+        {
+            Vector2 dimensions = gridPreviewComponent.GetDimensions();
+            Vector2 centerOffset = { 0, 0 };
+            centerOffset.x = floor(dimensions.x / 2);
+            centerOffset.y = floor(dimensions.y / 2);
+
+            return centerOffset;
         }
     }
 }

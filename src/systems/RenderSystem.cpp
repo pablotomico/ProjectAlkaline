@@ -1,9 +1,11 @@
 #include "RenderSystem.h"
 #include "components/RenderComponent.h"
 #include "components/TransformComponent.h"
+#include "components/GridPreviewComponent.h"
 #include "entities/Entity.h"
 #include "systems/GameLogic.h"
 #include "systems/Scene.h"
+#include "misc/GridHelpers.h"
 
 // #include "tracy/Tracy.hpp"
 
@@ -53,10 +55,6 @@ namespace alk
         for (auto i = 0; i < renderComponents->components.size(); ++i)
         {
             RenderComponent &renderComponent = renderComponents->components[i];
-            if(!renderComponent.GetVisible())
-            {
-                continue;
-            }
 
             EntityId id = renderComponents->entities[i];
 
@@ -116,6 +114,39 @@ namespace alk
 
             DrawLine(point.x, point.y, point.x - renderData.tileWidthHalf, point.y + renderData.tileHeightHalf, WHITE);
             DrawLine(endPosX, endPosY, endPosX - renderData.tileWidthHalf, endPosY + renderData.tileHeightHalf, WHITE);
+        }
+
+        World &world = alk::GameLogic::GetWorld();
+        auto gridPreviewComponents = world.GetComponents<GridPreviewComponent>();
+
+        if (gridPreviewComponents->components.size() == 0)
+        {
+            return;
+        }
+
+        RenderSystemData &renderSystemData = GetRenderSystemData();
+
+        for (auto i = 0; i < gridPreviewComponents->components.size(); ++i)
+        {
+            auto &gridPreviewComponent = gridPreviewComponents->components[i];
+            std::vector<std::pair<Vector2, bool>>& validMap = gridPreviewComponent.GetValidMap();
+
+            for (size_t i = 0; i < validMap.size(); i++)
+            {
+                Vector2 gridPosition = validMap[i].first;
+                Vector2 worldPosition = alk::GameLogic::GridHelpers::GridToWorldPosition(gridPosition);
+                worldPosition.x -= (renderData.tileWidthHalf);
+                if(validMap[i].second)
+                {
+                    auto tex = renderSystemData.loadedTextures[renderData.validTileTexHandler];
+                    DrawTexture(tex, worldPosition.x, worldPosition.y, Color{ 255, 255, 255, 100 });
+                }
+                else
+                {
+                    auto tex = renderSystemData.loadedTextures[renderData.invalidTileTexHandler];
+                    DrawTexture(tex, worldPosition.x, worldPosition.y, Color{ 255, 255, 255, 100 });
+                }
+            }
         }
     }
 

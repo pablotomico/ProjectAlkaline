@@ -26,7 +26,6 @@ namespace alk
             ALK_LOG("Transform Component Created!");
         };
 
-        void Update(float deltaTime) override {};
         const Vector2 GetPosition() const { return positionArray[0]; };
         void SetPosition(Vector2 newPosition) { positionArray[0] = newPosition; };
 
