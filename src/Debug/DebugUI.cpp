@@ -15,7 +15,7 @@ namespace alk
         void UI::Draw() {
 
             rlImGuiBegin();
-            ImGui::Begin("Performance");
+            ImGui::Begin("Debug");
             ImGui::Text("FPS: %d", GetFPS());
 
             for (const auto& button : buttons) {

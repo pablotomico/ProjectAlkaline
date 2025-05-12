@@ -33,6 +33,7 @@ namespace alk
                     world.AddComponent<RenderComponent>(gridPlacementEntity, RenderSystem::RenderType::Sprite, "assets/sprites/test_castle.png", Color{ 255, 255, 255, 100 });
                     world.AddComponent<TransformComponent>(gridPlacementEntity, Vector2{0, 0});
                     world.AddComponent<GridPreviewComponent>(gridPlacementEntity, Vector2{3, 3});
+                    world.GetComponent<RenderComponent>(gridPlacementEntity)->SetDrawLayer(1000);
                     alk::RenderSystem::AddToScreen(gridPlacementEntity);
                 }
             });
@@ -55,12 +56,13 @@ namespace alk
                     world.AddComponent<RenderComponent>(newBuilding, RenderSystem::RenderType::Sprite, "assets/sprites/test_castle.png", Color{ 255, 255, 255, 255 });
 
                     Vector2 position = world.GetComponent<TransformComponent>(gridPlacementEntity)->GetPosition();
+                    Vector2 gridPosition = GridHelpers::WorldToGridPosition(position);
                     world.AddComponent<TransformComponent>(newBuilding, position);
+                    world.AddComponent<GridEntityComponent>(newBuilding, gridPosition);
+                    world.GetComponent<GridEntityComponent>(newBuilding)->ConvertPreviewToGridMap(gridPreviewComponent->GetValidMap());
+
                     alk::RenderSystem::AddToScreen(newBuilding);
 
-                    world.AddComponent<GridEntityComponent>(newBuilding);
-                    world.GetComponent<GridEntityComponent>(newBuilding)->ConvertPreviewToGridMap(gridPreviewComponent->GetValidMap());
-                    
                     world.DestroyEntity(gridPlacementEntity);
                 }
             }

@@ -34,7 +34,7 @@ namespace alk
             auto transformComponents = world.GetComponents<TransformComponent>();
             auto gridPreviewComponents = world.GetComponents<GridPreviewComponent>();
             auto gridEntityComponents = world.GetComponents<GridEntityComponent>();
-
+            
             for (auto i = 0; i < gridPreviewComponents->components.size(); ++i)
             {
                 GridPreviewComponent &gridPreviewComponent = gridPreviewComponents->components[i];
@@ -77,9 +77,14 @@ namespace alk
                     }
                     gridState[(int)gridPosition.x][(int)gridPosition.y] = GridHelpers::GridPointState::GRID_POINT_FILLED;
                 }
-                
+
+                EntityId id = gridEntityComponents->entities[i];
+                size_t tranformIndex = transformComponents->entityIndices[id];
+                TransformComponent &transformComponent = transformComponents->components[tranformIndex];
+
+                Vector2 convertedGridPosition = GridHelpers::WorldToGridPosition(transformComponent.GetPosition());
+                gridEntityComponent.SetGridPosition(convertedGridPosition);
             }
-            
         }
 
         void GridSystem::Shutdown()
