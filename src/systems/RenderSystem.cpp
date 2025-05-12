@@ -2,7 +2,7 @@
 #include "components/RenderComponent.h"
 #include "components/TransformComponent.h"
 #include "components/GridPreviewComponent.h"
-#include "entities/Entity.h"
+#include "components/GridEntityComponent.h"
 #include "systems/GameLogic.h"
 #include "systems/Scene.h"
 #include "misc/GridHelpers.h"
@@ -41,48 +41,98 @@ namespace alk
         // ZoneScoped;
         BeginMode2D(RenderSystem::GetMainCamera());
 
+        EvaluateAndSortDirtyLayers();
+
         RenderSystemData &renderData = GetRenderSystemData();
-        if (renderData.dirtyLayers)
-        {
-            // TODO: Sort drawables by layer
-            renderData.dirtyLayers = false;
-        }
-
         World &world = alk::GameLogic::GetWorld();
-        auto renderComponents = world.GetComponents<RenderComponent>();
-        auto transformComponents = world.GetComponents<TransformComponent>();
-
-        for (auto i = 0; i < renderComponents->components.size(); ++i)
+        for(auto entityId : renderData.drawables)
         {
-            RenderComponent &renderComponent = renderComponents->components[i];
-
-            EntityId id = renderComponents->entities[i];
-
-            ALK_ASSERT(world.HasComponent<TransformComponent>(id), "{} doesn't have a TransformComponent!", world.GetEntity(id).name.c_str());
-            size_t tranformIndex = transformComponents->entityIndices[id];
-            TransformComponent &transformComponent = transformComponents->components[tranformIndex];
-
-            switch (renderComponent.GetRenderType())
-            {
-            case RenderSystem::RenderType::Sprite:
-                DrawSprite(renderComponent, transformComponent);
-                break;
-            case RenderSystem::RenderType::Grid:
-                DrawGrid(renderComponent, transformComponent);
-                break;
-            }
+            DrawEntity(entityId, &world);
         }
 
         EndMode2D();
     }
 
-    void RenderSystem::DrawSprite(RenderComponent &renderComponent, TransformComponent &transformComponent)
+    void RenderSystem::EvaluateAndSortDirtyLayers()
+    {
+        RenderSystemData &renderData = GetRenderSystemData();
+        if (renderData.dirtyLayers)
+        {
+            World &world = alk::GameLogic::GetWorld();
+            auto renderComponents = world.GetComponents<RenderComponent>();
+            auto gridEntityComponents = world.GetComponents<GridEntityComponent>();
+            renderData.drawables.clear();
+
+            for (auto i = 0; i < renderComponents->components.size(); ++i)
+            {
+                RenderComponent &renderComponent = renderComponents->components[i];
+                EntityId id = renderComponents->entities[i];
+
+                auto it = gridEntityComponents->entityIndices.find(id);
+                if (it != gridEntityComponents->entityIndices.end())
+                {
+                    size_t gridEntityIndex = it->second;
+                    GridEntityComponent &gridEntityComponent = gridEntityComponents->components[gridEntityIndex];
+                    renderComponent.SetDrawLayer((uint)gridEntityComponent.GetGridPosition().x + (uint)gridEntityComponent.GetGridPosition().y);
+                }
+
+                renderData.drawables.push_back(id);
+            }
+
+            std::sort(renderData.drawables.begin(), renderData.drawables.end(), [&](EntityId a, EntityId b) {
+                size_t aIndex = renderComponents->entityIndices[a];
+                size_t bIndex = renderComponents->entityIndices[b];
+                RenderComponent &aRenderComponent = renderComponents->components[aIndex];
+                RenderComponent &bRenderComponent = renderComponents->components[bIndex];
+                return aRenderComponent.GetDrawLayer() < bRenderComponent.GetDrawLayer();
+            });
+
+            ALK_LOG("Sorted render components by draw layer");
+            renderData.dirtyLayers = false;
+        }
+    }
+
+    void RenderSystem::DrawEntity(EntityId entityId, World *world)
+    {
+        Entity entity = world->GetEntity(entityId);
+        if(!entity.IsValid())
+        {
+            return;
+        }
+        if(!world->HasComponent<RenderComponent>(entityId))
+        {
+            return;
+        }
+        
+        RenderComponent *renderComponent = world->GetComponent<RenderComponent>(entity);
+        TransformComponent *transformComponent = world->GetComponent<TransformComponent>(entity);
+        if(renderComponent == nullptr || transformComponent == nullptr)
+        {
+            return;
+        }
+        if(!renderComponent->GetVisible())
+        {
+            return;
+        }
+        
+        switch (renderComponent->GetRenderType())
+        {
+        case RenderSystem::RenderType::Sprite:
+            DrawSprite(renderComponent, transformComponent);
+            break;
+        case RenderSystem::RenderType::Grid:
+            DrawGrid(renderComponent, transformComponent);
+            break;
+        }
+    }
+
+    void RenderSystem::DrawSprite(RenderComponent *renderComponent, TransformComponent *transformComponent)
     {
         // ZoneScoped;
         RenderSystemData &renderSystemData = GetRenderSystemData();
-        std::vector<Vector2> &positionArray = transformComponent.GetPositionArray();
-        auto renderData = renderComponent.GetRenderData<SpriteRenderData>();
-        Color color = renderComponent.GetColor();
+        std::vector<Vector2> &positionArray = transformComponent->GetPositionArray();
+        auto renderData = renderComponent->GetRenderData<SpriteRenderData>();
+        Color color = renderComponent->GetColor();
         if (renderData)
         {
             const SpriteRenderData &data = renderData->get();
@@ -99,11 +149,11 @@ namespace alk
         }
     }
 
-    void RenderSystem::DrawGrid(RenderComponent &renderComponent, TransformComponent &transformComponent)
+    void RenderSystem::DrawGrid(RenderComponent *renderComponent, TransformComponent *transformComponent)
     {
         // ZoneScoped;
-        std::vector<Vector2> &positionArray = transformComponent.GetPositionArray();
-        auto renderData = renderComponent.GetRenderData<GridRenderData>()->get();
+        std::vector<Vector2> &positionArray = transformComponent->GetPositionArray();
+        auto renderData = renderComponent->GetRenderData<GridRenderData>()->get();
 
         for (Vector2 point : positionArray)
         {

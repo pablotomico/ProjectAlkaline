@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <variant>
 #include "include/raylib.h"
+#include "entities/Entity.h"
 
 namespace alk
 {
@@ -11,7 +12,7 @@ namespace alk
 
     class RenderComponent;
     class TransformComponent;
-    class Entity;
+    class World;
 
     namespace RenderSystem
     {
@@ -39,7 +40,7 @@ namespace alk
             {
                 ALK_LOG("Created Render System Data");
             };
-            std::vector<std::pair<std::weak_ptr<RenderComponent>, std::weak_ptr<TransformComponent>>> drawables;
+            std::vector<alk::EntityId> drawables;
             bool dirtyLayers = false;
             std::unordered_map<const char*, TextureHandler> loadedHandlers;
             std::unordered_map<TextureHandler, Texture2D> loadedTextures;
@@ -54,7 +55,6 @@ namespace alk
         struct SpriteRenderData
         {
             TextureHandler texHandler;
-            uint32_t drawLayer = 500;
             uint16_t width;
             uint16_t height;
 
@@ -71,7 +71,6 @@ namespace alk
         {
             TextureHandler validTileTexHandler;
             TextureHandler invalidTileTexHandler;
-            uint32_t drawLayer = 100;
             uint tileWidthHalf;
             uint tileHeightHalf;
             GridRenderData(){};
@@ -99,9 +98,11 @@ namespace alk
         void Initialize();
         void Shutdown();
         void Draw();
-        void DrawSprite(RenderComponent& renderComponent, TransformComponent& transformComponent);
-        void DrawGrid(RenderComponent& renderComponent, TransformComponent& transformComponent);
 
         void AddToScreen(Entity& entity);
+        void EvaluateAndSortDirtyLayers();
+        void DrawEntity(EntityId entityId, World *world);
+        void DrawSprite(RenderComponent* renderComponent, TransformComponent* transformComponent);
+        void DrawGrid(RenderComponent* renderComponent, TransformComponent* transformComponent);
     }
 }

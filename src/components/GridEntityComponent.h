@@ -9,12 +9,15 @@ namespace alk
 {
     class GridEntityComponent : public BaseComponent {
         std::vector<Vector2> tileMap;
-
+        Vector2 gridPosition;
     public:
         GridEntityComponent() : BaseComponent() {
             ALK_LOG("Grid Entity Component Created!");
         };
-        ~GridEntityComponent(){};
+        GridEntityComponent(Vector2 newGridPosition) : BaseComponent() {
+            this->gridPosition = newGridPosition;
+            ALK_LOG("Grid Entity Component Created!");
+        };
 
         void ConvertPreviewToGridMap(const std::vector<std::pair<Vector2, bool>> &validMap) {
             tileMap.clear();
@@ -25,6 +28,14 @@ namespace alk
 
         const std::vector<Vector2>& GetTileMap() const {
             return tileMap;
+        };
+
+        inline void SetGridPosition(Vector2 newGridPosition) {
+            gridPosition = newGridPosition;
+        };
+
+        inline Vector2 GetGridPosition() const {
+            return gridPosition;
         };
     };
 }

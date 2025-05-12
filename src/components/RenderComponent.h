@@ -17,6 +17,8 @@ namespace alk
         bool visible = false;
         Color color = WHITE;
         Vector2 dimensions;
+        uint drawLayer = 0;
+
     public:
     
         RenderComponent()
@@ -76,6 +78,16 @@ namespace alk
         inline const Color GetColor() const
         {
             return color;
+        }
+
+        inline void SetDrawLayer(uint newLayer)
+        {
+            drawLayer = newLayer;
+        }
+
+        inline const uint GetDrawLayer() const
+        {
+            return drawLayer;
         }
     };
 }
