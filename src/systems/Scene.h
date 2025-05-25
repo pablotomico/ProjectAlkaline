@@ -3,6 +3,7 @@
 #include "alkaline_lib.h"
 #include "systems/World.h"
 #include "systems/GridSystem.h"
+#include "misc/GameState.h"
 
 namespace alk
 {
@@ -24,6 +25,9 @@ namespace alk
 
             std::vector<Entity> buildings;
 
+            GameState gameState;
+
+            void OnGameStateChanged(EGameState oldState, EGameState newState);
         public:
             Scene() = default;
 

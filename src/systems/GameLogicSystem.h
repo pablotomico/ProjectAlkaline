@@ -13,7 +13,7 @@ namespace alk
         public:
             GameLogicSystem(const char *name);
 
-            ~GameLogicSystem() {}
+            virtual ~GameLogicSystem() {}
 
             virtual void Initialize() {};
             virtual void Update() {};
