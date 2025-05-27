@@ -26,6 +26,7 @@
 
 # Executables
 *.exe
+!build/vendor/premake/premake5.exe
 *.out
 *.app
 
