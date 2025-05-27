@@ -1,45 +1,49 @@
 workspace "Alkaline"
-architecture "x64"
-startproject "Alkaline"
-configurations { "Debug", "Release" }
+   architecture "x64"
+   startproject "Alkaline"
+   location "build/projects"
+   configurations { "Debug", "Release" }
 
-outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+-- outputpath = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+outputpath = "%{cfg.buildcfg}"
+targetpath = "bin/" .. outputpath .. "/%{prj.name}"
+objpath = "bin-int/" .. outputpath .. "/%{prj.name}"
 
 -- ImGui + rlImGui static library
 project "imgui_rl"
-kind "StaticLib"
-language "C++"
-cppdialect "C++20"
-staticruntime "on"
+   kind "StaticLib"
+   language "C++"
+   cppdialect "C++20"
+   staticruntime "on"
 
-targetdir("bin/" .. outputdir .. "/%{prj.name}")
-objdir("bin-int/" .. outputdir .. "/%{prj.name}")
+   targetdir(targetpath)
+   objdir(objpath)
 
-files {
-   "external/imgui/*.cpp",
-   "external/imgui/*.h",
-   "external/rlImGui/rlImGui.cpp",
-   "external/rlImGui/rlImGui.h"
-}
+   files {
+      "external/imgui/*.cpp",
+      "external/imgui/*.h",
+      "external/rlImGui/rlImGui.cpp",
+      "external/rlImGui/rlImGui.h"
+   }
 
-includedirs {
-   "external",
-   "external/imgui",
-   "external/rlImGui",
-   "external/raylib",
-   "external/sol"
-}
+   includedirs {
+      "external",
+      "external/imgui",
+      "external/rlImGui",
+      "external/raylib",
+      "external/sol"
+   }
 
-filter "system:windows"
-systemversion "latest"
+   filter "system:windows"
+      systemversion "latest"
 
-filter "configurations:Debug"
-runtime "Debug"
-symbols "on"
+   filter "configurations:Debug"
+      runtime "Debug"
+      symbols "on"
 
-filter "configurations:Release"
-runtime "Release"
-optimize "on"
+   filter "configurations:Release"
+      runtime "Release"
+      optimize "on"
 
 -- Main Project
 project "Alkaline"
@@ -47,9 +51,8 @@ project "Alkaline"
    language "C++"
    cppdialect "C++20"
 
-   -- targetdir("bin/" .. outputdir .. "/%{prj.name}")
-   targetdir("bin/%{prj.name}")
-   objdir("bin-int/" .. outputdir .. "/%{prj.name}")
+   targetdir(targetpath)
+   objdir(objpath)
 
    files {
       "src/**.cpp",
