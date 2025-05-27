@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include "BaseComponent.h"
-#include "include/raylib.h"
+#include "raylib.h"
 #include <vector>
 #include <optional>
 #include "systems/RenderSystem.h"

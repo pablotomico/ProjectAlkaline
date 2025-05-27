@@ -5,7 +5,7 @@
 
 #include "alkaline_lib.h"
 #include "Application.h"
-#include "include/raylib.h"
+#include "raylib.h"
 
 #define SCRIPTS_PATH "scripts/"
 #define SPRITES_PATH "assets/sprites/"

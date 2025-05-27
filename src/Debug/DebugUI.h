@@ -21,8 +21,8 @@ namespace alk
     
             #else
     
-            void RegisterButton(const char*, std::function<void()>){}
-            void Draw(){}
+            inline void RegisterButton(const char*, std::function<void()>){}
+            inline void Draw(){}
     
             #endif // DEBUG_BUILD
         }

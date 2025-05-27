@@ -2,7 +2,7 @@
 
 #include "BaseComponent.h"
 #include <iostream>
-#include "include/raylib.h"
+#include "raylib.h"
 
 namespace alk
 {

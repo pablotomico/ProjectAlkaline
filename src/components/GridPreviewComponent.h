@@ -1,7 +1,7 @@
 #pragma once
 
 #include "BaseComponent.h"
-#include "include/raylib.h"
+#include "raylib.h"
 
 namespace alk
 {

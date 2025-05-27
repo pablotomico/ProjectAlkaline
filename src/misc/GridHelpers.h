@@ -1,6 +1,6 @@
 #pragma once
 #include "alkaline_lib.h"
-#include "include/raylib.h"
+#include "raylib.h"
 
 namespace alk
 {

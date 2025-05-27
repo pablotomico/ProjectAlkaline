@@ -3,7 +3,7 @@
 #include "alkaline_lib.h"
 #include <unordered_map>
 #include <variant>
-#include "include/raylib.h"
+#include "raylib.h"
 #include "entities/Entity.h"
 
 namespace alk
