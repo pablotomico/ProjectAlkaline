@@ -140,7 +140,7 @@ namespace alk
             // ZoneValue(positionArray.size());
             for (Vector2 &position : positionArray)
             {
-                DrawTexture(tex, position.x, position.y, color);
+                DrawTexture(tex, (int) position.x, (int) position.y, color);
             }
         }
         else
@@ -157,12 +157,12 @@ namespace alk
 
         for (Vector2 point : positionArray)
         {
-            auto endPosX = point.x + renderData.tileWidthHalf;
-            auto endPosY = point.y + renderData.tileHeightHalf;
-            DrawLine(point.x, point.y, endPosX, endPosY, WHITE);
-            DrawLine(point.x - renderData.tileWidthHalf, point.y + renderData.tileHeightHalf, endPosX - renderData.tileWidthHalf, endPosY + renderData.tileHeightHalf, WHITE);
+            auto endPosX = (int) point.x + renderData.tileWidthHalf;
+            auto endPosY = (int) point.y + renderData.tileHeightHalf;
+            DrawLine((int) point.x, (int) point.y, endPosX, endPosY, WHITE);
+            DrawLine((int) point.x - renderData.tileWidthHalf, (int) point.y + renderData.tileHeightHalf, endPosX - renderData.tileWidthHalf, endPosY + renderData.tileHeightHalf, WHITE);
 
-            DrawLine(point.x, point.y, point.x - renderData.tileWidthHalf, point.y + renderData.tileHeightHalf, WHITE);
+            DrawLine((int) point.x, (int) point.y, (int) point.x - renderData.tileWidthHalf, (int) point.y + renderData.tileHeightHalf, WHITE);
             DrawLine(endPosX, endPosY, endPosX - renderData.tileWidthHalf, endPosY + renderData.tileHeightHalf, WHITE);
         }
 
@@ -189,12 +189,12 @@ namespace alk
                 if(validMap[i].second)
                 {
                     auto tex = renderSystemData.loadedTextures[renderData.validTileTexHandler];
-                    DrawTexture(tex, worldPosition.x, worldPosition.y, Color{ 255, 255, 255, 100 });
+                    DrawTexture(tex, (int)worldPosition.x, (int)worldPosition.y, Color{ 255, 255, 255, 100 });
                 }
                 else
                 {
                     auto tex = renderSystemData.loadedTextures[renderData.invalidTileTexHandler];
-                    DrawTexture(tex, worldPosition.x, worldPosition.y, Color{ 255, 255, 255, 100 });
+                    DrawTexture(tex, (int)worldPosition.x, (int)worldPosition.y, Color{ 255, 255, 255, 100 });
                 }
             }
         }

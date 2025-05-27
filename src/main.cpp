@@ -32,28 +32,28 @@ namespace Debug
             sol::type type = var.get_type();
             if (type == sol::type::string)
             {
-                sprintf(textBuffer, "%s%s", textBuffer, var.as<std::string>().c_str());
+                sprintf_s(textBuffer, "%s%s", textBuffer, var.as<std::string>().c_str());
             }
             else if (type == sol::type::number)
             {
                 if (var.is<int>())
                 {
-                    sprintf(textBuffer, "%s%d", textBuffer, var.as<int>());
+                    sprintf_s(textBuffer, "%s%d", textBuffer, var.as<int>());
                 }
                 else if (var.is<double>())
                 {
-                    sprintf(textBuffer, "%s%f", textBuffer, var.as<double>());
+                    sprintf_s(textBuffer, "%s%f", textBuffer, var.as<double>());
                 }
             }
             else if (type == sol::type::boolean)
             {
                 if (var.as<bool>()) 
                 {
-                    sprintf(textBuffer, "%strue", textBuffer);
+                    sprintf_s(textBuffer, "%strue", textBuffer);
                 }
                 else
                 {
-                    sprintf(textBuffer, "%sfalse", textBuffer);
+                    sprintf_s(textBuffer, "%sfalse", textBuffer);
                 }
             }
         }
@@ -98,15 +98,15 @@ int main()
 
     ALK_ASSERT(application.Initialize(), "Critical failure during initialization, closing application");
 
-    float const fixedTimeStep = 1 / fixedUpdateFPS;
-    float nextFixedUpdate = 0;
+    double const fixedTimeStep = 1 / fixedUpdateFPS;
+    double nextFixedUpdate = 0;
 
     while (!application.QueryShutdown()) // Detect window close button or ESC key
     {
         float deltaTime = GetFrameTime();
         application.Update(deltaTime);
 
-        float currentTime = GetTime();
+        double currentTime = GetTime();
         if (currentTime > nextFixedUpdate)
         {
             application.FixedUpdate(fixedTimeStep);
