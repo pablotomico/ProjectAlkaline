@@ -26,11 +26,12 @@ namespace alk
             world.GetComponent<TransformComponent>(gridRenderEntity)->GetPositionArray() = gridSystem->GetGridArray();
             alk::RenderSystem::AddToScreen(gridRenderEntity);
 
-            gameState.RegisterOnStateChangedCallback([this](EGameState oldState, EGameState newState) {
-                OnGameStateChanged(oldState, newState);
-            });
+            gamemodeEntity = world.CreateEntity();
 
-            gameState.SetState(EGameState::BUILD);
+            world.AddComponent<GamemodeLogicComponent>(gamemodeEntity);
+            world.GetComponent<GamemodeLogicComponent>(gamemodeEntity)->RegisterOnStateChangedCallback([this](EGameState oldState, EGameState newState, const char* stateString) {
+                OnGameStateChanged(oldState, newState, stateString);
+            });
         }
 
         void Scene::Update()
@@ -60,14 +61,10 @@ namespace alk
                     world.DestroyEntity(gridPlacementEntity);
                 }
             }
-            if(IsKeyPressed(KEY_SPACE))
-            {
-                gameState.TransitionToNextState();
-            }
         }
-        void Scene::OnGameStateChanged(EGameState oldState, EGameState newState)
+        void Scene::OnGameStateChanged(EGameState oldState, EGameState newState, const char* stateString)
         {
-            alk::Debug::UI::RegisterText("GameState", gameState.GetStateString());
+            alk::Debug::UI::RegisterText("GameState", stateString);
 
             if (newState == EGameState::BUILD)
             {

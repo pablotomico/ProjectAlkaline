@@ -1,9 +1,11 @@
 #pragma once
+#include "systems/GamemodeLogicSystem.h"
 
 namespace alk
 {
     class Application
     {
+        alk::GameLogic::GamemodeLogicSystem gamemodeLogicSystem;
 
     public:
         Application();
