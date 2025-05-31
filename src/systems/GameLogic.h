@@ -7,6 +7,7 @@
 #include "alkaline_lib.h"
 #include "systems/Scene.h"
 
+
 class BaseComponent;
 
 template <typename T>
@@ -17,6 +18,7 @@ namespace alk
     namespace GameLogic
     {
         class GameLogicSystem;
+        class GamemodeLogicSystem;
 
         inline std::vector<GameLogicSystem *>& GetSystems()
         {
@@ -70,5 +72,7 @@ namespace alk
         {
             return GetActiveScene()->GetWorld();
         }
+
+        static GamemodeLogicSystem* gamemodeLogicSystem;
     }
 }

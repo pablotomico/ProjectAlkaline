@@ -3,6 +3,7 @@
 #include "alkaline_lib.h"
 #include "systems/World.h"
 #include "systems/GridSystem.h"
+#include "components/GamemodeLogicComponent.h"
 
 namespace alk
 {
@@ -13,6 +14,7 @@ namespace alk
         private:
             // TODO: Investigate better way to render grid without requiring an entity
             Entity gridRenderEntity;
+            Entity gamemodeEntity;
             // Entity entity;
             // Entity army;
             const int armySize = 50000;
@@ -24,6 +26,7 @@ namespace alk
 
             std::vector<Entity> buildings;
 
+            void OnGameStateChanged(EGameState oldState, EGameState newState, const char* stateString);
         public:
             Scene() = default;
 

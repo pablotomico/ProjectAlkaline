@@ -26,16 +26,11 @@ namespace alk
             world.GetComponent<TransformComponent>(gridRenderEntity)->GetPositionArray() = gridSystem->GetGridArray();
             alk::RenderSystem::AddToScreen(gridRenderEntity);
 
-            alk::Debug::UI::RegisterButton("Spawn Castle", [this]() {
-                if(!world.IsValid(gridPlacementEntity))
-                {
-                    gridPlacementEntity = world.CreateEntity();
-                    world.AddComponent<RenderComponent>(gridPlacementEntity, RenderSystem::RenderType::Sprite, "assets/sprites/test_castle.png", Color{ 255, 255, 255, 100 });
-                    world.AddComponent<TransformComponent>(gridPlacementEntity, Vector2{0, 0});
-                    world.AddComponent<GridPreviewComponent>(gridPlacementEntity, Vector2{3, 3});
-                    world.GetComponent<RenderComponent>(gridPlacementEntity)->SetDrawLayer(1000);
-                    alk::RenderSystem::AddToScreen(gridPlacementEntity);
-                }
+            gamemodeEntity = world.CreateEntity();
+
+            world.AddComponent<GamemodeLogicComponent>(gamemodeEntity);
+            world.GetComponent<GamemodeLogicComponent>(gamemodeEntity)->RegisterOnStateChangedCallback([this](EGameState oldState, EGameState newState, const char* stateString) {
+                OnGameStateChanged(oldState, newState, stateString);
             });
         }
 
@@ -65,6 +60,37 @@ namespace alk
 
                     world.DestroyEntity(gridPlacementEntity);
                 }
+            }
+        }
+        void Scene::OnGameStateChanged(EGameState oldState, EGameState newState, const char* stateString)
+        {
+            alk::Debug::UI::RegisterText("GameState", stateString);
+
+            if (newState == EGameState::BUILD)
+            {
+                alk::Debug::UI::RegisterButton("Spawn Castle", [this]() {
+                    if(!world.IsValid(gridPlacementEntity))
+                    {
+                        gridPlacementEntity = world.CreateEntity();
+                        world.AddComponent<RenderComponent>(gridPlacementEntity, RenderSystem::RenderType::Sprite, "assets/sprites/test_castle.png", Color{ 255, 255, 255, 100 });
+                        world.AddComponent<TransformComponent>(gridPlacementEntity, Vector2{0, 0});
+                        world.AddComponent<GridPreviewComponent>(gridPlacementEntity, Vector2{3, 3});
+                        world.GetComponent<RenderComponent>(gridPlacementEntity)->SetDrawLayer(1000);
+                        alk::RenderSystem::AddToScreen(gridPlacementEntity);
+                    }
+                });
+            }
+            else if (newState == EGameState::BATTLE)
+            {
+                alk::Debug::UI::UnregisterButton("Spawn Castle");
+                if (world.IsValid(gridPlacementEntity))
+                {
+                    world.DestroyEntity(gridPlacementEntity);
+                }
+            }
+            else if (newState == EGameState::REWARDS)
+            {
+
             }
         }
     }
