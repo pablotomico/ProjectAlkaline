@@ -1,9 +1,12 @@
 #include "systems/GameLogic.h"
 #include "systems/GameLogicSystem.h"
 #include "GameLogic.h"
+#include "systems/GamemodeLogicSystem.h"
 
 void alk::GameLogic::Initialize()
 {
+    gamemodeLogicSystem = new GamemodeLogicSystem();
+    
     for (GameLogicSystem* system : GetSystems())
     {
         system->Initialize();

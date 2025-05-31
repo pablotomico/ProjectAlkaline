@@ -4,7 +4,6 @@ namespace alk
 {
     class Application
     {
-
     public:
         Application();
         ~Application();
