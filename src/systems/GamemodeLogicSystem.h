@@ -1,7 +1,6 @@
 #pragma once
 
 #include "systems/GameLogicSystem.h"
-#include "include/raylib.h"
 
 namespace alk
 {
