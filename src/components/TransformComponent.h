@@ -21,7 +21,7 @@ namespace alk
             ALK_LOG("Transform Component Created!");
         };
         // Constructor which reserves n-number of elements worth of space in position array
-        TransformComponent(uint16_t elementCount){
+        TransformComponent(size_t elementCount){
             positionArray.reserve(elementCount);
             ALK_LOG("Transform Component Created!");
         };

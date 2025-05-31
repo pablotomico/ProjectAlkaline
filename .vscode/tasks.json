@@ -4,10 +4,19 @@
         {
             "label": "Build",
             "type": "shell",
-            "command": "build/build_premake.bat",
+            "command": "build/build_premake.bat -d",
             "group": {
                 "kind": "build",
                 "isDefault": true
+            }
+        },
+        {
+            "label": "clean-build",
+            "type": "shell",
+            "command": "build/build_premake.bat -d -c",
+            "group": {
+                "kind": "build",
+                "isDefault": false
             }
         }
     ]
