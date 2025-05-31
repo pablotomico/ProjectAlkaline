@@ -26,6 +26,7 @@
 
 # Executables
 *.exe
+!build/vendor/premake/premake5.exe
 *.out
 *.app
 
@@ -34,11 +35,24 @@
 *.ilk
 *.exp
 *.nativecodeanalysis.xml
+
+
 .vs
 .clangd
 
+#vs
+*.sln
+*.vcxproj
+*.vcxproj.filters
+projects
+
+#profiling
+*.tracy
+traces
+
 Meta
 bin
+bin-int
 docs
 settings.json
 imgui.ini

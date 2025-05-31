@@ -27,10 +27,10 @@ namespace alk
     
             #else
     
-            void RegisterText(const char* id, const char* text){}
-            void RegisterButton(const char* id, std::function<void()> callback){}
-            void UnregisterButton(const char* id){}
-            void Draw(){}
+            inline void RegisterText(const char* id, const char* text){}
+            inline void RegisterButton(const char* id, std::function<void()> callback){}
+            inline void UnregisterButton(const char* id){}
+            inline void Draw(){}
     
             #endif // DEBUG_BUILD
         }

@@ -3,7 +3,7 @@
 // Libs
 #include "imgui.h"
 #include "rlImGui.h"
-#include "include/raylib.h"
+#include "raylib.h"
 #include "alkaline_lib.h"
 #include "Debug/DebugUI.h"
 
@@ -11,7 +11,7 @@
 #include "systems/GameLogic.h"
 #include "systems/RenderSystem.h"
 
-#include "tracy/Tracy.hpp"
+#include "Tracy.hpp"
 
 namespace alk
 {

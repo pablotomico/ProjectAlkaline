@@ -53,10 +53,10 @@ void _log(char const *prefix, char const *msg, TextColor textColor, Args... args
         };
 
     char formatBuffer[8192] = {};
-    sprintf(formatBuffer, "%s%s %s \033[0m", TextColorTable[textColor], prefix, msg);
+    sprintf_s(formatBuffer, "%s%s %s \033[0m", TextColorTable[textColor], prefix, msg);
 
     char textBuffer[8192] = {};
-    sprintf(textBuffer, formatBuffer, args...);
+    sprintf_s(textBuffer, formatBuffer, args...);
 
     puts(textBuffer);
 }

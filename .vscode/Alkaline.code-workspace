@@ -73,7 +73,10 @@
 			"array": "cpp",
 			"bitset": "cpp",
 			"functional": "cpp",
-			"variant": "cpp"
+			"variant": "cpp",
+			"map": "cpp",
+			"xtree": "cpp",
+			"*.rh": "cpp"
 		}
 	}
 }

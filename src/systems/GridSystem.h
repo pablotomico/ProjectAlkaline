@@ -1,7 +1,7 @@
 #pragma once
 
 #include "systems/GameLogicSystem.h"
-#include "include/raylib.h"
+#include "raylib.h"
 #include "components/GridPreviewComponent.h"
 #include "misc/GridHelpers.h"
 
