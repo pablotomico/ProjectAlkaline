@@ -8,7 +8,7 @@ namespace alk
     {
         namespace UI
         {
-            #ifdef DEBUG_BUILD
+            #ifdef ALK_DEBUG
 
             struct ButtonData
             {
@@ -32,7 +32,7 @@ namespace alk
             inline void UnregisterButton(const char* id){}
             inline void Draw(){}
     
-            #endif // DEBUG_BUILD
+            #endif // ALK_DEBUG
         }
     }
 }

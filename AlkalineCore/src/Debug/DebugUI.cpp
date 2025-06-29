@@ -1,4 +1,4 @@
-#ifdef DEBUG_BUILD
+#ifdef ALK_DEBUG
 
 #include "DebugUI.h"
 #include "rlImGui.h"
@@ -50,5 +50,5 @@ namespace alk
     }
 }
 
-#endif // DEBUG_BUILD
+#endif // ALK_DEBUG
 

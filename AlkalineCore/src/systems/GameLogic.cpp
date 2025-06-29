@@ -6,15 +6,15 @@
 void alk::GameLogic::Initialize()
 {
     gamemodeLogicSystem = new GamemodeLogicSystem();
+
+    GetScenes().emplace("TestScene", Scene());
+    GetActiveScene() = &GetScenes().at("TestScene");
+    GetActiveScene()->Initialize();
     
     for (GameLogicSystem* system : GetSystems())
     {
         system->Initialize();
     }
-
-    GetScenes().emplace("TestScene", Scene());
-    GetActiveScene() = &GetScenes().at("TestScene");
-    GetActiveScene()->Initialize();
 }
 
 void alk::GameLogic::Update(const float deltaTime)

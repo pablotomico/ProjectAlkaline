@@ -1,6 +1,6 @@
 #include "systems/GamemodeLogicSystem.h"
 
-#include "GameLogic.h"
+#include "systems/GameLogic.h"
 #include "components/GamemodeLogicComponent.h"
 #include "GamemodeLogicSystem.h"
 

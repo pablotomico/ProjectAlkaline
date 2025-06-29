@@ -1,6 +1,7 @@
+---@diagnostic disable: undefined-global
 workspace "Alkaline"
    architecture "x64"
-   startproject "Alkaline"
+   startproject "AlkalineClient"
    location "build/projects"
    configurations { "Debug", "Release" }
 
@@ -31,7 +32,6 @@ project "imgui_rl"
       "external/imgui",
       "external/rlImGui",
       "external/raylib",
-      "external/sol"
    }
 
    filter "system:windows"
@@ -45,22 +45,26 @@ project "imgui_rl"
       runtime "Release"
       optimize "on"
 
--- Main Project
-project "Alkaline"
-   kind "ConsoleApp"
+
+group "Core"
+project "AlkalineCore"
+   -- location "AlkalineCore"
+   kind "StaticLib"
    language "C++"
    cppdialect "C++20"
+   staticruntime "on"
 
    targetdir(targetpath)
    objdir(objpath)
 
    files {
-      "src/**.cpp",
+      "%{prj.name}/src/**.h",
+      "%{prj.name}/src/**.cpp",
       "external/tracy/public/TracyClient.cpp"
    }
 
    includedirs {
-      "src",
+      "%{prj.name}/src",
       "external",
       "external/imgui",
       "external/rlImGui",
@@ -72,7 +76,7 @@ project "Alkaline"
 
    links {
       "imgui_rl",
-      "raylib",
+      -- "raylib",
       "lua54",
       "winmm"
    }
@@ -83,14 +87,135 @@ project "Alkaline"
 
    filter "system:windows"
       systemversion "latest"
-      staticruntime "on"  -- /MDd
       linkoptions { "/NODEFAULTLIB:LIBCMT" }
 
    filter "configurations:Debug"
-      runtime "Debug"
       symbols "on"
-      defines { "DEBUG_BUILD", "TRACY_ENABLE" }
+      defines { "ALK_DEBUG", "TRACY_ENABLE" }
 
    filter "configurations:Release"
-      runtime "Release"
+      optimize "on"
+
+group "Game"
+project "AlkalineGame"
+   -- location "AlkalineGame"
+   kind "StaticLib"
+   language "C++"
+   cppdialect "C++20"
+   staticruntime "on"
+
+   targetdir(targetpath)
+   objdir(objpath)
+
+   files {
+      "%{prj.name}/src/**.h",
+      "%{prj.name}/src/**.cpp",
+      -- "external/tracy/public/TracyClient.cpp"
+   }
+
+   includedirs {
+      "%{prj.name}/src",
+      "AlkalineCore/src"
+   }
+
+   links {
+      "AlkalineCore",
+   }
+
+   filter "system:windows"
+      systemversion "latest"
+      -- linkoptions { "/NODEFAULTLIB:LIBCMT" }
+
+   filter "configurations:Debug"
+      symbols "on"
+      defines { "ALK_DEBUG", "TRACY_ENABLE" }
+      
+   filter "configurations:Release"
+      optimize "on"
+
+group "Applications"
+project "AlkalineClient"
+   -- location "AlkalineClient"
+   kind "ConsoleApp"
+   language "C++"
+   cppdialect "C++20"
+   staticruntime "on"
+
+   targetdir(targetpath)
+   objdir(objpath)
+
+   files {
+      "%{prj.name}/src/**.h",
+      "%{prj.name}/src/**.cpp",
+      -- "external/tracy/public/TracyClient.cpp"
+   }
+
+   includedirs {
+      "%{prj.name}/src",
+      "AlkalineCore/src",
+      "AlkalineGame/src",
+      "external",
+      "external/sol",
+      "external/lua",
+      "external/raylib",
+   }
+
+   links {
+      "imgui_rl",
+      "raylib",
+      "AlkalineCore",
+      -- "AlkalineGame",
+   }
+
+   libdirs {
+      "lib"
+   }
+
+   filter "system:windows"
+      systemversion "latest"
+      linkoptions { "/NODEFAULTLIB:LIBCMT" }
+
+   filter "configurations:Debug"
+      symbols "on"
+      defines { "ALK_DEBUG", "TRACY_ENABLE" }
+      
+   filter "configurations:Release"
+      optimize "on"
+
+project "AlkalineEditor"
+   -- location "AlkalineEditor"
+   kind "ConsoleApp"
+   language "C++"
+   cppdialect "C++20"
+   staticruntime "on"
+
+   targetdir(targetpath)
+   objdir(objpath)
+
+   files {
+      "%{prj.name}/src/**.h",
+      "%{prj.name}/src/**.cpp",
+      -- "external/tracy/public/TracyClient.cpp"
+   }
+
+   includedirs {
+      "%{prj.name}/src",
+      "AlkalineCore/src",
+      "AlkalineGame/src",
+   }
+
+   links {
+      "AlkalineCore",
+      -- "AlkalineGame",
+   }
+
+   filter "system:windows"
+      systemversion "latest"
+      -- linkoptions { "/NODEFAULTLIB:LIBCMT" }
+
+   filter "configurations:Debug"
+      symbols "on"
+      defines { "ALK_DEBUG", "ALK_EDITOR", "TRACY_ENABLE" }
+      
+   filter "configurations:Release"
       optimize "on"
