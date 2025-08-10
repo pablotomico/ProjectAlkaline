@@ -1,14 +1,25 @@
 #pragma once
 
+#include <string>
+
 #include "alkaline_lib.h"
+
 #include "systems/World.h"
 #include "systems/GridSystem.h"
-#include "components/GamemodeLogicComponent.h"
 
 namespace alk
 {
     namespace GameLogic
     {
+        enum EGameState
+        {
+            NONE,
+            BUILD,
+            BATTLE,
+            REWARDS,
+        };
+        
+
         class Scene
         {
         private:
@@ -28,6 +39,7 @@ namespace alk
 
             void OnGameStateChanged(EGameState oldState, EGameState newState, const char* stateString);
         public:
+            std::string name;
             Scene() = default;
 
             void Initialize();

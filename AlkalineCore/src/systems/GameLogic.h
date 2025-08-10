@@ -7,7 +7,6 @@
 #include "alkaline_lib.h"
 #include "systems/Scene.h"
 
-
 class BaseComponent;
 
 template <typename T>
@@ -18,7 +17,10 @@ namespace alk
     namespace GameLogic
     {
         class GameLogicSystem;
-        class GamemodeLogicSystem;
+        using SystemFactoryFn = GameLogicSystem* (*)();
+
+        std::vector<alk::GameLogic::SystemFactoryFn>& GetFactoryList();
+        bool RegisterSystemFactory(SystemFactoryFn factory);
 
         inline std::vector<GameLogicSystem *>& GetSystems()
         {
@@ -31,7 +33,7 @@ namespace alk
 
         inline void AddSystem(GameLogicSystem *system)
         {
-            GetSystems().emplace_back(system);
+            GetSystems().push_back(system);
         }
 
         template <typename T>
@@ -39,7 +41,7 @@ namespace alk
         {
             std::type_index type = std::type_index(typeid(T));
 
-            callbacks<T>[type].emplace_back(callback);
+            callbacks<T>[type].push_back(callback);
         }
 
         template <typename T>
@@ -52,7 +54,7 @@ namespace alk
             }
         }
 
-        void Initialize();
+        void Initialize(Scene scene);
         void Update(const float deltaTime);
 
         // Scene
@@ -68,11 +70,24 @@ namespace alk
             return activeScene;
         }
 
+        inline void LoadScene(Scene scene, bool setActive)
+        {
+            auto resultPair = GetScenes().emplace(scene.name, std::move(scene));
+            if (resultPair.second)
+            {
+                Scene* loadedScene = &(resultPair.first->second);
+                if (setActive) 
+                {
+                    GetActiveScene() = loadedScene;
+                }
+                loadedScene->Initialize();
+                ALK_LOG("Successfully loaded scene %s", scene.name.c_str());
+            }
+        }
+
         inline World& GetWorld()
         {
             return GetActiveScene()->GetWorld();
         }
-
-        static GamemodeLogicSystem* gamemodeLogicSystem;
     }
 }

@@ -1,3 +1,5 @@
+---@diagnostic disable //TODO: enable when the globals generation is fixed
+
 local entity = {}
 
 function entity:OnStart()

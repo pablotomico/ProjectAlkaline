@@ -1,15 +1,25 @@
 #include "systems/GameLogic.h"
 #include "systems/GameLogicSystem.h"
-#include "GameLogic.h"
 #include "systems/GamemodeLogicSystem.h"
 
-void alk::GameLogic::Initialize()
-{
-    gamemodeLogicSystem = new GamemodeLogicSystem();
+std::vector<alk::GameLogic::SystemFactoryFn>& alk::GameLogic::GetFactoryList() {
+    static std::vector<alk::GameLogic::SystemFactoryFn> factories;
+    return factories;
+}
 
-    GetScenes().emplace("TestScene", Scene());
-    GetActiveScene() = &GetScenes().at("TestScene");
-    GetActiveScene()->Initialize();
+bool alk::GameLogic::RegisterSystemFactory(alk::GameLogic::SystemFactoryFn factory)
+{
+    GetFactoryList().push_back(factory);
+    return true;
+}
+
+void alk::GameLogic::Initialize(Scene scene)
+{
+    for (auto& f : GetFactoryList()) {
+        AddSystem(f());
+    }
+
+    GameLogic::LoadScene(std::move(scene), true);
     
     for (GameLogicSystem* system : GetSystems())
     {

@@ -4,6 +4,8 @@
 #include "rlImGui.h"
 #include "imgui.h"
 
+#include "systems/GameLogic.h"
+
 namespace alk
 {
     namespace Debug
@@ -43,7 +45,26 @@ namespace alk
                     button.second.callback();
                 }
             }
+            
             ImGui::End();
+
+            ImGui::Begin("World Outliner");
+            World& world = alk::GameLogic::GetWorld();
+            for(auto& pair : world.DebugGetAllEntities())
+            {
+                EntityMeta e = pair.second;
+                if (e.valid)
+                {
+                    ImGui::Text(e.name.c_str());
+                }
+                else
+                {
+                    ImGui::TextDisabled(e.name.c_str());
+                }
+            }
+            
+
+            ImGui::End(); // World Outliner
 
             rlImGuiEnd();
         }

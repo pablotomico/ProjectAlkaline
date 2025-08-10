@@ -1,27 +1,18 @@
 #pragma once
 
+#include "systems/GameLogic.h"
 #include "systems/GameLogicSystem.h"
 
 namespace alk
 {
     namespace GameLogic
     {
-        enum EGameState
-        {
-            NONE,
-            BUILD,
-            BATTLE,
-            REWARDS,
-        };
-
         class GamemodeLogicSystem : public GameLogicSystem
         {
-        private:
-            EGameState currentState = EGameState::NONE;
-
         public:
             GamemodeLogicSystem() : GameLogicSystem("Gamemode logic Subsystem") {}
 
+            static GameLogicSystem* Create() { return new GamemodeLogicSystem(); }
             void Initialize() override;
             void Update() override;
             void Shutdown() override;
@@ -52,6 +43,9 @@ namespace alk
             }
 
             EGameState TransitionToNextState();
+        private:
+            EGameState currentState = EGameState::NONE;
+            static inline bool isRegistered = alk::GameLogic::RegisterSystemFactory(Create);
         };
     }
 }

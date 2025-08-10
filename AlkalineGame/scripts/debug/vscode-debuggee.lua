@@ -1,3 +1,5 @@
+---@diagnostic disable
+
 local debuggee = {}
 
 local socket = require 'socket.core'

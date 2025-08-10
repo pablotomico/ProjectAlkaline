@@ -1,17 +1,21 @@
 #include "Application.h"
 
+#include <memory>
+
 // Libs
 #include "imgui.h"
 #include "rlImGui.h"
 #include "raylib.h"
 #include "alkaline_lib.h"
 #include "Debug/DebugUI.h"
+#include "Tracy.hpp"
 
 // Systems
+#include "systems/ScriptSystem.h"
 #include "systems/GameLogic.h"
 #include "systems/RenderSystem.h"
 
-#include "Tracy.hpp"
+#include "serialization/SceneSerializer.h"
 
 namespace alk
 {
@@ -27,8 +31,9 @@ namespace alk
      * @brief Initialize the application and all dependencies
      * @return success (bool)
      */
-    bool Application::Initialize()
+    bool Application::Initialize(const std::string& scenePath)
     {
+        ALK_TRACE("ALKALINE ENGINE v0.1");
         SetTraceLogLevel(LOG_NONE);
         InitWindow(1600, 900, "Alkaline");
         SetTargetFPS(200);
@@ -36,10 +41,42 @@ namespace alk
         // ImGui
         rlImGuiSetup(true);
 
+        alk::ScriptSystem::Initialize();
+        sol::table sceneTable = alk::ScriptSystem::LoadTableFromFile(scenePath);
+        ALK_ASSERT(sceneTable != sol::lua_nil, "Application::Initialize: Couldn't load scene with path: '%s'", scenePath);
+        alk::GameLogic::Scene testScene;
+        alk::SceneSerializer::DeserializeScene(testScene, sceneTable);
+
+
+        // alk::SceneSerializer::DeserializeScene();
+        alk::GameLogic::Initialize(std::move(testScene));
         alk::RenderSystem::Initialize();
-        alk::GameLogic::Initialize();
         
+        ALK_TRACE("APPLICATION INITIALIZED SUCCESSFULLY");
         return true;
+    }
+
+    int Application::Run()
+    {
+        double const fixedTimeStep = 1 / fixedUpdateFPS;
+        double nextFixedUpdate = 0;
+
+        while (!QueryShutdown()) // Detect window close button or ESC key
+        {
+            float deltaTime = GetFrameTime();
+            Update(deltaTime);
+
+            double currentTime = GetTime();
+            if (currentTime > nextFixedUpdate)
+            {
+                FixedUpdate(fixedTimeStep);
+                nextFixedUpdate = currentTime + fixedTimeStep;
+            }
+            Draw();
+        }
+
+        Shutdown();
+        return 0; // IDEA: define return values based on success, assert, exception, etc.
     }
 
     /**

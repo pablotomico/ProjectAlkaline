@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 namespace alk
 {
     class Application
@@ -8,11 +10,14 @@ namespace alk
         Application();
         ~Application();
     
-        bool Initialize();
+        bool Initialize(const std::string& scenePath);
+        int Run();
+        void Shutdown();
+        
+    private:
         void Update(const float deltaTime);
         void FixedUpdate(const float deltaTime);
         void Draw();
-        void Shutdown();
         bool QueryShutdown();
     };
 }

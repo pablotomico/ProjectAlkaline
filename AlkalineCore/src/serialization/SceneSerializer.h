@@ -6,9 +6,9 @@
 
 namespace alk
 {
-    namespace SceneLoader
+    namespace SceneSerializer
     {
-        void DeserializeScene(alk::GameLogic::Scene& scene, sol::table table);
+        void DeserializeScene(alk::GameLogic::Scene& scene, const sol::table& table);
         sol::table SerializeScene(alk::GameLogic::Scene& scene);
     }
 }

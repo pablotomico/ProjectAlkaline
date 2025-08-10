@@ -9,7 +9,7 @@ namespace alk
         {
             name = newName;
             ALK_LOG("Registering %s", name);
-            alk::GameLogic::AddSystem(this);
+            // alk::GameLogic::AddSystem(this);
         
             // Just C++ things...
             // this

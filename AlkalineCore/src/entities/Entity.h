@@ -38,7 +38,7 @@ namespace alk
         /**
          * @brief Returns the entity name - debug purposes only
          * 
-         * @return const char* 
+         * @return std::string 
          */
         const std::string GetName()
         {

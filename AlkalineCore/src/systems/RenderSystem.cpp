@@ -145,7 +145,7 @@ namespace alk
         }
         else
         {
-            // TODO Throw error for missing sprite render data
+            // TODO: Throw error for missing sprite render data
         }
     }
 

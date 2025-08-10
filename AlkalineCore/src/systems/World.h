@@ -13,10 +13,10 @@ namespace alk
     {
         EntityId id;
         std::string name;
-        bool valid = true;
+        bool valid = false;
 
         EntityMeta() = default;
-        EntityMeta(EntityId id, std::string name) : id(id), name(name) {}
+        EntityMeta(EntityId id, std::string name) : id(id), name(name), valid(true) {}
     };
 
     class IComponentArray
@@ -93,14 +93,14 @@ namespace alk
     public:
         Entity CreateEntity()
         {
-            EntityId id = ++nextEntityId;
+            EntityId id = nextEntityId++;
             entities[id] = EntityMeta{id, std::format("New Entity({})", id)};
             return Entity{id, entities[id].name.c_str()};
         }
 
-        Entity CreateEntity(const char *name)
+        Entity CreateEntity(std::string name)
         {
-            EntityId id = ++nextEntityId;
+            EntityId id = nextEntityId++;
             entities[id] = EntityMeta{id, name};
             return Entity{id, name};
         }
@@ -124,7 +124,8 @@ namespace alk
             {
                 array->Remove(entity.id);
             }
-            entities[entity.id].valid = false;
+            // entities[entity.id].valid = false;
+            entities.erase(entity.id);
         }
 
         template <typename T, typename... Args>
@@ -162,8 +163,13 @@ namespace alk
             return GetOrCreateComponentArray<T>();
         }
 
+        std::unordered_map<EntityId, EntityMeta>& DebugGetAllEntities()
+        {
+            return entities;
+        }
+
     private:
-        alk::EntityId nextEntityId = 0;
+        alk::EntityId nextEntityId = 1;
         std::unordered_map<std::type_index, std::unique_ptr<IComponentArray>> componentArrays;
         std::unordered_map<EntityId, EntityMeta> entities;
 

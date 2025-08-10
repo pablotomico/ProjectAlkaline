@@ -10,8 +10,6 @@
 #define SCRIPTS_PATH "scripts/"
 #define SPRITES_PATH "assets/sprites/"
 
-constexpr float fixedUpdateFPS = 60.0f;
-
 /**
  * @brief lua debug functions
  *
@@ -96,26 +94,6 @@ int main()
 
     // -------------
 
-    ALK_ASSERT(application.Initialize(), "Critical failure during initialization, closing application");
-
-    double const fixedTimeStep = 1 / fixedUpdateFPS;
-    double nextFixedUpdate = 0;
-
-    while (!application.QueryShutdown()) // Detect window close button or ESC key
-    {
-        float deltaTime = GetFrameTime();
-        application.Update(deltaTime);
-
-        double currentTime = GetTime();
-        if (currentTime > nextFixedUpdate)
-        {
-            application.FixedUpdate(fixedTimeStep);
-            nextFixedUpdate = currentTime + fixedTimeStep;
-        }
-        application.Draw();
-    }
-
-    application.Shutdown();
-
-    return 0;
+    ALK_ASSERT(application.Initialize("C:/dev/ProjectAlkaline/AlkalineGame/scenes/test.scene"), "Critical failure during initialization, closing application");
+    return application.Run();
 }
