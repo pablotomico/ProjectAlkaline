@@ -1,0 +1,9 @@
+return
+{
+    name = "Testing Scene",
+    entities =
+    {
+        -- { name = "Test Entity", components = {} },
+        -- { name = "Test Entity 2", components = {} },
+    },
+}

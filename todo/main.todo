@@ -1,20 +1,43 @@
 ## Alt+Enter for new tasks, Alt+D to (un)complete
 
 Project:
-    ✔ Github Repo @done(25-03-16 21:47)
-    ✔ Basic project setup readme @done(25-03-16 21:47)
-    ☐ Set up collaborators
+    ☐ Set up dev update template
 
 Build System:
     Generate Docs:
+        ☐ Re-integrate c++ docs in build script
         ☐ Generate todo file based on todo tags on doc comments in code
         ☐ Investigate way to mark classes/functions for lua only
     Generate Lua Globals:
+        ☐ Re-integrate lua globals in build script
         ☐ Keep working on python script to parse all types
 
 Alkaline Engine:
-    ☐ Rename Actor to Entity (PTSD too strong)
-    ☐ Create Entity Registry/Manager to create and keep track of them
+    ✔ Move main.cpp code to Application.cpp @done(25-08-10 15:19)
+    ✔ Set up Script System @done(25-08-10 15:06)
+    ☐ Sweep 'const char *' to std::string
+    ☐ Move 'hard-coded' game states from Scene class into AlkalineGame project @high
+    ☐ Move stuff to .cpp files instead of .h and check if it improves compile times @low
+    Scene serialization:
+        ✔ Define Lua structure for entities @done(25-08-10 23:46)
+        ✔ Read entities list and create @done(25-08-10 23:46)
+        ☐ Register components for serialization
+        ☐ How to define components in Lua
+        ☐ Deserialize components
+        ☐ Then think about serializing
+    Script System:
+        ☐ Move utils functions (Log) from main.cpp to the script system
+        ☐ Generalize how to expose stuff to Lua
 
-Script System:
-    ☐ Generalize how to expose stuff to Lua
+Alkaline Game:
+    ☐ Create test component that is registered to the Engine
+
+Scripting:
+    ☐ Design scripts architecture 
+
+Archive:
+  ✔ Github Repo @done(25-03-16 21:47) @project(Project)
+  ✔ Basic project setup readme @done(25-03-16 21:47) @project(Project)
+  ✔ Set up collaborators @done(25-08-10 11:34) @project(Project)
+  ✔ Rename Actor to Entity (PTSD too strong) @done(25-08-10 11:34) @project(Alkaline Engine)
+  ✔ Create Entity Registry/Manager to create and keep track of them @done(25-08-10 11:34) @project(Alkaline Engine)
