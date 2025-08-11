@@ -4,6 +4,9 @@
 #include "rlImGui.h"
 #include "imgui.h"
 
+#include "serialization/SceneSerializer.h"
+
+#include "systems/ScriptSystem.h"
 #include "systems/GameLogic.h"
 
 namespace alk
@@ -50,7 +53,7 @@ namespace alk
 
             ImGui::Begin("World Outliner");
             World& world = alk::GameLogic::GetWorld();
-            for(auto& pair : world.DebugGetAllEntities())
+            for(auto& pair : world.GetAllEntities())
             {
                 EntityMeta e = pair.second;
                 if (e.valid)
@@ -63,6 +66,14 @@ namespace alk
                 }
             }
             
+            ImGui::Separator();
+            if (ImGui::Button("Test Serialize")) {
+                sol::table table = alk::ScriptSystem::GetState().create_table();
+                alk::GameLogic::Scene* scene = alk::GameLogic::GetActiveScene();
+                alk::SceneSerializer::SerializeScene(*alk::GameLogic::GetActiveScene(), table);
+                
+                alk::ScriptSystem::SaveTableToFile("C:/dev/ProjectAlkaline/AlkalineGame/scenes/testexport.scene", table);
+            }
 
             ImGui::End(); // World Outliner
 

@@ -1,0 +1,25 @@
+return {
+    entities = {
+        [1] = {
+            components = {
+            },
+            name = "Test Entity 2",
+        },
+        [2] = {
+            components = {
+            },
+            name = "Test Entity",
+        },
+        [3] = {
+            components = {
+            },
+            name = "Grid",
+        },
+        [4] = {
+            components = {
+            },
+            name = "Gamemode",
+        },
+    },
+    name = "Testing Scene",
+}

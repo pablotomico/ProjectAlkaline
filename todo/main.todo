@@ -17,6 +17,7 @@ Alkaline Engine:
     ✔ Set up Script System @done(25-08-10 15:06)
     ✔ Build macro for the GameLogicSystem declaration @done(25-08-11 18:26)
     ☐ Sweep 'const char *' to std::string
+    ☐ Take a look at Transform component (maybe move grid stuff to GridTransform?) @high
     ☐ Move Grid + Gamemode entity definition out from Scene.cpp @high
     ☐ Move 'hard-coded' game states from Scene class into AlkalineGame project @high
     ☐ Move stuff to .cpp files instead of .h and check if it improves compile times @low
@@ -26,7 +27,8 @@ Alkaline Engine:
         ☐ Register components for serialization
         ☐ How to define components in Lua
         ☐ Deserialize components
-        ☐ Then think about serializing
+        ✔ Then think about serializing @done(25-08-11 21:12)
+        ☐ Serialize components
     Script System:
         ☐ Move utils functions (Log) from main.cpp to the script system
         ☐ Generalize how to expose stuff to Lua

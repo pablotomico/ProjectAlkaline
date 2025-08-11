@@ -1,9 +1,15 @@
-return
-{
-    name = "Testing Scene",
-    entities =
-    {
-        -- { name = "Test Entity", components = {} },
-        -- { name = "Test Entity 2", components = {} },
+return {
+  entities = {
+    [1] = {
+      components = {
+      },
+      name = "Test Entity",
     },
+    [2] = {
+      components = {
+      },
+      name = "Test Entity 2",
+    },
+  },
+  name = "Testing Scene",
 }

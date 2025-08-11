@@ -1,5 +1,7 @@
 #include "SceneSerializer.h"
 
+#include "systems/ScriptSystem.h"
+
 void alk::SceneSerializer::DeserializeScene(alk::GameLogic::Scene &scene, const sol::table &table)
 {
     World& world = scene.GetWorld();
@@ -22,7 +24,22 @@ void alk::SceneSerializer::DeserializeScene(alk::GameLogic::Scene &scene, const 
     }
 }
 
-sol::table alk::SceneSerializer::SerializeScene(alk::GameLogic::Scene &scene)
+void alk::SceneSerializer::SerializeScene(alk::GameLogic::Scene &scene, sol::table& table)
 {
-    return sol::table();
+    World& world = scene.GetWorld();
+    table["name"] = scene.name;
+    sol::state& lua = alk::ScriptSystem::GetState();
+    sol::table entitiesTable = lua.create_table();
+    for (auto& pair : world.GetAllEntities())
+    {
+        EntityMeta& em = pair.second;
+        if (em.valid)
+        {
+            sol::table entityTable = lua.create_table();
+            entityTable["name"] = em.name;
+            entityTable["components"] = lua.create_table();
+            entitiesTable.add(entityTable);
+        }
+    }
+    table["entities"] = entitiesTable;
 }

@@ -42,6 +42,7 @@ namespace alk
         rlImGuiSetup(true);
 
         alk::ScriptSystem::Initialize();
+        // TODO: check file extension using raylib IsFileExtension
         sol::table sceneTable = alk::ScriptSystem::LoadTableFromFile(scenePath);
         ALK_ASSERT(sceneTable != sol::lua_nil, "Application::Initialize: Couldn't load scene with path: '%s'", scenePath);
         alk::GameLogic::Scene testScene;

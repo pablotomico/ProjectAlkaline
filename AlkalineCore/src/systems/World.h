@@ -163,7 +163,7 @@ namespace alk
             return GetOrCreateComponentArray<T>();
         }
 
-        std::unordered_map<EntityId, EntityMeta>& DebugGetAllEntities()
+        std::unordered_map<EntityId, EntityMeta>& GetAllEntities()
         {
             return entities;
         }
