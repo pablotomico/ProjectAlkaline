@@ -9,11 +9,10 @@ namespace alk
     {
         class GamemodeLogicSystem : public GameLogicSystem
         {
-        public:
-            GamemodeLogicSystem() : GameLogicSystem("Gamemode logic Subsystem") {}
+            ALK_GAMELOGICSYSTEM(GamemodeLogicSystem);
 
-            static GameLogicSystem* Create() { return new GamemodeLogicSystem(); }
-            void Initialize() override;
+        public:
+            bool Initialize() override;
             void Update() override;
             void Shutdown() override;
 
@@ -45,7 +44,6 @@ namespace alk
             EGameState TransitionToNextState();
         private:
             EGameState currentState = EGameState::NONE;
-            static inline bool isRegistered = alk::GameLogic::RegisterSystemFactory(Create);
         };
     }
 }

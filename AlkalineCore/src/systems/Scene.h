@@ -5,7 +5,6 @@
 #include "alkaline_lib.h"
 
 #include "systems/World.h"
-#include "systems/GridSystem.h"
 
 namespace alk
 {
@@ -19,6 +18,7 @@ namespace alk
             REWARDS,
         };
         
+        class GridSystem;
 
         class Scene
         {
@@ -31,8 +31,6 @@ namespace alk
             const int armySize = 50000;
             
             World world;
-            GridSystem* gridSystem;
-            
             Entity gridPlacementEntity;
 
             std::vector<Entity> buildings;

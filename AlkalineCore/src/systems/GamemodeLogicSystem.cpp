@@ -1,18 +1,19 @@
-#include "systems/GamemodeLogicSystem.h"
+#include "raylib.h"
 
 #include "systems/GameLogic.h"
+#include "systems/GamemodeLogicSystem.h"
+
 #include "components/GamemodeLogicComponent.h"
-#include "GamemodeLogicSystem.h"
 
 namespace alk
 {
     namespace GameLogic
     {
-        void GamemodeLogicSystem::Initialize()
+        bool GamemodeLogicSystem::Initialize()
         {
-            ALK_LOG("Initializing Gamemode Logic subsystem");
             // Initialization logic for the gamemode logic system
             SetState(EGameState::BUILD);
+            return true;
         }
 
         void GamemodeLogicSystem::Update()

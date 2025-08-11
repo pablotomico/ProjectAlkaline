@@ -9,9 +9,8 @@ namespace alk
 {
     namespace GameLogic
     {
-        void GridSystem::Initialize()
+        GridSystem::GridSystem(std::string name) : GameLogicSystem(name)
         {
-            ALK_LOG("Initializing Grid subsystem");
             positionArray.reserve(GRID_WIDTH * GRID_HEIGHT);
 
             for (int i = 0; i < GRID_WIDTH; ++i)
@@ -23,6 +22,11 @@ namespace alk
                     positionArray.emplace_back(worldPosition);
                 }
             }
+        }
+
+        bool GridSystem::Initialize()
+        {
+            return true;
         }
 
         void GridSystem::Update()

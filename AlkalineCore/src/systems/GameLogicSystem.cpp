@@ -5,10 +5,9 @@ namespace alk
 {
     namespace GameLogic
     {
-        GameLogicSystem::GameLogicSystem(const char *newName)
+        GameLogicSystem::GameLogicSystem(std::string name) : name(name)
         {
-            name = newName;
-            ALK_LOG("Registering %s", name);
+            ALK_LOG("Registering %s", name.c_str());
             // alk::GameLogic::AddSystem(this);
         
             // Just C++ things...

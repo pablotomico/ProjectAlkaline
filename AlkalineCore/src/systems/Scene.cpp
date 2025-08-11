@@ -17,11 +17,9 @@ namespace alk
     {
         void Scene::Initialize()
         {
-            ALK_LOG("Initializing Scene subsystem");
+            ALK_LOG("Initializing Scene '%s'", name.c_str());
 
-            gridSystem = new GridSystem();
-            GameLogic::AddSystem(gridSystem);
-            gridSystem->Initialize();
+            auto gridSystem = alk::GameLogic::GetSystem<GridSystem>();
 
             // TODO: Figure out a better way to render the grid on screen
             gridRenderEntity = world.CreateEntity("Grid");

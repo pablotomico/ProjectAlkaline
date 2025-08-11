@@ -2,6 +2,16 @@
 
 #include "alkaline_lib.h"
 
+#include "systems/GameLogic.h"
+
+// GameLogicSystem::GameLogicSystem -> This is so it can use the base constructor
+#define ALK_GAMELOGICSYSTEM(T) \
+    public: \
+        using GameLogicSystem::GameLogicSystem; \
+        static GameLogicSystem* Create() { return new T(std::string(#T)); } \
+    private: \
+        static inline bool isRegistered = alk::GameLogic::RegisterSystemFactory<T>(Create); \
+
 namespace alk
 {
     namespace GameLogic
@@ -9,18 +19,18 @@ namespace alk
         class GameLogicSystem
         {
         private:
-            const char *name;
+            std::string name;
 
         public:
-            GameLogicSystem(const char *name);
+            GameLogicSystem(std::string name);
 
             virtual ~GameLogicSystem() {}
 
-            virtual void Initialize() {};
+            virtual bool Initialize() { return false; };
             virtual void Update() {};
             virtual void Shutdown() {};
 
-            const char *GetName()
+            std::string GetName()
             {
                 return name;
             }

@@ -1,7 +1,8 @@
 #pragma once
 
-#include "systems/GameLogicSystem.h"
 #include "raylib.h"
+
+#include "systems/GameLogicSystem.h"
 #include "components/GridPreviewComponent.h"
 #include "misc/GridHelpers.h"
 
@@ -11,6 +12,8 @@ namespace alk
     {
         class GridSystem : public GameLogicSystem
         {
+            ALK_GAMELOGICSYSTEM(GridSystem);
+
         private:
             std::vector<Vector2> positionArray;
             GridHelpers::GridPointState gridState[GRID_WIDTH][GRID_HEIGHT] = {GridHelpers::GRID_POINT_EMPTY};
@@ -20,9 +23,9 @@ namespace alk
             Vector2 CalculateGridPreviewEntityCenterOffset(GridPreviewComponent &gridPreviewComponent);
 
         public:
-            GridSystem() : GameLogicSystem("Grid Subsystem") {}
+            GridSystem(std::string name);
 
-            void Initialize() override;
+            bool Initialize() override;
             void Update() override;
             void Shutdown() override;
 

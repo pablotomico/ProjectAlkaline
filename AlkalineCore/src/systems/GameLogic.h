@@ -3,6 +3,7 @@
 #include <vector>
 #include <functional>
 #include <typeindex>
+#include <map>
 
 #include "alkaline_lib.h"
 #include "systems/Scene.h"
@@ -11,7 +12,7 @@ class BaseComponent;
 
 template <typename T>
 using Callback = std::function<void(T*)>;
-
+      
 namespace alk
 {
     namespace GameLogic
@@ -19,21 +20,41 @@ namespace alk
         class GameLogicSystem;
         using SystemFactoryFn = GameLogicSystem* (*)();
 
-        std::vector<alk::GameLogic::SystemFactoryFn>& GetFactoryList();
-        bool RegisterSystemFactory(SystemFactoryFn factory);
+        std::map<std::type_index, alk::GameLogic::SystemFactoryFn>& GetFactoryList();
 
-        inline std::vector<GameLogicSystem *>& GetSystems()
+        template <typename T>
+        inline bool RegisterSystemFactory(alk::GameLogic::SystemFactoryFn factory)
         {
-            static std::vector<GameLogicSystem *> subsystems;
+            GetFactoryList().emplace(typeid(T), factory);
+            return true;
+        }
+
+
+        inline std::vector<GameLogicSystem*>& GetSystems()
+        {
+            static std::vector<GameLogicSystem*> subsystems;
             return subsystems;
+        }
+
+        inline std::unordered_map<std::type_index, GameLogicSystem*>& GetSystemsMap()
+        {
+            static std::unordered_map<std::type_index, GameLogicSystem*> subsystemsMap;
+            return subsystemsMap;
+        }
+
+        template <typename T>
+        inline T* GetSystem()
+        {
+            return static_cast<T*>(GetSystemsMap()[typeid(T)]);
         }
 
         template <typename T>
         inline static std::unordered_map<std::type_index, std::vector<Callback<T>>> callbacks;
 
-        inline void AddSystem(GameLogicSystem *system)
+        inline void AddSystem(std::type_index type, GameLogicSystem* system)
         {
             GetSystems().push_back(system);
+            GetSystemsMap().emplace(type, system);
         }
 
         template <typename T>

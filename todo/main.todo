@@ -15,7 +15,9 @@ Build System:
 Alkaline Engine:
     ✔ Move main.cpp code to Application.cpp @done(25-08-10 15:19)
     ✔ Set up Script System @done(25-08-10 15:06)
+    ✔ Build macro for the GameLogicSystem declaration @done(25-08-11 18:26)
     ☐ Sweep 'const char *' to std::string
+    ☐ Move Grid + Gamemode entity definition out from Scene.cpp @high
     ☐ Move 'hard-coded' game states from Scene class into AlkalineGame project @high
     ☐ Move stuff to .cpp files instead of .h and check if it improves compile times @low
     Scene serialization:
