@@ -134,6 +134,12 @@ namespace alk
             GetOrCreateComponentArray<T>()->Add(entity.id, std::move(T(std::forward<Args>(args)...)));
         }
 
+        template <typename T, typename... Args>
+        void AddComponent(EntityId id, Args &&...args)
+        {
+            GetOrCreateComponentArray<T>()->Add(id, std::move(T(std::forward<Args>(args)...)));
+        }
+
         template <typename T>
         void RemoveComponent(Entity &entity)
         {

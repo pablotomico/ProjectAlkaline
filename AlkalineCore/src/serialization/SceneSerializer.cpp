@@ -19,7 +19,10 @@ void alk::SceneSerializer::DeserializeScene(alk::GameLogic::Scene &scene, const 
         Entity e = world.CreateEntity(name);
         for(auto& pair : components)
         {
-            // TODO: add components
+            std::string componentName = pair.first.as<std::string>();
+            sol::table componentTable = pair.second;
+
+            GetComponentDeserializerMap()[componentName](e.id, world, componentTable);
         }
     }
 }
@@ -32,12 +35,20 @@ void alk::SceneSerializer::SerializeScene(alk::GameLogic::Scene &scene, sol::tab
     sol::table entitiesTable = lua.create_table();
     for (auto& pair : world.GetAllEntities())
     {
+        EntityId id = pair.first;
         EntityMeta& em = pair.second;
         if (em.valid)
         {
             sol::table entityTable = lua.create_table();
             entityTable["name"] = em.name;
-            entityTable["components"] = lua.create_table();
+            sol::table componentsTable = lua.create_table();
+
+            for (auto& serializer : GetComponentSerializerList())
+            {
+                serializer(id, world, componentsTable);
+            }
+
+            entityTable["components"] = componentsTable;
             entitiesTable.add(entityTable);
         }
     }
