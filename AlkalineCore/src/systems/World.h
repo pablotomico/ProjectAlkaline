@@ -147,6 +147,12 @@ namespace alk
         }
 
         template <typename T>
+        T* GetComponent(EntityId entityId)
+        {
+            return GetOrCreateComponentArray<T>()->Get(entityId);
+        }
+
+        template <typename T>
         bool HasComponent(EntityId id)
         {
             return GetOrCreateComponentArray<T>()->Has(id);

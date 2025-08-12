@@ -1,10 +1,14 @@
 #include "RenderSystem.h"
+
+#include "systems/Scene.h"
+#include "systems/GameLogic.h"
+
 #include "components/RenderComponent.h"
 #include "components/TransformComponent.h"
 #include "components/GridPreviewComponent.h"
+#include "components/GridComponent.h"
 #include "components/GridEntityComponent.h"
-#include "systems/GameLogic.h"
-#include "systems/Scene.h"
+
 #include "misc/GridHelpers.h"
 
 // #include "tracy/Tracy.hpp"
@@ -121,7 +125,8 @@ namespace alk
             DrawSprite(renderComponent, transformComponent);
             break;
         case RenderSystem::RenderType::Grid:
-            DrawGrid(renderComponent, transformComponent);
+            alk::GameLogic::GridComponent *gridComponent = world->GetComponent<alk::GameLogic::GridComponent>(entity);
+            DrawGrid(renderComponent, gridComponent);
             break;
         }
     }
@@ -130,18 +135,13 @@ namespace alk
     {
         // ZoneScoped;
         RenderSystemData &renderSystemData = GetRenderSystemData();
-        std::vector<Vector2> &positionArray = transformComponent->GetPositionArray();
         auto renderData = renderComponent->GetRenderData<SpriteRenderData>();
         Color color = renderComponent->GetColor();
         if (renderData)
         {
             const SpriteRenderData &data = renderData->get();
             auto tex = renderSystemData.loadedTextures[data.texHandler];
-            // ZoneValue(positionArray.size());
-            for (Vector2 &position : positionArray)
-            {
-                DrawTexture(tex, (int) position.x, (int) position.y, color);
-            }
+            DrawTexture(tex, (int) transformComponent->position.x, (int) transformComponent->position.y, color);
         }
         else
         {
@@ -149,13 +149,13 @@ namespace alk
         }
     }
 
-    void RenderSystem::DrawGrid(RenderComponent *renderComponent, TransformComponent *transformComponent)
+    void RenderSystem::DrawGrid(RenderComponent* renderComponent, alk::GameLogic::GridComponent* gridComponent)
     {
         // ZoneScoped;
-        std::vector<Vector2> &positionArray = transformComponent->GetPositionArray();
+        std::vector<Vector2> &gridPoints = gridComponent->gridPoints;
         auto renderData = renderComponent->GetRenderData<GridRenderData>()->get();
 
-        for (Vector2 point : positionArray)
+        for (Vector2 point : gridPoints)
         {
             auto endPosX = (int) point.x + renderData.tileWidthHalf;
             auto endPosY = (int) point.y + renderData.tileHeightHalf;
@@ -184,7 +184,7 @@ namespace alk
             for (size_t i = 0; i < validMap.size(); i++)
             {
                 Vector2 gridPosition = validMap[i].first;
-                Vector2 worldPosition = alk::GameLogic::GridHelpers::GridToWorldPosition(gridPosition);
+                Vector2 worldPosition = alk::GameLogic::GridHelpers::GridToWorldPosition(gridPosition, gridComponent->width, gridComponent->height);
                 worldPosition.x -= (renderData.tileWidthHalf);
                 if(validMap[i].second)
                 {

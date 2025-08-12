@@ -15,7 +15,6 @@ namespace alk
             ALK_GAMELOGICSYSTEM(GridSystem);
 
         private:
-            std::vector<Vector2> positionArray;
             GridHelpers::GridPointState gridState[GRID_WIDTH][GRID_HEIGHT] = {GridHelpers::GRID_POINT_EMPTY};
 
             void EvaluateGridPreviewPlacement(GridPreviewComponent &gridPreviewComponent);
@@ -23,13 +22,9 @@ namespace alk
             Vector2 CalculateGridPreviewEntityCenterOffset(GridPreviewComponent &gridPreviewComponent);
 
         public:
-            GridSystem(std::string name);
-
             bool Initialize() override;
             void Update() override;
             void Shutdown() override;
-
-            const std::vector<Vector2>& GetGridArray() const { return positionArray; };
         };
     }
 }

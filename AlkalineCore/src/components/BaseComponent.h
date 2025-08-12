@@ -9,7 +9,7 @@ namespace alk
     protected:
         Entity* owner;
     public:
-        virtual ~BaseComponent() = default;
+        ~BaseComponent() = default;
         void SetOwner(Entity* entity){
             owner = entity;
         }

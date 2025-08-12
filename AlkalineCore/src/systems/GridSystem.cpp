@@ -9,33 +9,30 @@ namespace alk
 {
     namespace GameLogic
     {
-        GridSystem::GridSystem(std::string name) : GameLogicSystem(name)
-        {
-            positionArray.reserve(GRID_WIDTH * GRID_HEIGHT);
-
-            for (int i = 0; i < GRID_WIDTH; ++i)
-            {
-                for (int j = 0; j < GRID_HEIGHT; ++j)
-                {
-                    Vector2 gridPosition = { float(i), float(j) };
-                    Vector2 worldPosition = GridHelpers::GridToWorldPosition(gridPosition);
-                    positionArray.emplace_back(worldPosition);
-                }
-            }
-        }
-
         bool GridSystem::Initialize()
         {
+            World& world = alk::GameLogic::GetActiveScene()->GetWorld();
+            auto gridComponents = world.GetComponents<GridComponent>();
+
+            for (auto i = 0; i < gridComponents->components.size(); ++i)
+            {
+                EntityId id = gridComponents->entities[i];
+                TransformComponent* transform = world.GetComponent<TransformComponent>(id);
+                GridComponent& gridComponent = gridComponents->components[i];
+                gridComponent.GeneratePoints(transform->position);
+            }
+
+            
             return true;
         }
 
         void GridSystem::Update()
         {
-            alk::GameLogic::Scene *activeScene = alk::GameLogic::GetActiveScene();
+            World &world = alk::GameLogic::GetActiveScene()->GetWorld();
 
-            World &world = activeScene->GetWorld();
             auto renderComponents = world.GetComponents<RenderComponent>();
             auto transformComponents = world.GetComponents<TransformComponent>();
+            auto gridComponents = world.GetComponents<GridComponent>();
             auto gridPreviewComponents = world.GetComponents<GridPreviewComponent>();
             auto gridEntityComponents = world.GetComponents<GridEntityComponent>();
             
@@ -53,7 +50,13 @@ namespace alk
                 Vector2 worldPosition = GetScreenToWorld2D(GetMousePosition(), alk::RenderSystem::GetMainCamera());
 
                 auto gridPosition = GridHelpers::WorldToGridPosition(worldPosition);
-                auto worldPlacementPosition = GridHelpers::GridToWorldPosition(gridPosition);
+                auto worldPlacementPosition = Vector2{0, 0};
+                for (auto grid : gridComponents->components)
+                {
+                    worldPlacementPosition = GridHelpers::GridToWorldPosition(gridPosition, grid.width, grid.height);
+                    if (worldPlacementPosition.x > -1) 
+                        break;
+                }
 
                 // TODO Improve this so we don't directly reference render system
                 // Set the preview sprite position to the center of the selected tile position
@@ -61,7 +64,7 @@ namespace alk
                 worldPlacementPosition.x -= (renderData.width/2);
                 worldPlacementPosition.y = worldPlacementPosition.y - renderData.height + (TILE_HEIGHT * 2);
 
-                transformComponent.SetPosition(worldPlacementPosition);
+                transformComponent.position = worldPlacementPosition;
                 gridPreviewComponent.SetGridPosition(gridPosition);
                 
                 EvaluateGridPreviewPlacement(gridPreviewComponent);
@@ -86,7 +89,7 @@ namespace alk
                 size_t tranformIndex = transformComponents->entityIndices[id];
                 TransformComponent &transformComponent = transformComponents->components[tranformIndex];
 
-                Vector2 convertedGridPosition = GridHelpers::WorldToGridPosition(transformComponent.GetPosition());
+                Vector2 convertedGridPosition = GridHelpers::WorldToGridPosition(transformComponent.position);
                 gridEntityComponent.SetGridPosition(convertedGridPosition);
             }
         }

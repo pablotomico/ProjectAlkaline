@@ -4,6 +4,8 @@
 #include <unordered_map>
 #include <variant>
 #include "raylib.h"
+
+#include "components/GridComponent.h"
 #include "entities/Entity.h"
 
 namespace alk
@@ -103,6 +105,6 @@ namespace alk
         void EvaluateAndSortDirtyLayers();
         void DrawEntity(EntityId entityId, World *world);
         void DrawSprite(RenderComponent* renderComponent, TransformComponent* transformComponent);
-        void DrawGrid(RenderComponent* renderComponent, TransformComponent* transformComponent);
+        void DrawGrid(RenderComponent* renderComponent, alk::GameLogic::GridComponent* gridComponent);
     }
 }

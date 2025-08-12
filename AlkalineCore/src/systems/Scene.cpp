@@ -6,6 +6,7 @@
 #include "components/TransformComponent.h"
 #include "components/RenderComponent.h"
 #include "components/GridPreviewComponent.h"
+#include "components/GridComponent.h"
 #include "components/GridEntityComponent.h"
 
 #include "Debug/DebugUI.h"
@@ -23,9 +24,9 @@ namespace alk
 
             // TODO: Figure out a better way to render the grid on screen
             gridRenderEntity = world.CreateEntity("Grid");
+            world.AddComponent<TransformComponent>(gridRenderEntity);
             world.AddComponent<RenderComponent>(gridRenderEntity, RenderSystem::RenderType::Grid, TILE_WIDTH_HALF, TILE_HEIGHT_HALF, "assets/sprites/test_validGrid.png", "assets/sprites/test_invalidGrid.png");
-            world.AddComponent<TransformComponent>(gridRenderEntity, gridSystem->GetGridArray().size());
-            world.GetComponent<TransformComponent>(gridRenderEntity)->GetPositionArray() = gridSystem->GetGridArray();
+            world.AddComponent<GridComponent>(gridRenderEntity, GRID_WIDTH, GRID_HEIGHT);
             alk::RenderSystem::AddToScreen(gridRenderEntity);
 
             gamemodeEntity = world.CreateEntity("Gamemode");
@@ -52,7 +53,7 @@ namespace alk
                     buildings.push_back(newBuilding);
                     world.AddComponent<RenderComponent>(newBuilding, RenderSystem::RenderType::Sprite, "assets/sprites/test_castle.png", Color{ 255, 255, 255, 255 });
 
-                    Vector2 position = world.GetComponent<TransformComponent>(gridPlacementEntity)->GetPosition();
+                    Vector2 position = world.GetComponent<TransformComponent>(gridPlacementEntity)->position;
                     Vector2 gridPosition = GridHelpers::WorldToGridPosition(position);
                     world.AddComponent<TransformComponent>(newBuilding, position);
                     world.AddComponent<GridEntityComponent>(newBuilding, gridPosition);

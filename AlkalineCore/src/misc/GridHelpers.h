@@ -41,7 +41,7 @@ namespace alk
                 }
             }
 
-            inline Vector2 GridToWorldPosition(Vector2 gridPosition)
+            inline Vector2 GridToWorldPosition(Vector2 gridPosition, int width, int height)
             {
                 Vector2 worldPosition;
                 worldPosition.x = ((gridPosition.x - gridPosition.y) * TILE_WIDTH_HALF) + GRID_WORLD_START_POSITION.x;

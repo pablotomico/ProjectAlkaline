@@ -26,6 +26,7 @@ namespace alk
 
             virtual ~GameLogicSystem() {}
 
+            // IDEA: pass current world to these
             virtual bool Initialize() { return false; };
             virtual void Update() {};
             virtual void Shutdown() {};
