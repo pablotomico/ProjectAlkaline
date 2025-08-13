@@ -2,7 +2,6 @@
 
 #include "systems/GameLogic.h"
 #include "systems/GameLogicSystem.h"
-#include "systems/GamemodeLogicSystem.h"
 
 std::map<std::type_index, alk::GameLogic::SystemFactoryFn>& alk::GameLogic::GetFactoryList() {
     static std::map<std::type_index,alk::GameLogic::SystemFactoryFn> factories;

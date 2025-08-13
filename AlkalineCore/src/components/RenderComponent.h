@@ -7,6 +7,8 @@
 #include <optional>
 #include "systems/RenderSystem.h"
 
+#include "serialization/SceneSerializer.h"
+
 namespace alk
 {
     class RenderComponent : public BaseComponent
@@ -21,6 +23,19 @@ namespace alk
 
     public:
     
+        // ALK_COMPONENT_SERIALIZER(RenderComponent, 
+        // {
+        //     ALK_SERIALIZE_VALUE(renderType);
+        //     ALK_SERIALIZE_VECTOR2(dimensions);
+        // });
+
+        // ALK_COMPONENT_DESERIALIZER(RenderComponent, 
+        // {
+        //     ALK_DESERIALIZE_VALUE(renderType);
+        //     ALK_DESERIALIZE_VECTOR2(dimensions);
+        // });
+        
+    public:
         RenderComponent()
         {
             ALK_LOG("RenderComponent created successfully");

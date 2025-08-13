@@ -37,5 +37,9 @@ namespace alk
         inline Vector2 GetGridPosition() const {
             return gridPosition;
         };
+
+        // TODO
+        // ALK_COMPONENT_SERIALIZER(GridEntityComponent, {});
+        // ALK_COMPONENT_DESERIALIZER(GridEntityComponent, {});
     };
 }

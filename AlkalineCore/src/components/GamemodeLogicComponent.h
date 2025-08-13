@@ -1,9 +1,11 @@
 #pragma once
-#include "alkaline_lib.h"
-#include "BaseComponent.h"
 #include <functional>
 #include <vector>
+
+#include "alkaline_lib.h"
+#include "components/BaseComponent.h"
 #include "systems/GamemodeLogicSystem.h"
+#include "serialization/SceneSerializer.h"
 
 namespace alk
 {
@@ -26,6 +28,9 @@ namespace alk
             {
                 return stateChangeCallbacks;
             }
+
+            ALK_COMPONENT_SERIALIZER(GamemodeLogicComponent, {});
+            ALK_COMPONENT_DESERIALIZER(GamemodeLogicComponent, {});
         };
     }
 }

@@ -24,11 +24,12 @@ Alkaline Engine:
     Scene serialization:
         ✔ Define Lua structure for entities @done(25-08-10 23:46)
         ✔ Read entities list and create @done(25-08-10 23:46)
-        ☐ Register components for serialization
-        ☐ How to define components in Lua
-        ☐ Deserialize components
+        ✔ Register components for serialization @done(25-08-12 23:40)
+        ✔ How to define components in Lua @done(25-08-12 23:40)
+        ✔ Deserialize components @done(25-08-12 23:40)
         ✔ Then think about serializing @done(25-08-11 21:12)
-        ☐ Serialize components
+        ✔ Serialize components @done(25-08-12 23:40)
+        ☐ Create function/macro to serialize property based on type
     Script System:
         ☐ Move utils functions (Log) from main.cpp to the script system
         ☐ Generalize how to expose stuff to Lua

@@ -115,7 +115,14 @@ project "AlkalineGame"
 
    includedirs {
       "%{prj.name}/src",
-      "AlkalineCore/src"
+      "AlkalineCore/src",
+      "external",
+      "external/imgui",
+      "external/rlImGui",
+      "external/raylib",
+      "external/sol",
+      "external/lua",
+      "external/tracy/public/tracy"
    }
 
    links {
@@ -164,7 +171,7 @@ project "AlkalineClient"
       "imgui_rl",
       "raylib",
       "AlkalineCore",
-      -- "AlkalineGame",
+      "AlkalineGame",
    }
 
    libdirs {
@@ -177,6 +184,7 @@ project "AlkalineClient"
 
    filter "configurations:Debug"
       symbols "on"
+      linkoptions { "/WHOLEARCHIVE:AlkalineGame" }
       defines { "ALK_DEBUG", "TRACY_ENABLE" }
       
    filter "configurations:Release"
@@ -202,19 +210,30 @@ project "AlkalineEditor"
       "%{prj.name}/src",
       "AlkalineCore/src",
       "AlkalineGame/src",
+      "external",
+      "external/sol",
+      "external/lua",
+      "external/raylib",
    }
 
    links {
+      "imgui_rl",
+      "raylib",
       "AlkalineCore",
-      -- "AlkalineGame",
+      "AlkalineGame",
+   }
+
+   libdirs {
+      "lib"
    }
 
    filter "system:windows"
       systemversion "latest"
-      -- linkoptions { "/NODEFAULTLIB:LIBCMT" }
+      linkoptions { "/NODEFAULTLIB:LIBCMT" }
 
    filter "configurations:Debug"
       symbols "on"
+      linkoptions { "/WHOLEARCHIVE:AlkalineGame" }
       defines { "ALK_DEBUG", "ALK_EDITOR", "TRACY_ENABLE" }
       
    filter "configurations:Release"

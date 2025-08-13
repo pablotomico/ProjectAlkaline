@@ -2,21 +2,48 @@ return {
     entities = {
         [1] = {
             components = {
+                TransformComponent = {
+                    position = {
+                        y = 432,
+                        x = 32,
+                    },
+                },
             },
             name = "Test Entity 2",
         },
         [2] = {
             components = {
+                TestComponent = {
+                    path = "custompath",
+                },
+                TransformComponent = {
+                    position = {
+                        y = 534543,
+                        x = 123213,
+                    },
+                },
             },
             name = "Test Entity",
         },
         [3] = {
             components = {
+                TransformComponent = {
+                    position = {
+                        y = 0,
+                        x = 0,
+                    },
+                },
+                GridComponent = {
+                    height = 50,
+                    width = 50,
+                },
             },
             name = "Grid",
         },
         [4] = {
             components = {
+                GamemodeLogicComponent = {
+                },
             },
             name = "Gamemode",
         },

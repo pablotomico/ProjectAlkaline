@@ -12,21 +12,17 @@ namespace alk
     {
     public:
         Vector2 position;
-        TransformComponent() : position(Vector2{0, 0}) {};
-        TransformComponent(Vector2 position) : position(position) {};
+        TransformComponent() : position(Vector2{0, 0}) {}
+        TransformComponent(Vector2 position) : position(position) {}
 
         ALK_COMPONENT_SERIALIZER(TransformComponent, 
         {
-            table["position"] = lua.create_table();
-            table["position"]["x"] = component->position.x;
-            table["position"]["y"] = component->position.y;
+            ALK_SERIALIZE_VECTOR2(position);
         });
 
         ALK_COMPONENT_DESERIALIZER(TransformComponent,
         {
-            component->position.x = table["position"]["x"];
-            component->position.y = table["position"]["y"];
+            ALK_DESERIALIZE_VECTOR2(position);
         });
     };
-
 }

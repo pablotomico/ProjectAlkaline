@@ -8,6 +8,9 @@ return {
                 y = 534543,
             },
         },
+        TestComponent = {
+          path = "custompath"
+        },
       },
       name = "Test Entity",
     },

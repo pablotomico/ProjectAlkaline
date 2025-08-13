@@ -6,6 +6,8 @@
 
 #include "misc/GridHelpers.h"
 
+#include "serialization/SceneSerializer.h"
+
 namespace alk
 {
     namespace GameLogic
@@ -18,7 +20,8 @@ namespace alk
             std::vector<Vector2> gridPoints;
             bool isStatic = true;
             
-            GridComponent(int width, int height) : width(width), height(height) {};
+            GridComponent() {}
+            GridComponent(int width, int height) : width(width), height(height) {}
 
             void GeneratePoints(Vector2 worldPosition)
             {
@@ -42,6 +45,18 @@ namespace alk
                     }
                 }
             }
+
+            ALK_COMPONENT_SERIALIZER(GridComponent, 
+            {
+                ALK_SERIALIZE_VALUE(width);
+                ALK_SERIALIZE_VALUE(height);
+            });
+
+            ALK_COMPONENT_DESERIALIZER(GridComponent, 
+            {
+                ALK_DESERIALIZE_VALUE(width);
+                ALK_DESERIALIZE_VALUE(height);
+            });
         };
     }
 }
