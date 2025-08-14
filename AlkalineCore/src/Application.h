@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include "raylib.h"
 
 namespace alk
 {
@@ -13,7 +14,12 @@ namespace alk
         bool Initialize(const std::string& scenePath);
         int Run();
         void Shutdown();
-        
+
+        std::string name = "AlkalineGame";
+        int width = 1920;
+        int height = 1080;
+        int targetFPS = 144;
+
     private:
         void Update(const float deltaTime);
         void FixedUpdate(const float deltaTime);

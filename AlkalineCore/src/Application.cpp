@@ -19,6 +19,8 @@
 
 namespace alk
 {
+    
+
     Application::Application()
     {
     }
@@ -34,14 +36,26 @@ namespace alk
     bool Application::Initialize(const std::string& scenePath)
     {
         ALK_TRACE("ALKALINE ENGINE v0.1");
+        alk::ScriptSystem::Initialize(); // TODO: Investigate if loading internal things might expose them to the scripts as globals
+        
+        // TODO: Move to function
+        std::string gameSettingsPath = std::string(GetApplicationDirectory()) + "GameSettings.lua";
+        if (FileExists(gameSettingsPath.c_str()))
+        {
+            sol::table gameSettings = alk::ScriptSystem::LoadTableFromFile(gameSettingsPath);
+            name = gameSettings["ProjectName"].valid() ? gameSettings["ProjectName"] : name;
+            width = gameSettings["DefaultResolution"][1].valid() ? gameSettings["DefaultResolution"][1] : width;
+            height = gameSettings["DefaultResolution"][2].valid() ? gameSettings["DefaultResolution"][2] : height;
+            targetFPS = gameSettings["TargetFPS"].valid() ? gameSettings["TargetFPS"] : targetFPS;
+        }
+        
         SetTraceLogLevel(LOG_NONE);
-        InitWindow(1600, 900, "Alkaline");
-        SetTargetFPS(200);
+        InitWindow(width, height, name.c_str());
+        SetTargetFPS(targetFPS);
 
         // ImGui
         rlImGuiSetup(true);
 
-        alk::ScriptSystem::Initialize();
         // TODO: check file extension using raylib IsFileExtension
         sol::table sceneTable = alk::ScriptSystem::LoadTableFromFile(scenePath);
         ALK_ASSERT(sceneTable != sol::lua_nil, "Application::Initialize: Couldn't load scene with path: '%s'", scenePath);

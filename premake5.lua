@@ -186,6 +186,7 @@ project "AlkalineClient"
       symbols "on"
       linkoptions { "/WHOLEARCHIVE:AlkalineGame" }
       defines { "ALK_DEBUG", "TRACY_ENABLE" }
+      postbuildcommands { "{COPYFILE} %[AlkalineGame/config/GameSettings.lua] %[" .. targetpath .. "/GameSettings.lua]" }
       
    filter "configurations:Release"
       optimize "on"
