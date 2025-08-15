@@ -1,6 +1,6 @@
 #include "systems/Scene.h"
 #include "systems/World.h"
-#include "systems/GridSubsystem.h"
+#include "systems/subsystems/GridSubsystem.h"
 
 #include "components/GamemodeLogicComponent.h"
 #include "components/TransformComponent.h"

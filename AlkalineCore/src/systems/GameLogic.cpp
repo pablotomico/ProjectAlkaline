@@ -1,7 +1,7 @@
 #include <map>
 
 #include "systems/GameLogic.h"
-#include "systems/GameLogicSubsystem.h"
+#include "systems/subsystems/GameLogicSubsystem.h"
 
 std::map<std::type_index, alk::GameLogic::SubsystemFactoryFn>& alk::GameLogic::GetFactoryList() {
     static std::map<std::type_index,alk::GameLogic::SubsystemFactoryFn> factories;

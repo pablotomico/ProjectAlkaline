@@ -1,5 +1,5 @@
-#include "GameLogicSubsystem.h"
-#include "GameLogic.h"
+#include "systems/GameLogic.h"
+#include "systems/subsystems/GameLogicSubsystem.h"
 
 namespace alk
 {

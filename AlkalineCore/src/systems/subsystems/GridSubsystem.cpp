@@ -1,6 +1,7 @@
-#include "GridSubsystem.h"
-#include "GameLogic.h"
-#include "systems/GameLogicSubsystem.h"
+#include "systems/GameLogic.h"
+#include "systems/subsystems/GameLogicSubsystem.h"
+#include "systems/subsystems/GridSubsystem.h"
+
 #include "components/TransformComponent.h"
 #include "components/RenderComponent.h"
 #include "components/GridEntityComponent.h"

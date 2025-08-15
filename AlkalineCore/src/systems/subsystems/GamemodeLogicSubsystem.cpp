@@ -1,7 +1,7 @@
 #include "raylib.h"
 
 #include "systems/GameLogic.h"
-#include "systems/GamemodeLogicSubsystem.h"
+#include "systems/subsystems/GamemodeLogicSubsystem.h"
 
 #include "components/GamemodeLogicComponent.h"
 

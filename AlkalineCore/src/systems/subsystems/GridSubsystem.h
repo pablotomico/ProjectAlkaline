@@ -2,7 +2,7 @@
 
 #include "raylib.h"
 
-#include "systems/GameLogicSubsystem.h"
+#include "systems/subsystems/GameLogicSubsystem.h"
 #include "components/GridPreviewComponent.h"
 #include "misc/GridHelpers.h"
 
