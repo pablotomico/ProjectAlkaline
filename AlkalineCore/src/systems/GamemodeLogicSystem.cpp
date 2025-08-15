@@ -13,6 +13,9 @@ namespace alk
         {
             // Initialization logic for the gamemode logic system
             SetState(EGameState::BUILD);
+
+            alk::ScriptSystem::CreateNamespace("GamemodeLogicSystem")
+                .AddFunction("GetState", &GamemodeLogicSystem::GetStateString, this);
             return true;
         }
 

@@ -3,6 +3,8 @@
 #include "systems/GameLogic.h"
 #include "systems/GameLogicSystem.h"
 
+#include "systems/ScriptSystem.h"
+
 namespace alk
 {
     namespace GameLogic

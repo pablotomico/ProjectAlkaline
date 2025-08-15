@@ -67,10 +67,10 @@ void _log(char const *prefix, char const *msg, TextColor textColor, Args... args
     puts(textBuffer);
 }
 
-#define ALK_LOG(msg, ...) _log("LOG: ", msg, TEXT_COLOR_WHITE, ##__VA_ARGS__)
-#define ALK_TRACE(msg, ...) _log("TRACE: ", msg, TEXT_COLOR_GREEN, ##__VA_ARGS__)
-#define ALK_WARN(msg, ...) _log("WARN: ", msg, TEXT_COLOR_YELLOW, ##__VA_ARGS__)
-#define ALK_ERROR(msg, ...) _log("ERROR: ", msg, TEXT_COLOR_RED, ##__VA_ARGS__)
+#define ALK_LOG(msg, ...) _log("[LOG] ", msg, TEXT_COLOR_WHITE, ##__VA_ARGS__)
+#define ALK_TRACE(msg, ...) _log("[TRACE] ", msg, TEXT_COLOR_GREEN, ##__VA_ARGS__)
+#define ALK_WARN(msg, ...) _log("[WARN] ", msg, TEXT_COLOR_YELLOW, ##__VA_ARGS__)
+#define ALK_ERROR(msg, ...) _log("[ERROR] ", msg, TEXT_COLOR_RED, ##__VA_ARGS__)
 #define ALK_SUCCESS(msg, ...) _log("[TEST][SUCCESS] ", msg, TEXT_COLOR_GREEN, ##__VA_ARGS__)
 #define ALK_FAILURE(msg, ...) _log("[TEST][FAILURE] ", msg, TEXT_COLOR_RED, ##__VA_ARGS__)
 #define ALK_NOT_IMPLEMENTED(msg, ...) _log("[TODO] ", msg, TEXT_COLOR_RED, ##__VA_ARGS__)

@@ -5,14 +5,20 @@
 bool alk::ScriptSystem::Initialize()
 {
     sol::state& lua = GetState();
-    lua.open_libraries(sol::lib::base, sol::lib::package, sol::lib::string, sol::lib::math, sol::lib::table);
+    lua.open_libraries(sol::lib::base, sol::lib::package, sol::lib::string, sol::lib::math, sol::lib::table, sol::lib::debug);
     lua.set_panic([](lua_State *L)
                 {
         const char* message = lua_tostring(L, -1);
-        ALK_ERROR("LuaError: ", message);
+        ALK_ERROR("LuaError: %s", message);
         return 0; });
-
     return true;
+}
+
+void alk::ScriptSystem::AddToPackage(const std::string& path)
+{
+    sol::state& lua = GetState();
+    lua["package"]["path"] = lua["package"]["path"].get<std::string>() + ";" + GetWorkingDirectory() + path + "?.lua";
+    ALK_LOG("ScriptSystem::AddToPackage: '%s'", path.c_str());
 }
 
 sol::table alk::ScriptSystem::LoadTableFromFile(const std::string& filePath)
@@ -27,7 +33,7 @@ sol::table alk::ScriptSystem::LoadTableFromFile(const std::string& filePath)
     }
 
     sol::table result = script();
-    ALK_LOG("ScriptSystem::LoadTableFromFile: loaded file with path: '%s'", filePath.c_str());
+    // ALK_LOG("ScriptSystem::LoadTableFromFile: loaded file with path: '%s'", filePath.c_str());
     return result;
 }
 

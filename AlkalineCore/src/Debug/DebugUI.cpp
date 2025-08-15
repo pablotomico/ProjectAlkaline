@@ -40,6 +40,10 @@ namespace alk
             for (const auto& text : textMap) {
                 ImGui::Text("%s: %s", text.first, text.second);
             }
+            ImGui::Separator();
+            if (ImGui::Button("Run Lua Test")) {
+                alk::ScriptSystem::RunFile(std::string(GetWorkingDirectory()) + "/AlkalineGame/scripts/test.lua");
+            }
             
             ImGui::Separator();
             ImGui::Text("Buttons");

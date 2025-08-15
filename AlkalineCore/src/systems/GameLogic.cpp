@@ -20,10 +20,7 @@ void alk::GameLogic::Initialize(Scene scene)
     for (GameLogicSystem* system : GetSystems())
     {
         bool success = system->Initialize();
-        if(success)
-            ALK_TRACE("GameLogic: Initialized %s", system->GetName().c_str());
-        else
-            ALK_ERROR("GameLogic: Fail to initialize %s", system->GetName().c_str());
+        ALK_ASSERT(system->Initialize(), "GameLogic: Fail to initialize %s", system->GetName().c_str());
     }
 }
 

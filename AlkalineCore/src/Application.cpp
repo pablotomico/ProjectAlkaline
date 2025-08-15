@@ -36,6 +36,7 @@ namespace alk
     bool Application::Initialize(const std::string& scenePath)
     {
         ALK_TRACE("ALKALINE ENGINE v0.1");
+        ALK_LOG("Working Directory: '%s'", GetWorkingDirectory());
         alk::ScriptSystem::Initialize(); // TODO: Investigate if loading internal things might expose them to the scripts as globals
         
         // TODO: Move to function
@@ -43,7 +44,11 @@ namespace alk
         if (FileExists(gameSettingsPath.c_str()))
         {
             sol::table gameSettings = alk::ScriptSystem::LoadTableFromFile(gameSettingsPath);
-            name = gameSettings["ProjectName"].valid() ? gameSettings["ProjectName"] : name;
+            if (gameSettings["ProjectName"].valid())
+            {
+                name = gameSettings["ProjectName"];
+                alk::ScriptSystem::AddToPackage("/" + name + "/scripts/");
+            }
             width = gameSettings["DefaultResolution"][1].valid() ? gameSettings["DefaultResolution"][1] : width;
             height = gameSettings["DefaultResolution"][2].valid() ? gameSettings["DefaultResolution"][2] : height;
             targetFPS = gameSettings["TargetFPS"].valid() ? gameSettings["TargetFPS"] : targetFPS;
