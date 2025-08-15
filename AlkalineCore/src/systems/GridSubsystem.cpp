@@ -1,6 +1,6 @@
-#include "GridSystem.h"
+#include "GridSubsystem.h"
 #include "GameLogic.h"
-#include "systems/GameLogicSystem.h"
+#include "systems/GameLogicSubsystem.h"
 #include "components/TransformComponent.h"
 #include "components/RenderComponent.h"
 #include "components/GridEntityComponent.h"
@@ -9,7 +9,7 @@ namespace alk
 {
     namespace GameLogic
     {
-        bool GridSystem::Initialize()
+        bool GridSubsystem::Initialize()
         {
             World& world = alk::GameLogic::GetActiveScene()->GetWorld();
             auto gridComponents = world.GetComponents<GridComponent>();
@@ -26,7 +26,7 @@ namespace alk
             return true;
         }
 
-        void GridSystem::Update()
+        void GridSubsystem::Update()
         {
             World &world = alk::GameLogic::GetActiveScene()->GetWorld();
 
@@ -94,12 +94,12 @@ namespace alk
             }
         }
 
-        void GridSystem::Shutdown()
+        void GridSubsystem::Shutdown()
         {
             ALK_LOG("Shutting down Grid subsystem");
         }
 
-        void GridSystem::EvaluateGridPreviewPlacement(GridPreviewComponent &gridPreviewComponent)
+        void GridSubsystem::EvaluateGridPreviewPlacement(GridPreviewComponent &gridPreviewComponent)
         {
             std::vector<std::pair<Vector2, bool>>& validMap = gridPreviewComponent.GetValidMap();
             Vector2 gridPosition = gridPreviewComponent.GetGridPosition();
@@ -126,7 +126,7 @@ namespace alk
             }
         }
 
-        bool GridSystem::EvaluateTileValid(Vector2 gridPosition)
+        bool GridSubsystem::EvaluateTileValid(Vector2 gridPosition)
         {
             if(gridPosition.x < 0 || gridPosition.x >= GRID_WIDTH || gridPosition.y < 0 || gridPosition.y >= GRID_HEIGHT)
             {
@@ -139,7 +139,7 @@ namespace alk
             return true;
         }
 
-        Vector2 GridSystem::CalculateGridPreviewEntityCenterOffset(GridPreviewComponent &gridPreviewComponent)
+        Vector2 GridSubsystem::CalculateGridPreviewEntityCenterOffset(GridPreviewComponent &gridPreviewComponent)
         {
             Vector2 dimensions = gridPreviewComponent.GetDimensions();
             Vector2 centerOffset = { 0, 0 };

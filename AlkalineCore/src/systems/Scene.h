@@ -18,7 +18,7 @@ namespace alk
             REWARDS,
         };
         
-        class GridSystem;
+        class GridSubsystem;
 
         class Scene
         {

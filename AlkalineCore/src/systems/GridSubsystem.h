@@ -2,7 +2,7 @@
 
 #include "raylib.h"
 
-#include "systems/GameLogicSystem.h"
+#include "systems/GameLogicSubsystem.h"
 #include "components/GridPreviewComponent.h"
 #include "misc/GridHelpers.h"
 
@@ -10,9 +10,9 @@ namespace alk
 {
     namespace GameLogic
     {
-        class GridSystem : public GameLogicSystem
+        class GridSubsystem : public GameLogicSubsystem
         {
-            ALK_GAMELOGICSYSTEM(GridSystem);
+            ALK_GAMELOGICSUBSYSTEM(GridSubsystem);
 
         private:
             GridHelpers::GridPointState gridState[GRID_WIDTH][GRID_HEIGHT] = {GridHelpers::GRID_POINT_EMPTY};

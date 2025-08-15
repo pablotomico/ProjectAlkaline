@@ -1,10 +1,10 @@
 #include <map>
 
 #include "systems/GameLogic.h"
-#include "systems/GameLogicSystem.h"
+#include "systems/GameLogicSubsystem.h"
 
-std::map<std::type_index, alk::GameLogic::SystemFactoryFn>& alk::GameLogic::GetFactoryList() {
-    static std::map<std::type_index,alk::GameLogic::SystemFactoryFn> factories;
+std::map<std::type_index, alk::GameLogic::SubsystemFactoryFn>& alk::GameLogic::GetFactoryList() {
+    static std::map<std::type_index,alk::GameLogic::SubsystemFactoryFn> factories;
     return factories;
 }
 
@@ -12,12 +12,12 @@ void alk::GameLogic::Initialize(Scene scene)
 {
     for (auto& pair : GetFactoryList()) {
         auto system = pair.second();
-        AddSystem(pair.first, system);
+        AddSubsystem(pair.first, system);
     }
 
     GameLogic::LoadScene(std::move(scene), true);
     
-    for (GameLogicSystem* system : GetSystems())
+    for (GameLogicSubsystem* system : GetSubsystems())
     {
         bool success = system->Initialize();
         ALK_ASSERT(system->Initialize(), "GameLogic: Fail to initialize %s", system->GetName().c_str());
@@ -26,7 +26,7 @@ void alk::GameLogic::Initialize(Scene scene)
 
 void alk::GameLogic::Update(const float deltaTime)
 {
-    for (GameLogicSystem* system : GetSystems())
+    for (GameLogicSubsystem* system : GetSubsystems())
     {
         if (system)
         {

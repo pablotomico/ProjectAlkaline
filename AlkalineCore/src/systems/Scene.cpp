@@ -1,6 +1,6 @@
 #include "systems/Scene.h"
 #include "systems/World.h"
-#include "systems/GridSystem.h"
+#include "systems/GridSubsystem.h"
 
 #include "components/GamemodeLogicComponent.h"
 #include "components/TransformComponent.h"
@@ -20,7 +20,7 @@ namespace alk
         {
             ALK_LOG("Initializing Scene '%s'", name.c_str());
 
-            auto gridSystem = alk::GameLogic::GetSystem<GridSystem>();
+            auto gridSystem = alk::GameLogic::GetSubsystem<GridSubsystem>();
 
             // TODO: Figure out a better way to render the grid on screen
             gridRenderEntity = world.CreateEntity("Grid");

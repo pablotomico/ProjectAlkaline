@@ -17,44 +17,44 @@ namespace alk
 {
     namespace GameLogic
     {
-        class GameLogicSystem;
-        using SystemFactoryFn = GameLogicSystem* (*)();
+        class GameLogicSubsystem;
+        using SubsystemFactoryFn = GameLogicSubsystem* (*)();
 
-        std::map<std::type_index, alk::GameLogic::SystemFactoryFn>& GetFactoryList();
+        std::map<std::type_index, alk::GameLogic::SubsystemFactoryFn>& GetFactoryList();
 
         template <typename T>
-        inline bool RegisterSystemFactory(alk::GameLogic::SystemFactoryFn factory)
+        inline bool RegisterSystemFactory(alk::GameLogic::SubsystemFactoryFn factory)
         {
             GetFactoryList().emplace(typeid(T), factory);
             return true;
         }
 
 
-        inline std::vector<GameLogicSystem*>& GetSystems()
+        inline std::vector<GameLogicSubsystem*>& GetSubsystems()
         {
-            static std::vector<GameLogicSystem*> subsystems;
+            static std::vector<GameLogicSubsystem*> subsystems;
             return subsystems;
         }
 
-        inline std::unordered_map<std::type_index, GameLogicSystem*>& GetSystemsMap()
+        inline std::unordered_map<std::type_index, GameLogicSubsystem*>& GetSubsystemsMap()
         {
-            static std::unordered_map<std::type_index, GameLogicSystem*> subsystemsMap;
+            static std::unordered_map<std::type_index, GameLogicSubsystem*> subsystemsMap;
             return subsystemsMap;
         }
 
         template <typename T>
-        inline T* GetSystem()
+        inline T* GetSubsystem()
         {
-            return static_cast<T*>(GetSystemsMap()[typeid(T)]);
+            return static_cast<T*>(GetSubsystemsMap()[typeid(T)]);
         }
 
         template <typename T>
         inline static std::unordered_map<std::type_index, std::vector<Callback<T>>> callbacks;
 
-        inline void AddSystem(std::type_index type, GameLogicSystem* system)
+        inline void AddSubsystem(std::type_index type, GameLogicSubsystem* system)
         {
-            GetSystems().push_back(system);
-            GetSystemsMap().emplace(type, system);
+            GetSubsystems().push_back(system);
+            GetSubsystemsMap().emplace(type, system);
         }
 
         template <typename T>

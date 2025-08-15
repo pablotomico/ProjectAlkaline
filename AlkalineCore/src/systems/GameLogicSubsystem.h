@@ -4,11 +4,11 @@
 
 #include "systems/GameLogic.h"
 
-// GameLogicSystem::GameLogicSystem -> This is so it can use the base constructor
-#define ALK_GAMELOGICSYSTEM(T) \
+// GameLogicSubsystem::GameLogicSubsystem -> This is so it can use the base constructor
+#define ALK_GAMELOGICSUBSYSTEM(T) \
     public: \
-        using GameLogicSystem::GameLogicSystem; \
-        static GameLogicSystem* Create() { return new T(std::string(#T)); } \
+        using GameLogicSubsystem::GameLogicSubsystem; \
+        static GameLogicSubsystem* Create() { return new T(std::string(#T)); } \
     private: \
         static inline bool isRegistered = alk::GameLogic::RegisterSystemFactory<T>(Create); \
 
@@ -16,15 +16,15 @@ namespace alk
 {
     namespace GameLogic
     {
-        class GameLogicSystem
+        class GameLogicSubsystem
         {
         private:
             std::string name;
 
         public:
-            GameLogicSystem(std::string name);
+            GameLogicSubsystem(std::string name);
 
-            virtual ~GameLogicSystem() {}
+            virtual ~GameLogicSubsystem() {}
 
             // IDEA: pass current world to these
             virtual bool Initialize() { return false; };

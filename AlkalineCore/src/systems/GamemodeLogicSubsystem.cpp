@@ -1,7 +1,7 @@
 #include "raylib.h"
 
 #include "systems/GameLogic.h"
-#include "systems/GamemodeLogicSystem.h"
+#include "systems/GamemodeLogicSubsystem.h"
 
 #include "components/GamemodeLogicComponent.h"
 
@@ -9,17 +9,17 @@ namespace alk
 {
     namespace GameLogic
     {
-        bool GamemodeLogicSystem::Initialize()
+        bool GamemodeLogicSubsystem::Initialize()
         {
             // Initialization logic for the gamemode logic system
             SetState(EGameState::BUILD);
 
-            alk::ScriptSystem::CreateNamespace("GamemodeLogicSystem")
-                .AddFunction("GetState", &GamemodeLogicSystem::GetStateString, this);
+            alk::ScriptSystem::CreateNamespace("GamemodeLogicSubsystem")
+                .AddFunction("GetState", &GamemodeLogicSubsystem::GetStateString, this);
             return true;
         }
 
-        void GamemodeLogicSystem::Update()
+        void GamemodeLogicSubsystem::Update()
         {
             if(IsKeyPressed(KEY_SPACE))
             {
@@ -28,12 +28,12 @@ namespace alk
             }
         }
 
-        void GamemodeLogicSystem::Shutdown()
+        void GamemodeLogicSubsystem::Shutdown()
         {
             ALK_LOG("Shutting down Gamemode Logic subsystem");
         }
 
-        void GamemodeLogicSystem::SetState(EGameState newState)
+        void GamemodeLogicSubsystem::SetState(EGameState newState)
         {
             if (currentState != newState)
             {
@@ -43,7 +43,7 @@ namespace alk
                 alk::GameLogic::Scene *activeScene = alk::GameLogic::GetActiveScene();
                 if (activeScene == nullptr)
                 {
-                    ALK_LOG("GamemodeLogicSystem::SetState: Active scene is null, cannot find gamemode logic components.");
+                    ALK_LOG("GamemodeLogicSubsystem::SetState: Active scene is null, cannot find gamemode logic components.");
                     return;
                 }
                 World &world = activeScene->GetWorld();
@@ -62,7 +62,7 @@ namespace alk
             }
         }
 
-        EGameState GamemodeLogicSystem::TransitionToNextState()
+        EGameState GamemodeLogicSubsystem::TransitionToNextState()
         {
             switch (currentState)
             {

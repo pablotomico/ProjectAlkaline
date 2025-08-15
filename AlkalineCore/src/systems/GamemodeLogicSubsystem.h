@@ -1,7 +1,7 @@
 #pragma once
 
 #include "systems/GameLogic.h"
-#include "systems/GameLogicSystem.h"
+#include "systems/GameLogicSubsystem.h"
 
 #include "systems/ScriptSystem.h"
 
@@ -9,9 +9,9 @@ namespace alk
 {
     namespace GameLogic
     {
-        class GamemodeLogicSystem : public GameLogicSystem
+        class GamemodeLogicSubsystem : public GameLogicSubsystem
         {
-            ALK_GAMELOGICSYSTEM(GamemodeLogicSystem);
+            ALK_GAMELOGICSUBSYSTEM(GamemodeLogicSubsystem);
 
         public:
             bool Initialize() override;

@@ -4,7 +4,7 @@
 
 #include "alkaline_lib.h"
 #include "components/BaseComponent.h"
-#include "systems/GamemodeLogicSystem.h"
+#include "systems/GamemodeLogicSubsystem.h"
 #include "serialization/SceneSerializer.h"
 
 namespace alk

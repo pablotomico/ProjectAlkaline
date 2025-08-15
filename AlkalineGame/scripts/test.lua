@@ -1,6 +1,6 @@
 function Run()
     print("Running test.lua");
-    print("GamemodeLogicSystem.GetState() = " .. GamemodeLogicSystem.GetState())
+    print("GamemodeLogicSubsystem.GetState() = " .. GamemodeLogicSubsystem.GetState())
     TestError()
 end
 
