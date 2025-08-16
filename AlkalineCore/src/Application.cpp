@@ -14,6 +14,7 @@
 #include "systems/ScriptSystem.h"
 #include "systems/GameLogic.h"
 #include "systems/RenderSystem.h"
+#include "systems/InputSystem.h"
 
 #include "serialization/SceneSerializer.h"
 
@@ -71,6 +72,7 @@ namespace alk
         // alk::SceneSerializer::DeserializeScene();
         alk::GameLogic::Initialize(std::move(testScene));
         alk::RenderSystem::Initialize();
+        alk::InputSystem::Initialize();
         
         ALK_TRACE("APPLICATION INITIALIZED SUCCESSFULLY");
         return true;
@@ -105,6 +107,7 @@ namespace alk
      */
     void Application::Update(const float deltaTime)
     {
+        alk::InputSystem::Update(deltaTime);
         alk::GameLogic::Update(deltaTime);
 
         float cameraSpeed = 300.0f;

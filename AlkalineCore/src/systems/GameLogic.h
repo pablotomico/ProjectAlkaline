@@ -17,6 +17,9 @@ namespace alk
 {
     namespace GameLogic
     {
+        void Initialize(Scene scene);
+        void Update(const float deltaTime);
+        
         class GameLogicSubsystem;
         using SubsystemFactoryFn = GameLogicSubsystem* (*)();
 
@@ -74,9 +77,6 @@ namespace alk
                 callback(obj);
             }
         }
-
-        void Initialize(Scene scene);
-        void Update(const float deltaTime);
 
         // Scene
         inline std::unordered_map<std::string, Scene>& GetScenes()

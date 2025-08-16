@@ -44,6 +44,10 @@ namespace alk
             if (ImGui::Button("Run Lua Test")) {
                 alk::ScriptSystem::RunFile(std::string(GetWorkingDirectory()) + "/AlkalineGame/scripts/test.lua");
             }
+
+            if (ImGui::Button("Send TestNotification")) {
+                alk::ScriptSystem::SendNotification("TestNotification", 12, "param");
+            }
             
             ImGui::Separator();
             ImGui::Text("Buttons");

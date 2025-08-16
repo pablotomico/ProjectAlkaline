@@ -106,6 +106,9 @@
 			"valarray": "cpp"
 		},
 		"bg3ModHelper.rootModPath": "c:\\dev\\ProjectAlkaline",
-		"bg3ModHelper.packingPriority": 0
+		"bg3ModHelper.packingPriority": 0,
+		"[cpp]": {
+			"editor.defaultFormatter": null
+		}
 	}
 }
