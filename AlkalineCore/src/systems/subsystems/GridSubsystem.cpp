@@ -15,12 +15,15 @@ namespace alk
             World& world = alk::GameLogic::GetActiveScene()->GetWorld();
             auto gridComponents = world.GetComponents<GridComponent>();
 
-            for (auto i = 0; i < gridComponents->components.size(); ++i)
+            if (gridComponents->Size() == 0 ) return false;
+
+            auto tranformComponents = world.GetComponents<TransformComponent>();
+
+            for (auto i = 0; i < gridComponents->Size(); ++i)
             {
-                EntityId id = gridComponents->entities[i];
-                TransformComponent* transform = world.GetComponent<TransformComponent>(id);
-                GridComponent& gridComponent = gridComponents->components[i];
-                gridComponent.GeneratePoints(transform->position);
+                auto pair = gridComponents->Get(i);
+                TransformComponent* transform = tranformComponents->Get(pair.first);
+                pair.second->GeneratePoints(transform->position);
             }
 
             

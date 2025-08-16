@@ -55,6 +55,11 @@ namespace alk
             }
         }
 
+        std::pair<EntityId, T*> Get(int index)
+        {
+            return std::make_pair(entities[index], &components[index]);
+        }
+
         bool Has(EntityId entity)
         {
             return entityIndices.find(entity) != entityIndices.end();
@@ -83,6 +88,11 @@ namespace alk
             entityIndices.erase(it);
         }
 
+        size_t Size()
+        {
+            return components.size();
+        }
+
         std::vector<T> components;
         std::vector<EntityId> entities;
         std::unordered_map<EntityId, size_t> entityIndices;
@@ -94,22 +104,22 @@ namespace alk
         Entity CreateEntity()
         {
             EntityId id = nextEntityId++;
-            entities[id] = EntityMeta{id, std::format("New Entity({})", id)};
-            return Entity{id, entities[id].name.c_str()};
+            entities[id] = EntityMeta{ id, std::format("New Entity({})", id) };
+            return Entity{ id, entities[id].name.c_str() };
         }
 
         Entity CreateEntity(std::string name)
         {
             EntityId id = nextEntityId++;
-            entities[id] = EntityMeta{id, name};
-            return Entity{id, name};
+            entities[id] = EntityMeta{ id, name };
+            return Entity{ id, name };
         }
 
         Entity GetEntity(EntityId id)
         {
             if (entities.find(id) != entities.end())
             {
-                return Entity{id, entities[id].name};
+                return Entity{ id, entities[id].name };
             }
             else
             {
@@ -117,7 +127,7 @@ namespace alk
             }
         }
 
-        void DestroyEntity(Entity &entity)
+        void DestroyEntity(Entity& entity)
         {
             ALK_ASSERT(IsValid(entity), "World::DestroyEntity entity is not valid!");
             for (auto& [type, array] : componentArrays)
@@ -129,7 +139,7 @@ namespace alk
         }
 
         template <typename T, typename... Args>
-        void AddComponent(Entity &entity, Args &&...args)
+        void AddComponent(Entity& entity, Args &&...args)
         {
             GetOrCreateComponentArray<T>()->Add(entity.id, std::move(T(std::forward<Args>(args)...)));
         }
@@ -141,13 +151,13 @@ namespace alk
         }
 
         template <typename T>
-        void RemoveComponent(Entity &entity)
+        void RemoveComponent(Entity& entity)
         {
             GetOrCreateComponentArray<T>()->Remove(entity.id);
         }
 
         template <typename T>
-        T* GetComponent(Entity &entity)
+        T* GetComponent(Entity& entity)
         {
             return GetOrCreateComponentArray<T>()->Get(entity.id);
         }
@@ -164,7 +174,7 @@ namespace alk
             return GetOrCreateComponentArray<T>()->Has(id);
         }
 
-        bool IsValid(Entity &entity)
+        bool IsValid(Entity& entity)
         {
             return (entities.find(entity.id) != entities.end()) && entities[entity.id].valid;
         }
@@ -186,7 +196,7 @@ namespace alk
         std::unordered_map<EntityId, EntityMeta> entities;
 
         template <typename T>
-        ComponentArray<T> *GetOrCreateComponentArray()
+        ComponentArray<T>* GetOrCreateComponentArray()
         {
             std::type_index index = std::type_index(typeid(T));
             if (componentArrays.find(index) == componentArrays.end())

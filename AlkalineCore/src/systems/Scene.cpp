@@ -20,21 +20,21 @@ namespace alk
         {
             ALK_LOG("Initializing Scene '%s'", name.c_str());
 
-            auto gridSystem = alk::GameLogic::GetSubsystem<GridSubsystem>();
-
+            
             // TODO: Figure out a better way to render the grid on screen
-            gridRenderEntity = world.CreateEntity("Grid");
-            world.AddComponent<TransformComponent>(gridRenderEntity);
-            world.AddComponent<RenderComponent>(gridRenderEntity, RenderSystem::RenderType::Grid, TILE_WIDTH_HALF, TILE_HEIGHT_HALF, "assets/sprites/test_validGrid.png", "assets/sprites/test_invalidGrid.png");
-            world.AddComponent<GridComponent>(gridRenderEntity, GRID_WIDTH, GRID_HEIGHT);
-            alk::RenderSystem::AddToScreen(gridRenderEntity);
+            // auto gridSystem = alk::GameLogic::GetSubsystem<GridSubsystem>();
+            // gridRenderEntity = world.CreateEntity("Grid");
+            // world.AddComponent<TransformComponent>(gridRenderEntity);
+            // world.AddComponent<RenderComponent>(gridRenderEntity, RenderSystem::RenderType::Grid, TILE_WIDTH_HALF, TILE_HEIGHT_HALF, "assets/sprites/test_validGrid.png", "assets/sprites/test_invalidGrid.png");
+            // world.AddComponent<GridComponent>(gridRenderEntity, GRID_WIDTH, GRID_HEIGHT);
+            // alk::RenderSystem::AddToScreen(gridRenderEntity);
 
-            gamemodeEntity = world.CreateEntity("Gamemode");
+            // gamemodeEntity = world.CreateEntity("Gamemode");
 
-            world.AddComponent<GamemodeLogicComponent>(gamemodeEntity);
-            world.GetComponent<GamemodeLogicComponent>(gamemodeEntity)->RegisterOnStateChangedCallback([this](EGameState oldState, EGameState newState, const char* stateString) {
-                OnGameStateChanged(oldState, newState, stateString);
-            });
+            // world.AddComponent<GamemodeLogicComponent>(gamemodeEntity);
+            // world.GetComponent<GamemodeLogicComponent>(gamemodeEntity)->RegisterOnStateChangedCallback([this](EGameState oldState, EGameState newState, const char* stateString) {
+            //     OnGameStateChanged(oldState, newState, stateString);
+            // });
         }
 
         void Scene::Update()

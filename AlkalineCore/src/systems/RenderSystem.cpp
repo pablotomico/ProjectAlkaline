@@ -8,6 +8,7 @@
 #include "components/GridPreviewComponent.h"
 #include "components/GridComponent.h"
 #include "components/GridEntityComponent.h"
+#include "components/SpriteComponent.h"
 
 #include "misc/GridHelpers.h"
 
@@ -17,24 +18,32 @@ namespace alk
 {
     void RenderSystem::Initialize()
     {
-        Camera2D &mainCamera = RenderSystem::GetMainCamera();
-        mainCamera = {0};
-        mainCamera.target = Vector2{0.0f, 0.0f};
-        mainCamera.offset = Vector2{0.0f, 0.0f};
+        // TODO: find CameraComponents
+        Camera2D& mainCamera = RenderSystem::GetMainCamera();
+        mainCamera = { 0 };
+        mainCamera.target = Vector2{ 0.0f, 0.0f };
+        mainCamera.offset = Vector2{ 0.0f, 0.0f };
         mainCamera.rotation = 0.0f;
         mainCamera.zoom = 1.0f;
+
+        World& world = alk::GameLogic::GetWorld();
+        auto spriteComponents = world.GetComponents<SpriteComponent>();
+        for (auto i = 0; i < spriteComponents->components.size(); ++i)
+        {
+            auto pair = spriteComponents->Get(i);
+            pair.second->texHandler = LoadRenderSystemTexture(pair.second->path.c_str());
+        }
     }
 
     void RenderSystem::Shutdown()
-    {
-    }
+    {}
 
-    void RenderSystem::AddToScreen(Entity &entity)
+    void RenderSystem::AddToScreen(Entity& entity)
     {
-        alk::GameLogic::Scene *activeScene = alk::GameLogic::GetActiveScene();
-        World &world = activeScene->GetWorld();
+        alk::GameLogic::Scene* activeScene = alk::GameLogic::GetActiveScene();
+        World& world = activeScene->GetWorld();
         world.GetComponent<RenderComponent>(entity)->SetVisible(true);
-        RenderSystemData &renderData = GetRenderSystemData();
+        RenderSystemData& renderData = GetRenderSystemData();
         renderData.dirtyLayers = true;
 
         ALK_LOG("Added entity to screen");
@@ -47,11 +56,20 @@ namespace alk
 
         EvaluateAndSortDirtyLayers();
 
-        RenderSystemData &renderData = GetRenderSystemData();
-        World &world = alk::GameLogic::GetWorld();
-        for(auto entityId : renderData.drawables)
+        RenderSystemData& renderData = GetRenderSystemData();
+        World& world = alk::GameLogic::GetWorld();
+        // for (auto entityId : renderData.drawables)
+        // {
+        //     DrawEntity(entityId, &world);
+        // }
+        auto spriteComponents = world.GetComponents<SpriteComponent>();
+        auto transformComponents = world.GetComponents<TransformComponent>();
+        for (auto i = 0; i < spriteComponents->components.size(); ++i)
         {
-            DrawEntity(entityId, &world);
+            auto pair = spriteComponents->Get(i);
+            TransformComponent* transformComponent = transformComponents->Get(pair.first);
+            auto& tex = renderData.loadedTextures[pair.second->texHandler];
+            DrawTexture(tex, (int) transformComponent->position.x, (int) transformComponent->position.y, pair.second->color);
         }
 
         EndMode2D();
@@ -59,25 +77,25 @@ namespace alk
 
     void RenderSystem::EvaluateAndSortDirtyLayers()
     {
-        RenderSystemData &renderData = GetRenderSystemData();
+        RenderSystemData& renderData = GetRenderSystemData();
         if (renderData.dirtyLayers)
         {
-            World &world = alk::GameLogic::GetWorld();
+            World& world = alk::GameLogic::GetWorld();
             auto renderComponents = world.GetComponents<RenderComponent>();
             auto gridEntityComponents = world.GetComponents<GridEntityComponent>();
             renderData.drawables.clear();
 
             for (auto i = 0; i < renderComponents->components.size(); ++i)
             {
-                RenderComponent &renderComponent = renderComponents->components[i];
+                RenderComponent& renderComponent = renderComponents->components[i];
                 EntityId id = renderComponents->entities[i];
 
                 auto it = gridEntityComponents->entityIndices.find(id);
                 if (it != gridEntityComponents->entityIndices.end())
                 {
                     size_t gridEntityIndex = it->second;
-                    GridEntityComponent &gridEntityComponent = gridEntityComponents->components[gridEntityIndex];
-                    renderComponent.SetDrawLayer((uint)gridEntityComponent.GetGridPosition().x + (uint)gridEntityComponent.GetGridPosition().y);
+                    GridEntityComponent& gridEntityComponent = gridEntityComponents->components[gridEntityIndex];
+                    renderComponent.SetDrawLayer((uint) gridEntityComponent.GetGridPosition().x + (uint) gridEntityComponent.GetGridPosition().y);
                 }
 
                 renderData.drawables.push_back(id);
@@ -86,60 +104,60 @@ namespace alk
             std::sort(renderData.drawables.begin(), renderData.drawables.end(), [&](EntityId a, EntityId b) {
                 size_t aIndex = renderComponents->entityIndices[a];
                 size_t bIndex = renderComponents->entityIndices[b];
-                RenderComponent &aRenderComponent = renderComponents->components[aIndex];
-                RenderComponent &bRenderComponent = renderComponents->components[bIndex];
+                RenderComponent& aRenderComponent = renderComponents->components[aIndex];
+                RenderComponent& bRenderComponent = renderComponents->components[bIndex];
                 return aRenderComponent.GetDrawLayer() < bRenderComponent.GetDrawLayer();
-            });
+                });
 
             ALK_LOG("Sorted render components by draw layer");
             renderData.dirtyLayers = false;
         }
     }
 
-    void RenderSystem::DrawEntity(EntityId entityId, World *world)
+    void RenderSystem::DrawEntity(EntityId entityId, World* world)
     {
         Entity entity = world->GetEntity(entityId);
-        if(!entity.IsValid())
+        if (!entity.IsValid())
         {
             return;
         }
-        if(!world->HasComponent<RenderComponent>(entityId))
+        if (!world->HasComponent<RenderComponent>(entityId))
         {
             return;
         }
-        
-        RenderComponent *renderComponent = world->GetComponent<RenderComponent>(entity);
-        TransformComponent *transformComponent = world->GetComponent<TransformComponent>(entity);
-        if(renderComponent == nullptr || transformComponent == nullptr)
+
+        RenderComponent* renderComponent = world->GetComponent<RenderComponent>(entity);
+        TransformComponent* transformComponent = world->GetComponent<TransformComponent>(entity);
+        if (renderComponent == nullptr || transformComponent == nullptr)
         {
             return;
         }
-        if(!renderComponent->GetVisible())
+        if (!renderComponent->GetVisible())
         {
             return;
         }
-        
+
         switch (renderComponent->GetRenderType())
         {
         case RenderSystem::RenderType::Sprite:
             DrawSprite(renderComponent, transformComponent);
             break;
         case RenderSystem::RenderType::Grid:
-            alk::GameLogic::GridComponent *gridComponent = world->GetComponent<alk::GameLogic::GridComponent>(entity);
+            alk::GameLogic::GridComponent* gridComponent = world->GetComponent<alk::GameLogic::GridComponent>(entity);
             DrawGrid(renderComponent, gridComponent);
             break;
         }
     }
 
-    void RenderSystem::DrawSprite(RenderComponent *renderComponent, TransformComponent *transformComponent)
+    void RenderSystem::DrawSprite(RenderComponent* renderComponent, TransformComponent* transformComponent)
     {
         // ZoneScoped;
-        RenderSystemData &renderSystemData = GetRenderSystemData();
+        RenderSystemData& renderSystemData = GetRenderSystemData();
         auto renderData = renderComponent->GetRenderData<SpriteRenderData>();
         Color color = renderComponent->GetColor();
         if (renderData)
         {
-            const SpriteRenderData &data = renderData->get();
+            const SpriteRenderData& data = renderData->get();
             auto tex = renderSystemData.loadedTextures[data.texHandler];
             DrawTexture(tex, (int) transformComponent->position.x, (int) transformComponent->position.y, color);
         }
@@ -152,7 +170,7 @@ namespace alk
     void RenderSystem::DrawGrid(RenderComponent* renderComponent, alk::GameLogic::GridComponent* gridComponent)
     {
         // ZoneScoped;
-        std::vector<Vector2> &gridPoints = gridComponent->gridPoints;
+        std::vector<Vector2>& gridPoints = gridComponent->gridPoints;
         auto renderData = renderComponent->GetRenderData<GridRenderData>()->get();
 
         for (Vector2 point : gridPoints)
@@ -166,7 +184,7 @@ namespace alk
             DrawLine(endPosX, endPosY, endPosX - renderData.tileWidthHalf, endPosY + renderData.tileHeightHalf, WHITE);
         }
 
-        World &world = alk::GameLogic::GetWorld();
+        World& world = alk::GameLogic::GetWorld();
         auto gridPreviewComponents = world.GetComponents<GridPreviewComponent>();
 
         if (gridPreviewComponents->components.size() == 0)
@@ -174,11 +192,11 @@ namespace alk
             return;
         }
 
-        RenderSystemData &renderSystemData = GetRenderSystemData();
+        RenderSystemData& renderSystemData = GetRenderSystemData();
 
         for (auto i = 0; i < gridPreviewComponents->components.size(); ++i)
         {
-            auto &gridPreviewComponent = gridPreviewComponents->components[i];
+            auto& gridPreviewComponent = gridPreviewComponents->components[i];
             std::vector<std::pair<Vector2, bool>>& validMap = gridPreviewComponent.GetValidMap();
 
             for (size_t i = 0; i < validMap.size(); i++)
@@ -186,23 +204,23 @@ namespace alk
                 Vector2 gridPosition = validMap[i].first;
                 Vector2 worldPosition = alk::GameLogic::GridHelpers::GridToWorldPosition(gridPosition, gridComponent->width, gridComponent->height);
                 worldPosition.x -= (renderData.tileWidthHalf);
-                if(validMap[i].second)
+                if (validMap[i].second)
                 {
                     auto tex = renderSystemData.loadedTextures[renderData.validTileTexHandler];
-                    DrawTexture(tex, (int)worldPosition.x, (int)worldPosition.y, Color{ 255, 255, 255, 100 });
+                    DrawTexture(tex, (int) worldPosition.x, (int) worldPosition.y, Color{ 255, 255, 255, 100 });
                 }
                 else
                 {
                     auto tex = renderSystemData.loadedTextures[renderData.invalidTileTexHandler];
-                    DrawTexture(tex, (int)worldPosition.x, (int)worldPosition.y, Color{ 255, 255, 255, 100 });
+                    DrawTexture(tex, (int) worldPosition.x, (int) worldPosition.y, Color{ 255, 255, 255, 100 });
                 }
             }
         }
     }
 
-    TextureHandler RenderSystem::LoadRenderSystemTexture(const char *filename)
+    TextureHandler RenderSystem::LoadRenderSystemTexture(const char* filename)
     {
-        RenderSystemData &renderData = GetRenderSystemData();
+        RenderSystemData& renderData = GetRenderSystemData();
 
         auto it = renderData.loadedHandlers.find(filename);
         if (it != renderData.loadedHandlers.end())
@@ -213,8 +231,8 @@ namespace alk
 
         TextureHandler texHandler = GetNextTextureHandler();
         Texture2D texture = LoadTexture(filename);
-        renderData.loadedHandlers.insert({filename, texHandler});
-        renderData.loadedTextures.insert({texHandler, texture});
+        renderData.loadedHandlers.insert({ filename, texHandler });
+        renderData.loadedTextures.insert({ texHandler, texture });
         return texHandler;
     }
 }

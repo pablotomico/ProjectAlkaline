@@ -19,8 +19,7 @@ void alk::GameLogic::Initialize(Scene scene)
     
     for (GameLogicSubsystem* system : GetSubsystems())
     {
-        bool success = system->Initialize();
-        ALK_ASSERT(system->Initialize(), "GameLogic: Fail to initialize %s", system->GetName().c_str());
+        system->SetEnabled(system->Initialize());
     }
 }
 
@@ -28,7 +27,7 @@ void alk::GameLogic::Update(const float deltaTime)
 {
     for (GameLogicSubsystem* system : GetSubsystems())
     {
-        if (system)
+        if (system && system->IsEnabled())
         {
             system->Update();
         }

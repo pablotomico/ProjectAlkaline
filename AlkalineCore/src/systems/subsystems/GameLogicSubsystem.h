@@ -20,6 +20,7 @@ namespace alk
         {
         private:
             std::string name;
+            bool enabled = false;
 
         public:
             GameLogicSubsystem(std::string name);
@@ -34,6 +35,16 @@ namespace alk
             std::string GetName()
             {
                 return name;
+            }
+
+            bool IsEnabled()
+            {
+                return enabled;
+            }
+
+            void SetEnabled(bool newEnabled)
+            {
+                enabled = newEnabled;
             }
         };
     }

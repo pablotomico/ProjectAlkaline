@@ -12,6 +12,7 @@ namespace alk
 {
     using TextureHandler = uint32_t;
 
+    class SpriteComponent;
     class RenderComponent;
     class TransformComponent;
     class World;
