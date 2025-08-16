@@ -23,8 +23,10 @@ namespace alk
 
         struct TextureDeleter
         {
-            void operator()(Texture2D* texture) const {
-                if (texture) {
+            void operator()(Texture2D* texture) const
+            {
+                if (texture)
+                {
                     UnloadTexture(*texture);
                     delete texture;
                 }
@@ -36,13 +38,10 @@ namespace alk
             Sprite,
             Grid,
         };
-    
+
         struct RenderSystemData
         {
-            RenderSystemData()
-            {
-                ALK_LOG("Created Render System Data");
-            };
+            RenderSystemData() {};
             std::vector<alk::EntityId> drawables;
             bool dirtyLayers = false;
             std::unordered_map<const char*, TextureHandler> loadedHandlers;
@@ -61,8 +60,9 @@ namespace alk
             uint16_t width;
             uint16_t height;
 
-            SpriteRenderData(){};
-            SpriteRenderData(const char* spriteFilename){
+            SpriteRenderData() {};
+            SpriteRenderData(const char* spriteFilename)
+            {
                 texHandler = LoadRenderSystemTexture(spriteFilename);
                 width = GetRenderSystemData().loadedTextures[texHandler].width;
                 height = GetRenderSystemData().loadedTextures[texHandler].height;
@@ -76,8 +76,9 @@ namespace alk
             TextureHandler invalidTileTexHandler;
             uint tileWidthHalf;
             uint tileHeightHalf;
-            GridRenderData(){};
-            GridRenderData(uint tileWidthHalf, uint tileHeightHalf, const char* validTileTexFilename, const char* invalidTileTexFilename) : tileWidthHalf(tileWidthHalf), tileHeightHalf(tileHeightHalf){
+            GridRenderData() {};
+            GridRenderData(uint tileWidthHalf, uint tileHeightHalf, const char* validTileTexFilename, const char* invalidTileTexFilename) : tileWidthHalf(tileWidthHalf), tileHeightHalf(tileHeightHalf)
+            {
                 validTileTexHandler = LoadRenderSystemTexture(validTileTexFilename);
                 invalidTileTexHandler = LoadRenderSystemTexture(invalidTileTexFilename);
             };
@@ -104,7 +105,7 @@ namespace alk
 
         void AddToScreen(Entity& entity);
         void EvaluateAndSortDirtyLayers();
-        void DrawEntity(EntityId entityId, World *world);
+        void DrawEntity(EntityId entityId, World* world);
         void DrawSprite(RenderComponent* renderComponent, TransformComponent* transformComponent);
         void DrawGrid(RenderComponent* renderComponent, alk::GameLogic::GridComponent* gridComponent);
     }

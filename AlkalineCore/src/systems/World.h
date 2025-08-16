@@ -6,6 +6,7 @@
 
 #include "alkaline_lib.h"
 #include "entities/Entity.h"
+#include "components/BaseComponent.h"
 
 namespace alk
 {
@@ -36,7 +37,6 @@ namespace alk
             {
                 return;
             }
-
             entityIndices[entity] = components.size();
             components.push_back(std::move(component));
             entities.push_back(entity);
@@ -92,6 +92,12 @@ namespace alk
         {
             return components.size();
         }
+
+        auto begin() { return components.begin(); }
+        auto end() { return components.end(); }
+
+        auto begin() const { return components.begin(); }
+        auto end() const { return components.end(); }
 
         std::vector<T> components;
         std::vector<EntityId> entities;

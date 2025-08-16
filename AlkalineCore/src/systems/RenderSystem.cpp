@@ -28,10 +28,9 @@ namespace alk
 
         World& world = alk::GameLogic::GetWorld();
         auto spriteComponents = world.GetComponents<SpriteComponent>();
-        for (auto i = 0; i < spriteComponents->components.size(); ++i)
+        for(auto& component : *spriteComponents)
         {
-            auto pair = spriteComponents->Get(i);
-            pair.second->texHandler = LoadRenderSystemTexture(pair.second->path.c_str());
+            component.texHandler = LoadRenderSystemTexture(component.path.c_str());
         }
     }
 
