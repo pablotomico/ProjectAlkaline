@@ -205,7 +205,7 @@ namespace alk
         ComponentArray<T>* GetOrCreateComponentArray()
         {
             std::type_index index = std::type_index(typeid(T));
-            if (componentArrays.find(index) == componentArrays.end())
+            if (!componentArrays.contains(index))
             {
                 componentArrays[index] = std::make_unique<ComponentArray<T>>();
             }

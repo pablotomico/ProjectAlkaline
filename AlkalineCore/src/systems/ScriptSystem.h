@@ -89,11 +89,54 @@ namespace alk
                 table = lua[name].get_or_create<sol::table>();
             }
 
-            template <typename FuncName, typename... Args>
-            void AddFunction(FuncName name, Args&&... args)
+            template <typename... Args>
+            LuaNamespace& AddFunction(const std::string& fnName, Args&&... args)
             {
-                table.set_function(name, std::forward<Args>(args)...);
+                table.set_function(fnName, std::forward<Args>(args)...);
+                return *this;
             }
+        };
+
+        template <typename T>
+        struct LuaUsertype
+        {
+            sol::state& lua;
+            sol::usertype<T> type;
+            std::string name;
+
+            LuaUsertype(sol::state& lua, const std::string& name) : lua(lua), name(name)
+            {
+                type = lua.new_usertype<T>(name, sol::no_constructor);
+            }
+
+            template <typename... Args>
+            LuaUsertype& SetConstructors(Args&&... args)
+            {
+                lua.set_function(name, sol::overload(std::forward<Args>(args)...));
+                return *this;
+            }
+
+            template <typename... Args>
+            LuaUsertype& AddFunction(const std::string& fnName, Args&&... args)
+            {
+                type.set_function(fnName, std::forward<Args>(args)...);
+                return *this;
+            }
+
+            template <typename M>
+            LuaUsertype& AddMember(const std::string& mName, M&& member)
+            {
+                type.set(mName, member);
+                return *this;
+            }
+
+            template <typename F>
+            LuaUsertype& SetToString(F&& fn)
+            {
+                type.set("__tostring", fn);
+                return *this;
+            }
+
         };
 
         inline sol::state& GetState()
@@ -163,6 +206,12 @@ namespace alk
         inline LuaNamespace CreateNamespace(const std::string& name)
         {
             return LuaNamespace(GetState(), name);
+        }
+
+        template<typename T>
+        LuaUsertype<T> CreateUsertype(const std::string& name)
+        {
+            return LuaUsertype<T>(GetState(), name);
         }
     }
 }
