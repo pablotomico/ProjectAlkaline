@@ -21,12 +21,14 @@ namespace alk
         ALK_COMPONENT_SERIALIZER(SpriteComponent,
             {
                 ALK_SERIALIZE_VALUE(path);
+                ALK_SERIALIZE_VALUE(visible);
                 // ALK_SERIALIZE_VALUE(drawLayer);
             });
 
         ALK_COMPONENT_DESERIALIZER(SpriteComponent,
             {
                 ALK_DESERIALIZE_VALUE(path);
+                ALK_DESERIALIZE_VALUE(visible);
                 // ALK_DESERIALIZE_VALUE(drawLayer);
             });
     };

@@ -4,6 +4,7 @@ return {
             components = {
                 SpriteComponent = {
                     path = "assets/sprites/test_castle.png",
+                    visible = true,
                 },
                 ScriptComponent = {
                     path = "AlkalineGame/scripts/entity.lua",

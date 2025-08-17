@@ -28,7 +28,7 @@ namespace alk
 
         World& world = alk::GameLogic::GetWorld();
         auto spriteComponents = world.GetComponents<SpriteComponent>();
-        for(auto& component : *spriteComponents)
+        for (auto& component : *spriteComponents)
         {
             component.texHandler = LoadRenderSystemTexture(component.path.c_str());
         }
@@ -65,10 +65,13 @@ namespace alk
         auto transformComponents = world.GetComponents<TransformComponent>();
         for (auto i = 0; i < spriteComponents->components.size(); ++i)
         {
-            auto pair = spriteComponents->Get(i);
-            TransformComponent* transformComponent = transformComponents->Get(pair.first);
-            auto& tex = renderData.loadedTextures[pair.second->texHandler];
-            DrawTexture(tex, (int) transformComponent->position.x, (int) transformComponent->position.y, pair.second->color);
+            auto [entityId, spriteComponent] = spriteComponents->Get(i);
+            if (spriteComponent->visible)
+            {
+                TransformComponent* transformComponent = transformComponents->Get(entityId);
+                auto& tex = renderData.loadedTextures[spriteComponent->texHandler];
+                DrawTexture(tex, (int) transformComponent->position.x, (int) transformComponent->position.y, spriteComponent->color);
+            }
         }
 
         EndMode2D();
