@@ -12,9 +12,13 @@ namespace alk
 {
     using TextureHandler = uint32_t;
 
-    class RenderComponent;
+    namespace GameLogic
+    {
+        class World;
+    }
+
     class TransformComponent;
-    class World;
+    class RenderComponent;
 
     namespace RenderSystem
     {
@@ -104,7 +108,7 @@ namespace alk
 
         void AddToScreen(Entity& entity);
         void EvaluateAndSortDirtyLayers();
-        void DrawEntity(EntityId entityId, World* world);
+        void DrawEntity(EntityId entityId, alk::GameLogic::World* world);
         void DrawSprite(RenderComponent* renderComponent, TransformComponent* transformComponent);
         void DrawGrid(RenderComponent* renderComponent, alk::GameLogic::GridComponent* gridComponent);
     }

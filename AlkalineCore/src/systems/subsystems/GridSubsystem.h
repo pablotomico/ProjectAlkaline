@@ -3,13 +3,14 @@
 #include "raylib.h"
 
 #include "systems/subsystems/GameLogicSubsystem.h"
-#include "components/GridPreviewComponent.h"
 #include "misc/GridHelpers.h"
 
 namespace alk
 {
     namespace GameLogic
     {
+        class GridPreviewComponent;
+
         class GridSubsystem : public GameLogicSubsystem
         {
             ALK_GAMELOGICSUBSYSTEM(GridSubsystem);

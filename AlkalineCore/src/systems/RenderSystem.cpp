@@ -2,6 +2,7 @@
 
 #include "systems/Scene.h"
 #include "systems/GameLogic.h"
+#include "systems/World.h"
 
 #include "components/RenderComponent.h"
 #include "components/TransformComponent.h"
@@ -26,7 +27,7 @@ namespace alk
         mainCamera.rotation = 0.0f;
         mainCamera.zoom = 1.0f;
 
-        World& world = alk::GameLogic::GetWorld();
+        GameLogic::World& world = alk::GameLogic::GetWorld();
         auto spriteComponents = world.GetComponents<SpriteComponent>();
         for (auto& component : *spriteComponents)
         {
@@ -40,7 +41,7 @@ namespace alk
     void RenderSystem::AddToScreen(Entity& entity)
     {
         alk::GameLogic::Scene* activeScene = alk::GameLogic::GetActiveScene();
-        World& world = activeScene->GetWorld();
+        GameLogic::World& world = activeScene->GetWorld();
         world.GetComponent<RenderComponent>(entity)->SetVisible(true);
         RenderSystemData& renderData = GetRenderSystemData();
         renderData.dirtyLayers = true;
@@ -56,7 +57,7 @@ namespace alk
         EvaluateAndSortDirtyLayers();
 
         RenderSystemData& renderData = GetRenderSystemData();
-        World& world = alk::GameLogic::GetWorld();
+        GameLogic::World& world = alk::GameLogic::GetWorld();
         // for (auto entityId : renderData.drawables)
         // {
         //     DrawEntity(entityId, &world);
@@ -82,7 +83,7 @@ namespace alk
         RenderSystemData& renderData = GetRenderSystemData();
         if (renderData.dirtyLayers)
         {
-            World& world = alk::GameLogic::GetWorld();
+            GameLogic::World& world = alk::GameLogic::GetWorld();
             auto renderComponents = world.GetComponents<RenderComponent>();
             auto gridEntityComponents = world.GetComponents<GridEntityComponent>();
             renderData.drawables.clear();
@@ -116,7 +117,7 @@ namespace alk
         }
     }
 
-    void RenderSystem::DrawEntity(EntityId entityId, World* world)
+    void RenderSystem::DrawEntity(EntityId entityId, GameLogic::World* world)
     {
         Entity entity = world->GetEntity(entityId);
         if (!entity.IsValid())
@@ -186,8 +187,8 @@ namespace alk
             DrawLine(endPosX, endPosY, endPosX - renderData.tileWidthHalf, endPosY + renderData.tileHeightHalf, WHITE);
         }
 
-        World& world = alk::GameLogic::GetWorld();
-        auto gridPreviewComponents = world.GetComponents<GridPreviewComponent>();
+        alk::GameLogic::World& world = alk::GameLogic::GetWorld();
+        auto gridPreviewComponents = world.GetComponents<alk::GameLogic::GridPreviewComponent>();
 
         if (gridPreviewComponents->components.size() == 0)
         {

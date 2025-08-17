@@ -1,9 +1,6 @@
 #pragma once
 
-#include "systems/GameLogic.h"
 #include "systems/subsystems/GameLogicSubsystem.h"
-
-#include "systems/ScriptSystem.h"
 
 namespace alk
 {

@@ -3,21 +3,25 @@
 #include <map>
 #include "sol.hpp"
 
-#include "systems/Scene.h"
-#include "systems/World.h"
 #include "systems/ScriptSystem.h"
 
 #include "serialization/Serialization.h"
 
 namespace alk
 {
+    namespace GameLogic
+    {
+        class Scene;
+        class World;
+    }
+
     namespace SceneSerializer
     {
         // #########################################
         // COMPONENT SERIALIZATION / DESERIALIZATION
         // #########################################
             
-        using ComponentSerializerFn = void (*)(EntityId, World&, sol::table&);
+        using ComponentSerializerFn = void (*)(EntityId, alk::GameLogic::World&, sol::table&);
 
         inline std::vector<ComponentSerializerFn>& GetComponentSerializerList()
         {
@@ -32,7 +36,7 @@ namespace alk
             return true;
         }
 
-        using ComponentDeserializerFn = void (*)(EntityId, World&, const sol::table&);
+        using ComponentDeserializerFn = void (*)(EntityId, alk::GameLogic::World&, const sol::table&);
 
         inline std::map<std::string, ComponentDeserializerFn>& GetComponentDeserializerMap()
         {

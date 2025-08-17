@@ -5,6 +5,7 @@
 #include "components/TransformComponent.h"
 #include "components/RenderComponent.h"
 #include "components/GridEntityComponent.h"
+#include "components/GridPreviewComponent.h"
 
 namespace alk
 {

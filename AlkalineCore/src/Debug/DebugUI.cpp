@@ -8,6 +8,7 @@
 
 #include "systems/ScriptSystem.h"
 #include "systems/GameLogic.h"
+#include "systems/World.h"
 #include "systems/subsystems/GameLogicSubsystem.h"
 
 namespace alk
@@ -83,10 +84,10 @@ namespace alk
             ImGui::End(); // Active Systems
 
             ImGui::Begin("World Outliner");
-            World& world = alk::GameLogic::GetWorld();
+            alk::GameLogic::World& world = alk::GameLogic::GetWorld();
             for (auto& pair : world.GetAllEntities())
             {
-                EntityMeta e = pair.second;
+                alk::GameLogic::EntityMeta e = pair.second;
                 if (e.valid)
                 {
                     ImGui::Text(e.name.c_str());
