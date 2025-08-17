@@ -1,9 +1,39 @@
 ## Alt+Enter for new tasks, Alt+D to (un)complete
 
-Project:
-    ☐ Set up dev update template
+Alkaline Engine:
+    ☐ Move Grid + Gamemode entity definition out from Scene.cpp @high
+    ☐ Move 'hard-coded' game states from Scene class into AlkalineGame project @high
+    ☐ Tag Component
+    Serialization:
+        ☐ Create function/macro to serialize property based on type
+    Render System:
+        ☐ Camera Component
+    Input System:
+        ☐ Reflect Keycode enum
+        ☐ Research raylib input functionality
+    Script System:
+        ☐ Consider exposing Entity as complex usertype (Entity or EntityMeta)
+        ☐ Move script reflection to its own function instead of Initialize
+        ☐ Move utils functions (Log) from main.cpp to the script system
+        ☐ Reintegrate Debug and global functionality (i.e. Debug.Log, etc.)
+    Resource System:
+        ☐ Search through directories and index resources (scenes, sprites, prefabs...)
+    Logging:
+        ☐ Think of potential improvements (e.g. system prefixes)
+    Debug:
+        ☐ Clean up the ImGui stuff
+
+Alkaline Game:
+
+Alkaline Editor:
+    ☐ Find cool name
+
+Scripting:
+    ☐ Design scripts architecture
+    ☐ Debugging for Lua
 
 Build System:
+    ☐ Move stuff to .cpp files instead of .h and check if it improves compile times @low
     Generate Docs:
         ☐ Re-integrate c++ docs in build script
         ☐ Generate todo file based on todo tags on doc comments in code
@@ -12,46 +42,35 @@ Build System:
         ☐ Re-integrate lua globals in build script
         ☐ Keep working on python script to parse all types
 
-Alkaline Engine:
-    ✔ Move main.cpp code to Application.cpp @done(25-08-10 15:19)
-    ✔ Set up Script System @done(25-08-10 15:06)
-    ✔ Build macro for the GameLogicSystem declaration @done(25-08-11 18:26)
-    ✔ Take a look at Transform component (maybe move grid stuff to GridComponent) @high @done(25-08-12 20:35)
-    ☐ Move GameLogic and systems into its own folder
-    ☐ Rename GameLogicSystem(s) to GameLogicSubsystems
-    ☐ Move Grid + Gamemode entity definition out from Scene.cpp @high
-    ☐ Move 'hard-coded' game states from Scene class into AlkalineGame project @high
-    ☐ Move stuff to .cpp files instead of .h and check if it improves compile times @low
-    Scene serialization:
-        ✔ Define Lua structure for entities @done(25-08-10 23:46)
-        ✔ Read entities list and create @done(25-08-10 23:46)
-        ✔ Register components for serialization @done(25-08-12 23:40)
-        ✔ How to define components in Lua @done(25-08-12 23:40)
-        ✔ Deserialize components @done(25-08-12 23:40)
-        ✔ Then think about serializing @done(25-08-11 21:12)
-        ✔ Serialize components @done(25-08-12 23:40)
-        ☐ Create function/macro to serialize property based on type
-    Render System:
-        ☐ Simplify system (SpriteComponent?)
-    Input System:
-        ☐ Create base system implementation
-        ☐ Research raylib input functionality
-    Script System:
-        ☐ Move utils functions (Log) from main.cpp to the script system
-        ☐ Generalize how to expose stuff to Lua
-    Resource System:
-        ☐ Search through directories and index resources (scenes, sprites, prefabs...)
-
-Alkaline Game:
-    ✔ Create test component that is registered to the Engine @done(25-08-13 23:32)
-
-Alkaline Editor:
-    ☐ Find cool name
-
-Scripting:
-    ☐ Design scripts architecture 
+Project:
+    ☐ Set up dev update template
+    ☐ Update Readme
 
 Archive:
+    17/08/2025:
+  ✔ Script Component @done(25-08-17 17:21) @project(Alkaline Engine.Script System)
+  ✔ Create test component that is registered to the Engine @done(25-08-13 23:32) @project(Alkaline Game)
+  ✔ Add support for Usertypes (e.g. Vector) @done(25-08-17 12:58) @project(Alkaline Engine.Script System)
+  ✔ Expose some basic Entity functionality to Lua @done(25-08-17 13:30) @project(Alkaline Engine.Script System)
+  ✔ Add support for range based loop to ComponentArray @low @done(25-08-17 00:42) @project(Alkaline Engine)
+  ✔ Define Lua structure for entities @done(25-08-10 23:46) @project(Alkaline Engine.Serialization)
+  ✔ Simplify system (SpriteComponent?) @done(25-08-17 00:10) @project(Alkaline Engine.Render System)
+  ✔ Create base system implementation @done(25-08-16 17:51) @project(Alkaline Engine.Input System)
+  ✔ Rename GameLogicSystem(s) to GameLogicSubsystems @done(25-08-16 00:22) @project(Alkaline Engine)
+  ✔ Move GameLogicSubsystem(s) into their own folder @done(25-08-16 00:26) @project(Alkaline Engine)
+  ✔ Generalize how to expose stuff to Lua @done(25-08-16 00:08) @project(Alkaline Engine.Script System)
+  ✔ Implement notification subscription from Lua @done(25-08-16 17:52) @project(Alkaline Engine.Script System)
+  ✔ How to define components in Lua @done(25-08-12 23:40) @project(Alkaline Engine.Serialization)
+  ✔ Deserialize components @done(25-08-12 23:40) @project(Alkaline Engine.Serialization)
+  ✔ Then think about serializing @done(25-08-11 21:12) @project(Alkaline Engine.Serialization)
+  ✔ Serialize components @done(25-08-12 23:40) @project(Alkaline Engine.Serialization)
+  ✔ Build macro for the GameLogicSystem declaration @done(25-08-11 18:26) @project(Alkaline Engine)
+  ✔ Take a look at Transform component (maybe move grid stuff to GridComponent) @high @done(25-08-12 20:35) @project(Alkaline Engine)
+  ✔ Read entities list and create @done(25-08-10 23:46) @project(Alkaline Engine.Serialization)
+  ✔ Register components for serialization @done(25-08-12 23:40) @project(Alkaline Engine.Serialization)
+  ✔ Move main.cpp code to Application.cpp @done(25-08-10 15:19) @project(Alkaline Engine)
+  ✔ Set up Script System @done(25-08-10 15:06) @project(Alkaline Engine)
+    09/08/2025:
   ✔ Github Repo @done(25-03-16 21:47) @project(Project)
   ✔ Basic project setup readme @done(25-03-16 21:47) @project(Project)
   ✔ Set up collaborators @done(25-08-10 11:34) @project(Project)
