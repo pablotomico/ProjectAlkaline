@@ -11,8 +11,6 @@
 #include "systems/Scene.h"
 #include "entities/Entity.h"
 
-class BaseComponent;
-
 template <typename T>
 using Callback = std::function<void(T*)>;
       
@@ -22,6 +20,7 @@ namespace alk
     {
         void Initialize(Scene scene);
         void Update(const float deltaTime);
+        void Shutdown();
         
         class GameLogicSubsystem;
         using SubsystemFactoryFn = GameLogicSubsystem* (*)();

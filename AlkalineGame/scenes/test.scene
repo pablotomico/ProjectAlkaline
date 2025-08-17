@@ -2,22 +2,11 @@ return {
     entities = {
         [1] = {
             components = {
-                TransformComponent = {
-                    position = {
-                        x = 32,
-                        y = 432,
-                    },
-                },
-            },
-            name = "Test Entity 2",
-        },
-        [2] = {
-            components = {
                 SpriteComponent = {
                     path = "assets/sprites/test_castle.png",
                 },
-                TestComponent = {
-                    path = "custompath",
+                ScriptComponent = {
+                    path = "AlkalineGame/scripts/entity.lua",
                 },
                 TransformComponent = {
                     position = {

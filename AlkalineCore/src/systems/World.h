@@ -6,7 +6,6 @@
 
 #include "alkaline_lib.h"
 #include "entities/Entity.h"
-#include "components/BaseComponent.h"
 
 namespace alk
 {

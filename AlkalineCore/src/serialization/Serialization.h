@@ -1,5 +1,11 @@
 #pragma once
 
+#include "sol/sol.hpp"
+#include "systems/ScriptSystem.h"
+#include "systems/World.h"
+#include "entities/Entity.h"
+#include "serialization/SceneSerializer.h"
+
 #define ALK_SERIALIZE_VALUE(name) \
     table[#name] = component->##name;
 

@@ -13,8 +13,6 @@ namespace alk
 {
     namespace SceneSerializer
     {
-        class BaseComponent;
-
         // #########################################
         // COMPONENT SERIALIZATION / DESERIALIZATION
         // #########################################

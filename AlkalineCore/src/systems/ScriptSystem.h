@@ -3,7 +3,8 @@
 #include <string>
 #include <map>
 
-#include "sol.hpp"
+#include "raylib/raylib.h"
+#include "sol/sol.hpp"
 
 #include "alkaline_lib.h"
 
@@ -17,11 +18,9 @@ namespace alk
             LuaSafeRunner(sol::state& lua) : lua(lua) {}
 
             // Run a Lua file with traceback
-            bool RunFileSafe(const std::string& filename)
+            sol::object RunFileSafe(const std::string& filename)
             {
-                return RunWithTraceback([&]() {
-                    return lua.script_file(filename, sol::script_pass_on_error);
-                    });
+                return RunWithTraceback([&]() { return lua.safe_script_file(filename, sol::script_pass_on_error); });
             }
 
             // Call a Lua function by name with traceback
@@ -36,7 +35,7 @@ namespace alk
                         return sol::protected_function_result();
                     }
                     return func(std::forward<Args>(args)...);
-                    });
+                    }).valid();
             }
 
             template <typename... Args>
@@ -48,14 +47,14 @@ namespace alk
                         return sol::protected_function_result();
                     }
                     return func(std::forward<Args>(args)...);
-                    });
+                    }).valid();
             }
 
         private:
             sol::state& lua;
 
             template <typename Callable>
-            bool RunWithTraceback(Callable&& action)
+            sol::object RunWithTraceback(Callable&& action)
             {
                 // Push debug.traceback
                 lua_getglobal(lua.lua_state(), "debug");
@@ -70,11 +69,13 @@ namespace alk
                 if (!success)
                 {
                     sol::error err = result;
-                    ALK_ERROR("LuaRuntime: %s", err.what());
+                    ALK_ASSERT(success, "LuaRuntime: %s", err.what())
                 }
 
+                sol::object obj = result;
+
                 lua_remove(lua.lua_state(), traceback_index); // remove traceback
-                return success;
+                return obj;
             }
         };
 
@@ -139,6 +140,11 @@ namespace alk
 
         };
 
+        void SetupLuaState();
+        void Initialize();
+        void Update(const float deltaTime);
+        void Shutdown();
+
         inline sol::state& GetState()
         {
             static sol::state lua;
@@ -186,21 +192,26 @@ namespace alk
             }
         }
 
-        bool Initialize();
         void AddToPackage(const std::string& path);
         sol::table LoadTableFromFile(const std::string& filePath);
         void SaveTableToFile(const std::string& filePath, const sol::table& table);
         std::string TableToString(const sol::table& table, int indent = 1);
 
-        inline bool RunFile(const std::string& filename)
+        inline sol::object RunFile(const std::string& filename)
         {
-            return GetSafeRunner().RunFileSafe(filename);
+            return GetSafeRunner().RunFileSafe(std::string(GetWorkingDirectory()) + "/" + filename);
         }
 
         template <typename... Args>
         bool CallFunction(const std::string& funcName, Args&&... args)
         {
             return GetSafeRunner().CallFunction(funcName, std::forward<Args>(args)...);
+        }
+
+        template <typename... Args>
+        bool CallFunction(sol::function fn, Args&&... args)
+        {
+            return GetSafeRunner().CallFunction(fn, std::forward<Args>(args)...);
         }
 
         inline LuaNamespace CreateNamespace(const std::string& name)

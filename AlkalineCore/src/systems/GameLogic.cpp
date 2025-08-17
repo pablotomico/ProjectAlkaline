@@ -60,6 +60,8 @@ void alk::GameLogic::Update(const float deltaTime)
     }
 }
 
+void alk::GameLogic::Shutdown() {}
+
 // TODO: Add validation to these
 Vector2 alk::GameLogic::GetEntityPosition(EntityId id)
 {

@@ -1,10 +1,9 @@
 #pragma once
 
-#include "BaseComponent.h"
-#include "raylib.h"
-
+#include "raylib/raylib.h"
 #include "systems/RenderSystem.h"
-#include "serialization/SceneSerializer.h"
+#include "components/BaseComponent.h"
+#include "serialization/Serialization.h"
 
 namespace alk
 {

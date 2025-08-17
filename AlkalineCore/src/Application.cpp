@@ -38,7 +38,7 @@ namespace alk
     {
         ALK_TRACE("ALKALINE ENGINE v0.1");
         ALK_LOG("Working Directory: '%s'", GetWorkingDirectory());
-        alk::ScriptSystem::Initialize(); // TODO: Investigate if loading internal things might expose them to the scripts as globals
+        alk::ScriptSystem::SetupLuaState(); // TODO: Investigate if loading internal things might expose them to the scripts as globals
         
         // TODO: Move to function
         std::string gameSettingsPath = std::string(GetApplicationDirectory()) + "GameSettings.lua";
@@ -71,6 +71,7 @@ namespace alk
 
         // alk::SceneSerializer::DeserializeScene();
         alk::GameLogic::Initialize(std::move(testScene));
+        alk::ScriptSystem::Initialize();
         alk::InputSystem::Initialize();
         alk::RenderSystem::Initialize();
         
@@ -109,6 +110,7 @@ namespace alk
     {
         alk::InputSystem::Update(deltaTime);
         alk::GameLogic::Update(deltaTime);
+        alk::ScriptSystem::Update(deltaTime);
 
         float cameraSpeed = 300.0f;
         float cameraZoomSpeed = 10.0f;
@@ -166,7 +168,9 @@ namespace alk
      */
     void Application::Shutdown()
     {
+        alk::GameLogic::Shutdown();
         alk::RenderSystem::Shutdown();
+        alk::ScriptSystem::Shutdown();
         CloseWindow();
         rlImGuiShutdown();
     }

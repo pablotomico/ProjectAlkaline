@@ -1,22 +1,56 @@
-#include "systems/ScriptSystem.h"
-
 #include "raylib.h"
+#include "systems/ScriptSystem.h"
+#include "systems/GameLogic.h"
+#include "components/ScriptComponent.h"
 
-bool alk::ScriptSystem::Initialize()
+
+void alk::ScriptSystem::SetupLuaState()
 {
     sol::state& lua = GetState();
     lua.open_libraries(sol::lib::base, sol::lib::package, sol::lib::string, sol::lib::math, sol::lib::table, sol::lib::debug);
     lua.set_panic([](lua_State* L) {
         const char* message = lua_tostring(L, -1);
         ALK_ERROR("LuaError: %s", message);
+        DEBUG_BREAK();
         return 0; });
+}
 
+void alk::ScriptSystem::Initialize()
+{
     RegisterNotification("TestNotification");
 
     CreateNamespace("System")
         .AddFunction("ConnectToNotification", RegisterNotificationCallback);
-    return true;
+
+    auto& safe = GetSafeRunner();
+    for (auto& scriptComponent : *alk::GameLogic::GetWorld().GetComponents<ScriptComponent>())
+    {
+        auto result = RunFile(scriptComponent.path);
+        sol::type t = result.get_type();
+        bool valid = result.valid();
+        if (t == sol::type::table)
+        {
+            sol::table table = result;
+            scriptComponent.self = table;
+            scriptComponent.onStart = table.get<sol::function>("OnStart");
+            scriptComponent.onUpdate = table["OnUpdate"];
+            scriptComponent.onStop = table.get<sol::function>("OnStop");
+        }
+    }
 }
+
+void alk::ScriptSystem::Update(float deltaTime)
+{
+    for (auto& scriptComponent : *alk::GameLogic::GetWorld().GetComponents<ScriptComponent>())
+    {
+        if (scriptComponent.onUpdate)
+        {
+            CallFunction(scriptComponent.onUpdate, scriptComponent.self, deltaTime);
+        }
+    }
+}
+
+void alk::ScriptSystem::Shutdown() {}
 
 void alk::ScriptSystem::AddToPackage(const std::string& path)
 {
