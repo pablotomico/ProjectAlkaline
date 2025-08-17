@@ -5,6 +5,7 @@
 #include "systems/GameLogic.h"
 #include "systems/ScriptSystem.h"
 #include "systems/subsystems/GameLogicSubsystem.h"
+#include "components/TransformComponent.h"
 
 std::map<std::type_index, alk::GameLogic::SubsystemFactoryFn>& alk::GameLogic::GetFactoryList()
 {
@@ -27,6 +28,7 @@ void alk::GameLogic::Initialize(Scene scene)
         system->SetEnabled(system->Initialize());
     }
 
+    alk::ScriptSystem::CreateUsertype<EntityId>("Entity");
     alk::ScriptSystem::CreateUsertype<Vector2>("Vector")
         .SetConstructors(
             []() { return Vector2(); },
@@ -34,6 +36,11 @@ void alk::GameLogic::Initialize(Scene scene)
         .SetToString([](const Vector2& v) { return std::format("({}, {})", v.x, v.y); })
         .AddMember("x", &Vector2::x)
         .AddMember("y", &Vector2::y);
+
+    alk::ScriptSystem::CreateNamespace("Game")
+        .AddFunction("GetRandomEntity", GetRandomEntity)
+        .AddFunction("GetEntityPosition", GetEntityPosition)
+        .AddFunction("SetEntityPosition", SetEntityPosition);
 }
 
 void alk::GameLogic::Update(const float deltaTime)
@@ -51,4 +58,21 @@ void alk::GameLogic::Update(const float deltaTime)
     {
         activeScene->Update();
     }
+}
+
+// TODO: Add validation to these
+Vector2 alk::GameLogic::GetEntityPosition(EntityId id)
+{
+    return GetWorld().GetComponent<TransformComponent>(id)->position;
+}
+
+void alk::GameLogic::SetEntityPosition(EntityId id, Vector2 position)
+{
+    GetWorld().GetComponent<TransformComponent>(id)->position = position;
+}
+
+alk::EntityId alk::GameLogic::GetRandomEntity()
+{
+    auto transforms = GetWorld().GetComponents<TransformComponent>();
+    return transforms->Size() > 0 ? transforms->entities[0] : 0;
 }

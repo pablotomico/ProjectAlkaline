@@ -71,8 +71,8 @@ namespace alk
 
         // alk::SceneSerializer::DeserializeScene();
         alk::GameLogic::Initialize(std::move(testScene));
-        alk::RenderSystem::Initialize();
         alk::InputSystem::Initialize();
+        alk::RenderSystem::Initialize();
         
         ALK_TRACE("APPLICATION INITIALIZED SUCCESSFULLY");
         return true;

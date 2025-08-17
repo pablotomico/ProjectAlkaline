@@ -5,8 +5,11 @@
 #include <typeindex>
 #include <map>
 
+#include "raylib/raylib.h"
 #include "alkaline_lib.h"
+
 #include "systems/Scene.h"
+#include "entities/Entity.h"
 
 class BaseComponent;
 
@@ -110,5 +113,9 @@ namespace alk
         {
             return GetActiveScene()->GetWorld();
         }
+
+        Vector2 GetEntityPosition(EntityId id);
+        void SetEntityPosition(EntityId id, Vector2 position);
+        EntityId GetRandomEntity();
     }
 }
