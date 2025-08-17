@@ -23,18 +23,26 @@ void alk::ScriptSystem::Initialize()
         .AddFunction("ConnectToNotification", RegisterNotificationCallback);
 
     auto& safe = GetSafeRunner();
-    for (auto& scriptComponent : *alk::GameLogic::GetWorld().GetComponents<ScriptComponent>())
+    auto components = alk::GameLogic::GetWorld().GetComponents<ScriptComponent>();
+    for (int i = 0; i < components->Size(); ++i)
     {
-        auto result = RunFile(scriptComponent.path);
+        auto [entityId, scriptComponent] = components->Get(i);
+        auto result = RunFile(scriptComponent->path);
         sol::type t = result.get_type();
-        bool valid = result.valid();
         if (t == sol::type::table)
         {
             sol::table table = result;
-            scriptComponent.self = table;
-            scriptComponent.onStart = table.get<sol::function>("OnStart");
-            scriptComponent.onUpdate = table["OnUpdate"];
-            scriptComponent.onStop = table.get<sol::function>("OnStop");
+            scriptComponent->self = table;
+            scriptComponent->onStart = table.get<sol::function>("OnStart");
+            scriptComponent->onUpdate = table.get<sol::function>("OnUpdate");
+            scriptComponent->onStop = table.get<sol::function>("OnStop");
+
+            scriptComponent->self.set("owner", entityId);
+
+            if(scriptComponent->onStart)
+            {
+                CallFunction(scriptComponent->onStart, scriptComponent->self, entityId);
+            }
         }
     }
 }

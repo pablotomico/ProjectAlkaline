@@ -21,13 +21,6 @@ void alk::GameLogic::Initialize(Scene scene)
         AddSubsystem(pair.first, system);
     }
 
-    GameLogic::LoadScene(std::move(scene), true);
-
-    for (GameLogicSubsystem* system : GetSubsystems())
-    {
-        system->SetEnabled(system->Initialize());
-    }
-
     alk::ScriptSystem::CreateUsertype<EntityId>("Entity");
     alk::ScriptSystem::CreateUsertype<Vector2>("Vector")
         .SetConstructors(
@@ -41,6 +34,13 @@ void alk::GameLogic::Initialize(Scene scene)
         .AddFunction("GetRandomEntity", GetRandomEntity)
         .AddFunction("GetEntityPosition", GetEntityPosition)
         .AddFunction("SetEntityPosition", SetEntityPosition);
+
+    GameLogic::LoadScene(std::move(scene), true);
+
+    for (GameLogicSubsystem* system : GetSubsystems())
+    {
+        system->SetEnabled(system->Initialize());
+    }
 }
 
 void alk::GameLogic::Update(const float deltaTime)
