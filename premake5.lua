@@ -5,6 +5,9 @@ workspace "Alkaline"
    location "build/projects"
    configurations { "Debug", "Release" }
 
+   filter "action:vs*"
+      buildoptions { "/MP" }
+
 -- outputpath = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 outputpath = "%{cfg.buildcfg}"
 targetpath = "bin/" .. outputpath .. "/%{prj.name}"
@@ -60,7 +63,7 @@ project "AlkalineCore"
    files {
       "%{prj.name}/src/**.h",
       "%{prj.name}/src/**.cpp",
-      "external/tracy/public/TracyClient.cpp"
+      -- "external/tracy/public/TracyClient.cpp"
    }
 
    includedirs {
@@ -91,7 +94,8 @@ project "AlkalineCore"
 
    filter "configurations:Debug"
       symbols "on"
-      defines { "ALK_DEBUG", "TRACY_ENABLE" }
+      defines { "ALK_DEBUG" }
+      -- buildoptions { "/Bt+", "/d2cgsummary" }
 
    filter "configurations:Release"
       optimize "on"

@@ -49,6 +49,7 @@ projects
 #profiling
 *.tracy
 traces
+*.etl
 
 Meta
 bin

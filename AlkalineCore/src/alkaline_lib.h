@@ -2,17 +2,8 @@
 
 #include <stdio.h>
 
-// for malloc
-#include <stdlib.h>
-
 // for memset
-#include <string.h>
-
-// for file timestamps
-#include <sys/stat.h>
-
-// for working directory
-#include <filesystem>
+#include <string>
 
 #ifdef _WIN32
 #define DEBUG_BREAK() __debugbreak()
@@ -95,20 +86,3 @@ void _log(char const *prefix, char const *msg, TextColor textColor, Args... args
             ALK_FAILURE(msg, ##__VA_ARGS__);\
         }                                   \
     }                                       \
-
-
-// ######################################################################################
-//                                      I / O
-// ######################################################################################
-
-inline std::filesystem::path get_working_directory()
-{
-    return std::filesystem::current_path();
-}
-
-inline long long get_timestamp(const char *file)
-{
-    struct stat file_stat = {};
-    stat(file, &file_stat);
-    return file_stat.st_mtime;
-}
