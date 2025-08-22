@@ -1,9 +1,9 @@
 return {
     entities = {
-        [1] = {
+        {
             components = {
                 SpriteComponent = {
-                    path = "assets/sprites/test_castle.png",
+                    path = "AlkalineGame/assets/sprites/grass.png",
                     visible = true,
                 },
                 ScriptComponent = {
@@ -11,12 +11,48 @@ return {
                 },
                 TransformComponent = {
                     position = {
-                        x = 10,
-                        y = 1,
+                        x = 0,
+                        y = 0,
                     },
                 },
             },
-            name = "Test Entity",
+            name = "Test Tile",
+        },
+        {
+            components = {
+                SpriteComponent = {
+                    path = "AlkalineGame/assets/sprites/grass.png",
+                    visible = true,
+                },
+                ScriptComponent = {
+                    path = "AlkalineGame/scripts/entity.lua",
+                },
+                TransformComponent = {
+                    position = {
+                        x = 128,
+                        y = 0,
+                    },
+                },
+            },
+            name = "Test Tile",
+        },
+        {
+            components = {
+                SpriteComponent = {
+                    path = "AlkalineGame/assets/sprites/grass.png",
+                    visible = true,
+                },
+                ScriptComponent = {
+                    path = "AlkalineGame/scripts/entity.lua",
+                },
+                TransformComponent = {
+                    position = {
+                        x = 64,
+                        y = 32,
+                    },
+                },
+            },
+            name = "Test Tile",
         },
     },
     name = "Testing Scene",

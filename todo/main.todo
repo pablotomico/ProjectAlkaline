@@ -4,13 +4,14 @@ Alkaline Engine:
     ☐ Move Grid + Gamemode entity definition out from Scene.cpp @high
     ☐ Move 'hard-coded' game states from Scene class into AlkalineGame project @high
     ☐ Tag Component
+    ☐ Game Settings management
     Serialization:
         ☐ Create function/macro to serialize property based on type
     Render System:
         ☐ Camera Component
     Input System:
-        ☐ Reflect Keycode enum
-        ☐ Research raylib input functionality
+        ✔ Input Actions design (input settings?) @done(25-08-22 23:13)
+        ☐ Support stack of input contexts
     Script System:
         ☐ Consider exposing Entity as complex usertype (Entity or EntityMeta)
         ☐ Move script reflection to its own function instead of Initialize
@@ -33,6 +34,7 @@ Scripting:
     ☐ Debugging for Lua
 
 Build System:
+    ✔ Copy entire config folder as postbuildcommands @done(25-08-22 22:01)
     ☐ Move stuff to .cpp files instead of .h and check if it improves compile times @low
     Generate Docs:
         ☐ Re-integrate c++ docs in build script

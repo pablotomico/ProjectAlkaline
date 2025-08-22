@@ -23,6 +23,8 @@ function Run()
     -- local pos = Game.GetEntityPosition(e)
     -- print("pos=" .. tostring(pos))
     -- TestError()
+
+    Input.LoadInputContext("PlayerMovement")
 end
 
 function MyCallback(...)
@@ -31,20 +33,20 @@ end
 
 e = Game.GetRandomEntity()
 
-function OnKeyPressed(key)
-    -- print("OnKeyPressed: " .. key)
+function OnKeyPressed(action)
+    print("OnKeyPressed: " .. action)
     local pos = Game.GetEntityPosition(e)
     local updatePos = false
-    if key == 262 then -- right
+    if action == "move_right" then -- right
         updatePos = true
         pos.x = pos.x + 10
-    elseif key == 263 then -- left
+    elseif action == "move_left" then -- left
         updatePos = true
         pos.x = pos.x - 10
-    elseif key == 264 then -- down
+    elseif action == "move_down" then -- down
         updatePos = true
         pos.y = pos.y + 10
-    elseif key == 265 then -- up
+    elseif action == "move_up" then -- up
         updatePos = true
         pos.y = pos.y - 10
     end
