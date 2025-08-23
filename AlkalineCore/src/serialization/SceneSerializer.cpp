@@ -2,6 +2,7 @@
 
 #include "systems/ScriptSystem.h"
 #include "systems/Scene.h"
+#include "entities/Entity.h"
 
 void alk::SceneSerializer::DeserializeScene(alk::GameLogic::Scene &scene, const sol::table &table)
 {
@@ -14,17 +15,7 @@ void alk::SceneSerializer::DeserializeScene(alk::GameLogic::Scene &scene, const 
     for (auto &pair : entities)
     {
         sol::table entity = pair.second;
-        std::string name = entity["name"];
-        sol::table components = entity["components"];
-
-        Entity e = world.CreateEntity(name);
-        for(auto& pair : components)
-        {
-            std::string componentName = pair.first.as<std::string>();
-            sol::table componentTable = pair.second;
-
-            GetComponentDeserializerMap()[componentName](e.id, world, componentTable);
-        }
+        alk::SceneSerializer::DeserializeEntity(scene, entity);
     }
 }
 
@@ -54,4 +45,22 @@ void alk::SceneSerializer::SerializeScene(alk::GameLogic::Scene &scene, sol::tab
         }
     }
     table["entities"] = entitiesTable;
+}
+
+alk::Entity alk::SceneSerializer::DeserializeEntity(alk::GameLogic::Scene& scene, sol::table& entity)
+{
+    alk::GameLogic::World& world = scene.GetWorld();
+    std::string name = entity["name"];
+    sol::table components = entity["components"];
+
+    Entity e = world.CreateEntity(name);
+    for(auto& pair : components)
+    {
+        std::string componentName = pair.first.as<std::string>();
+        sol::table componentTable = pair.second;
+
+        GetComponentDeserializerMap()[componentName](e.id, world, componentTable);
+    }
+
+    return e;
 }

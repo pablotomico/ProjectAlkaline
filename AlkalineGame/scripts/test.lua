@@ -6,7 +6,7 @@ function Run()
     print("Running test.lua");
     -- print("GamemodeLogicSubsystem.GetState() = " .. GamemodeLogicSubsystem.GetState())
     -- print("Input.IsKeyDown(32) = " .. tostring(Input.IsKeyDown(32)))
-    
+
     if not connected then
         System.ConnectToNotification("TestNotification", MyCallback)
         System.ConnectToNotification("OnKeyPressed", OnKeyPressed)
@@ -31,12 +31,17 @@ function MyCallback(...)
     print(...)
 end
 
-e = Game.GetRandomEntity()
-
 function OnKeyPressed(action)
-    print("OnKeyPressed: " .. action)
-    local pos = Game.GetEntityPosition(e)
+    -- print("OnKeyPressed: " .. action)
     local updatePos = false
+    if action == "spawn_sigil" then
+        print("Spawning Castle")
+        e = Game.SpawnSigil("AlkalineGame/sigils/castle.sigil")
+    end
+    if not e then
+        return
+    end
+    local pos = Game.GetEntityPosition(e)
     if action == "move_right" then -- right
         updatePos = true
         pos.x = pos.x + 10

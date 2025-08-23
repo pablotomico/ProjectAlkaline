@@ -11,9 +11,6 @@
 #include "systems/Scene.h"
 #include "entities/Entity.h"
 
-template <typename T>
-using Callback = std::function<void(T*)>;
-      
 namespace alk
 {
     namespace GameLogic
@@ -53,8 +50,11 @@ namespace alk
             return static_cast<T*>(GetSubsystemsMap()[typeid(T)]);
         }
 
-        template <typename T>
-        inline static std::unordered_map<std::type_index, std::vector<Callback<T>>> callbacks;
+        inline std::vector<std::function<void(EntityId)>>& GetCallbacks()
+        {
+            static std::vector<std::function<void(EntityId)>> callbacks;
+            return callbacks;
+        }
 
         inline void AddSubsystem(std::type_index type, GameLogicSubsystem* system)
         {
@@ -62,21 +62,16 @@ namespace alk
             GetSubsystemsMap().emplace(type, system);
         }
 
-        template <typename T>
-        inline void SubscribeToComponent(Callback<T> callback)
+        inline void SubscribeToEntitySpawned(std::function<void(EntityId)> callback)
         {
-            std::type_index type = std::type_index(typeid(T));
-
-            callbacks<T>[type].push_back(callback);
+            GetCallbacks().push_back(callback);
         }
 
-        template <typename T>
-        inline void NotifyCallbacks(T *obj)
+        inline void NotifyCallbacks(EntityId id)
         {
-            std::type_index type = std::type_index(typeid(T));
-            for (Callback<T> callback : callbacks<T>[type])
+            for (auto& callback : GetCallbacks())
             {
-                callback(obj);
+                callback(id);
             }
         }
 
@@ -116,5 +111,7 @@ namespace alk
         Vector2 GetEntityPosition(EntityId id);
         void SetEntityPosition(EntityId id, Vector2 position);
         EntityId GetRandomEntity();
+        
+        EntityId SpawnSigil(const std::string& name);
     }
 }

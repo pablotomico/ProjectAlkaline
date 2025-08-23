@@ -82,6 +82,7 @@
 			"queue": "cpp",
 			"set": "cpp",
 			"*.scene": "lua",
+			"*.sigil": "lua",
 			"thread": "cpp",
 			"barrier": "cpp",
 			"cinttypes": "cpp",
@@ -103,7 +104,8 @@
 			"stop_token": "cpp",
 			"syncstream": "cpp",
 			"unordered_set": "cpp",
-			"valarray": "cpp"
+			"valarray": "cpp",
+			"*.def": "cpp"
 		},
 		"bg3ModHelper.rootModPath": "c:\\dev\\ProjectAlkaline",
 		"bg3ModHelper.packingPriority": 0,

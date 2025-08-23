@@ -14,39 +14,39 @@ targetpath = "bin/" .. outputpath .. "/%{prj.name}"
 objpath = "bin-int/" .. outputpath .. "/%{prj.name}"
 
 -- ImGui + rlImGui static library
-project "imgui_rl"
-   kind "StaticLib"
-   language "C++"
-   cppdialect "C++20"
-   staticruntime "on"
+-- project "imgui_rl"
+--    kind "StaticLib"
+--    language "C++"
+--    cppdialect "C++20"
+--    staticruntime "on"
 
-   targetdir(targetpath)
-   objdir(objpath)
+--    targetdir(targetpath)
+--    objdir(objpath)
 
-   files {
-      "external/imgui/*.cpp",
-      "external/imgui/*.h",
-      "external/rlImGui/rlImGui.cpp",
-      "external/rlImGui/rlImGui.h"
-   }
+--    files {
+--       "external/imgui/*.cpp",
+--       "external/imgui/*.h",
+--       "external/rlImGui/rlImGui.cpp",
+--       "external/rlImGui/rlImGui.h"
+--    }
 
-   includedirs {
-      "external",
-      "external/imgui",
-      "external/rlImGui",
-      "external/raylib",
-   }
+--    includedirs {
+--       "external",
+--       "external/imgui",
+--       "external/rlImGui",
+--       "external/raylib",
+--    }
 
-   filter "system:windows"
-      systemversion "latest"
+--    filter "system:windows"
+--       systemversion "latest"
 
-   filter "configurations:Debug"
-      runtime "Debug"
-      symbols "on"
+--    filter "configurations:Debug"
+--       runtime "Debug"
+--       symbols "on"
 
-   filter "configurations:Release"
-      runtime "Release"
-      optimize "on"
+--    filter "configurations:Release"
+--       runtime "Release"
+--       optimize "on"
 
 
 group "Core"

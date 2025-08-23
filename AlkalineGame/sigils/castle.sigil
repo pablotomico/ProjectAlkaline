@@ -1,0 +1,15 @@
+return {
+    components = {
+        SpriteComponent = {
+            path = "AlkalineGame/assets/sprites/castle.png",
+            visible = true,
+        },
+        TransformComponent = {
+            position = {
+                x = 0,
+                y = 0,
+            },
+        },
+    },
+    name = "Castle Sigil",
+}

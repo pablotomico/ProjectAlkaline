@@ -33,6 +33,11 @@ namespace alk
         {
             component.texHandler = LoadRenderSystemTexture(component.path.c_str());
         }
+
+        alk::GameLogic::SubscribeToEntitySpawned([](EntityId id) {
+                auto c = alk::GameLogic::GetWorld().GetComponent<SpriteComponent>(id);
+                c->texHandler = LoadRenderSystemTexture(c->path.c_str());
+            });
     }
 
     void RenderSystem::Shutdown()

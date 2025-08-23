@@ -57,5 +57,6 @@ namespace alk
         
         void DeserializeScene(alk::GameLogic::Scene& scene, const sol::table& table);
         void SerializeScene(alk::GameLogic::Scene& scene, sol::table& table);
+        Entity DeserializeEntity(alk::GameLogic::Scene& scene, sol::table& table);
     }
 }

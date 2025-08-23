@@ -6,6 +6,7 @@
 #include "systems/ScriptSystem.h"
 #include "systems/subsystems/GameLogicSubsystem.h"
 #include "components/TransformComponent.h"
+#include "GameLogic.h"
 
 std::map<std::type_index, alk::GameLogic::SubsystemFactoryFn>& alk::GameLogic::GetFactoryList()
 {
@@ -31,6 +32,7 @@ void alk::GameLogic::Initialize(Scene scene)
         .AddMember("y", &Vector2::y);
 
     alk::ScriptSystem::CreateNamespace("Game")
+        .AddFunction("SpawnSigil", SpawnSigil)
         .AddFunction("GetRandomEntity", GetRandomEntity)
         .AddFunction("GetEntityPosition", GetEntityPosition)
         .AddFunction("SetEntityPosition", SetEntityPosition);
@@ -65,7 +67,8 @@ void alk::GameLogic::Shutdown() {}
 // TODO: Add validation to these
 Vector2 alk::GameLogic::GetEntityPosition(EntityId id)
 {
-    return GetWorld().GetComponent<TransformComponent>(id)->position;
+    auto c = GetWorld().GetComponent<TransformComponent>(id);
+    return c ? c->position : Vector2{ -1, -1 };
 }
 
 void alk::GameLogic::SetEntityPosition(EntityId id, Vector2 position)
@@ -77,4 +80,14 @@ alk::EntityId alk::GameLogic::GetRandomEntity()
 {
     auto transforms = GetWorld().GetComponents<TransformComponent>();
     return transforms->Size() > 0 ? transforms->entities[0] : 0;
+}
+
+alk::EntityId alk::GameLogic::SpawnSigil(const std::string& path)
+{
+    std::string fullPath = std::string(GetWorkingDirectory()) + "/" + path;
+    sol::table table = alk::ScriptSystem::LoadTableFromFile(fullPath);
+    Entity e = alk::SceneSerializer::DeserializeEntity(*GetActiveScene(), table);
+    ALK_LOG("[GameLogic] Spawned '%s' from sigil", e.name.c_str());
+    alk::GameLogic::NotifyCallbacks(e.id);
+    return e.id;
 }

@@ -1,11 +1,11 @@
 #pragma once
 
+#include "alkaline_lib.h"
+#include "entities/Entity.h"
+
 #include <format>
 #include <unordered_map>
 #include <typeindex>
-
-#include "alkaline_lib.h"
-#include "entities/Entity.h"
 
 namespace alk
 {
