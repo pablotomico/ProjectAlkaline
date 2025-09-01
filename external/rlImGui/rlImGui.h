@@ -30,7 +30,7 @@
 
 #pragma once
 
-#include "raylib.h"
+#include "raylib/raylib.h"
 
 // Function specifiers in case library is build/used as a shared library
 // NOTE: Microsoft specifiers to tell compiler that symbols are imported/exported from a .dll
@@ -55,7 +55,7 @@
 #endif
 
 #ifndef NO_FONT_AWESOME
-#include "extras/IconsFontAwesome6.h"
+#include "imgui/extras/IconsFontAwesome6.h"
 #ifndef FONT_AWESOME_ICON_SIZE
 #define FONT_AWESOME_ICON_SIZE 11
 #endif

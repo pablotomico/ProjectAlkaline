@@ -185,12 +185,12 @@ project "AlkalineClient"
    filter "system:windows"
       systemversion "latest"
       linkoptions { "/NODEFAULTLIB:LIBCMT" }
+      postbuildcommands { "{COPYDIR} %[AlkalineGame/config/] %[" .. targetpath .. "/]" }
 
    filter "configurations:Debug"
       symbols "on"
       linkoptions { "/WHOLEARCHIVE:AlkalineGame" }
       defines { "ALK_DEBUG", "TRACY_ENABLE" }
-      postbuildcommands { "{COPYDIR} %[AlkalineGame/config/] %[" .. targetpath .. "/]" }
       
    filter "configurations:Release"
       optimize "on"
@@ -216,9 +216,6 @@ project "AlkalineEditor"
       "AlkalineCore/src",
       "AlkalineGame/src",
       "external",
-      "external/sol",
-      "external/lua",
-      "external/raylib",
    }
 
    links {
@@ -235,11 +232,9 @@ project "AlkalineEditor"
    filter "system:windows"
       systemversion "latest"
       linkoptions { "/NODEFAULTLIB:LIBCMT" }
+      postbuildcommands { "{COPYDIR} %[AlkalineGame/config/] %[" .. targetpath .. "/]" }
 
    filter "configurations:Debug"
       symbols "on"
       linkoptions { "/WHOLEARCHIVE:AlkalineGame" }
-      defines { "ALK_DEBUG", "ALK_EDITOR", "TRACY_ENABLE" }
-      
-   filter "configurations:Release"
-      optimize "on"
+      defines { "ALK_DEBUG", "TRACY_ENABLE" }

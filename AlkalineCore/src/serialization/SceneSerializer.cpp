@@ -1,12 +1,12 @@
 #include "SceneSerializer.h"
 
-#include "systems/ScriptSystem.h"
-#include "systems/Scene.h"
+#include "systems/Script/ScriptSystem.h"
+#include "systems/GameLogic/Scene.h"
 #include "entities/Entity.h"
 
-void alk::SceneSerializer::DeserializeScene(alk::GameLogic::Scene &scene, const sol::table &table)
+void alk::SceneSerializer::DeserializeScene(alk::Scene &scene, const sol::table &table)
 {
-    alk::GameLogic::World& world = scene.GetWorld();
+    alk::World& world = scene.GetWorld();
     scene.name = table["name"];
     ALK_LOG("SceneSerializer::DeserializeScene: '%s'", scene.name.c_str());
 
@@ -19,25 +19,25 @@ void alk::SceneSerializer::DeserializeScene(alk::GameLogic::Scene &scene, const 
     }
 }
 
-void alk::SceneSerializer::SerializeScene(alk::GameLogic::Scene &scene, sol::table& table)
+void alk::SceneSerializer::SerializeScene(alk::Scene &scene, sol::table& table)
 {
-    alk::GameLogic::World& world = scene.GetWorld();
+    alk::World& world = scene.GetWorld();
     table["name"] = scene.name;
-    sol::state& lua = alk::ScriptSystem::GetState();
-    sol::table entitiesTable = lua.create_table();
+    sol::state* luaState = alk::ScriptSystem::GetState();
+    sol::table entitiesTable = luaState->create_table();
     for (auto& pair : world.GetAllEntities())
     {
         EntityId id = pair.first;
-        alk::GameLogic::EntityMeta& em = pair.second;
+        alk::EntityMeta& em = pair.second;
         if (em.valid)
         {
-            sol::table entityTable = lua.create_table();
+            sol::table entityTable = luaState->create_table();
             entityTable["name"] = em.name;
-            sol::table componentsTable = lua.create_table();
+            sol::table componentsTable = luaState->create_table();
 
             for (auto& serializer : GetComponentSerializerList())
             {
-                serializer(id, world, componentsTable);
+                serializer(*luaState, id, world, componentsTable);
             }
 
             entityTable["components"] = componentsTable;
@@ -47,9 +47,9 @@ void alk::SceneSerializer::SerializeScene(alk::GameLogic::Scene &scene, sol::tab
     table["entities"] = entitiesTable;
 }
 
-alk::Entity alk::SceneSerializer::DeserializeEntity(alk::GameLogic::Scene& scene, sol::table& entity)
+alk::Entity alk::SceneSerializer::DeserializeEntity(alk::Scene& scene, sol::table& entity)
 {
-    alk::GameLogic::World& world = scene.GetWorld();
+    alk::World& world = scene.GetWorld();
     std::string name = entity["name"];
     sol::table components = entity["components"];
 

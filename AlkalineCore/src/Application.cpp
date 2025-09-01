@@ -11,70 +11,76 @@
 #include "Tracy.hpp"
 
 // Systems
-#include "systems/ScriptSystem.h"
-#include "systems/GameLogic.h"
-#include "systems/RenderSystem.h"
-#include "systems/InputSystem.h"
+#include "systems/Script/ScriptSystem.h"
+#include "systems/GameLogic/GameLogic.h"
+#include "systems/Render/RenderSystem.h"
+#include "systems/Input/InputSystem.h"
 
 #include "serialization/SceneSerializer.h"
 
 namespace alk
 {
-    
+    Application::Application() {
+        scriptSystem = std::make_unique<ScriptSystem>(coreSystems);
+        gameLogic = std::make_unique<GameLogic>(coreSystems);
+        renderSystem = std::make_unique<RenderSystem>(coreSystems);
+        inputSystem = std::make_unique<InputSystem>(coreSystems);
 
-    Application::Application()
-    {
+        coreSystems.scriptSystem = scriptSystem.get();
+        coreSystems.gameLogic = gameLogic.get();
+        coreSystems.renderSystem = renderSystem.get();
+        coreSystems.inputSystem = inputSystem.get();
     }
-    Application::~Application()
-    {
 
-    }
+    Application::~Application() {}
 
     /**
      * @brief Initialize the application and all dependencies
      * @return success (bool)
      */
-    bool Application::Initialize(const std::string& scenePath)
+    bool Application::Initialize(const std::string& scenePath, bool initWindow)
     {
         ALK_TRACE("ALKALINE ENGINE v0.1");
         ALK_LOG("Working Directory: '%s'", GetWorkingDirectory());
-        alk::ScriptSystem::SetupLuaState(); // TODO: Investigate if loading internal things might expose them to the scripts as globals
-        
+
         // TODO: Move to function
         std::string gameSettingsPath = std::string(GetApplicationDirectory()) + "GameSettings.lua";
         if (FileExists(gameSettingsPath.c_str()))
         {
-            sol::table gameSettings = alk::ScriptSystem::LoadTableFromFile(gameSettingsPath);
+            sol::table gameSettings = scriptSystem->LoadTableFromFile(gameSettingsPath);
             if (gameSettings["ProjectName"].valid())
             {
                 name = gameSettings["ProjectName"];
-                alk::ScriptSystem::AddToPackage("/" + name + "/scripts/");
+                scriptSystem->AddToPackage("/" + name + "/scripts/");
             }
             width = gameSettings["DefaultResolution"][1].valid() ? gameSettings["DefaultResolution"][1] : width;
             height = gameSettings["DefaultResolution"][2].valid() ? gameSettings["DefaultResolution"][2] : height;
             targetFPS = gameSettings["TargetFPS"].valid() ? gameSettings["TargetFPS"] : targetFPS;
         }
-        
-        SetTraceLogLevel(LOG_NONE);
-        InitWindow(width, height, name.c_str());
-        SetTargetFPS(targetFPS);
 
-        // ImGui
-        rlImGuiSetup(true);
+        if (initWindow)
+        {
+            SetTraceLogLevel(LOG_NONE);
+            InitWindow(width, height, name.c_str());
+            SetTargetFPS(targetFPS);
+
+            // ImGui
+            rlImGuiSetup(true);
+        }
 
         // TODO: check file extension using raylib IsFileExtension
-        sol::table sceneTable = alk::ScriptSystem::LoadTableFromFile(scenePath);
+        sol::table sceneTable = scriptSystem->LoadTableFromFile(scenePath);
         ALK_ASSERT(sceneTable != sol::lua_nil, "Application::Initialize: Couldn't load scene with path: '%s'", scenePath);
-        alk::GameLogic::Scene testScene;
+        alk::Scene testScene;
         alk::SceneSerializer::DeserializeScene(testScene, sceneTable);
 
 
         // alk::SceneSerializer::DeserializeScene();
-        alk::GameLogic::Initialize(std::move(testScene));
-        alk::ScriptSystem::Initialize();
-        alk::InputSystem::Initialize();
-        alk::RenderSystem::Initialize();
-        
+        gameLogic->Initialize(testScene);
+        scriptSystem->Initialize(testScene);
+        inputSystem->Initialize(testScene);
+        renderSystem->Initialize(testScene);
+
         ALK_TRACE("APPLICATION INITIALIZED SUCCESSFULLY");
         return true;
     }
@@ -95,10 +101,11 @@ namespace alk
                 FixedUpdate(fixedTimeStep);
                 nextFixedUpdate = currentTime + fixedTimeStep;
             }
-            Draw();
+            Draw(nullptr);
         }
 
         Shutdown();
+        Close();
         return 0; // IDEA: define return values based on success, assert, exception, etc.
     }
 
@@ -108,36 +115,36 @@ namespace alk
      */
     void Application::Update(const float deltaTime)
     {
-        alk::InputSystem::Update(deltaTime);
-        alk::GameLogic::Update(deltaTime);
-        alk::ScriptSystem::Update(deltaTime);
+        inputSystem->Update(deltaTime);
+        gameLogic->Update(deltaTime);
+        scriptSystem->Update(deltaTime);
 
         float cameraSpeed = 300.0f;
         float cameraZoomSpeed = 10.0f;
-        Camera2D& mainCamera = RenderSystem::GetMainCamera();
-        if(IsKeyDown(KEY_A))
+        Camera2D* mainCamera = renderSystem->GetMainCamera();
+        if (IsKeyDown(KEY_A))
         {
-            mainCamera.offset.x += deltaTime * cameraSpeed;
+            mainCamera->offset.x += deltaTime * cameraSpeed;
         }
-        if(IsKeyDown(KEY_D))
+        if (IsKeyDown(KEY_D))
         {
-            mainCamera.offset.x -= deltaTime * cameraSpeed;
+            mainCamera->offset.x -= deltaTime * cameraSpeed;
         }
-        if(IsKeyDown(KEY_W))
+        if (IsKeyDown(KEY_W))
         {
-            mainCamera.offset.y += deltaTime * cameraSpeed;
+            mainCamera->offset.y += deltaTime * cameraSpeed;
         }
-        if(IsKeyDown(KEY_S))
+        if (IsKeyDown(KEY_S))
         {
-            mainCamera.offset.y -= deltaTime * cameraSpeed;
+            mainCamera->offset.y -= deltaTime * cameraSpeed;
         }
 
         // Handles camera zoom in on mouse position
-        Vector2 mouseWorldPosBeforeZoom = GetScreenToWorld2D(GetMousePosition(), mainCamera);
-        mainCamera.zoom -= (GetMouseWheelMove() * deltaTime * cameraZoomSpeed);
-        Vector2 mouseWorldPosAfterZoom = GetScreenToWorld2D(GetMousePosition(), mainCamera);
+        Vector2 mouseWorldPosBeforeZoom = GetScreenToWorld2D(GetMousePosition(), *mainCamera);
+        mainCamera->zoom -= (GetMouseWheelMove() * deltaTime * cameraZoomSpeed);
+        Vector2 mouseWorldPosAfterZoom = GetScreenToWorld2D(GetMousePosition(), *mainCamera);
         Vector2 delta = { mouseWorldPosBeforeZoom.x - mouseWorldPosAfterZoom.x, mouseWorldPosBeforeZoom.y - mouseWorldPosAfterZoom.y };
-        mainCamera.target = Vector2{mainCamera.target.x + delta.x, mainCamera.target.y + delta.y };   
+        mainCamera->target = Vector2{ mainCamera->target.x + delta.x, mainCamera->target.y + delta.y };
     }
 
     /**
@@ -145,21 +152,36 @@ namespace alk
      * @param deltaTime Elapsed time since last frame
      */
     void Application::FixedUpdate(const float deltaTime)
-    {
-    }
+    {}
 
     /**
      * @brief Draw loop for application
      */
-    void Application::Draw()
+    void Application::Draw(RenderTexture2D* renderTexture)
     {
-        BeginDrawing();
+        if (renderTexture)
+        {
+            BeginTextureMode(*renderTexture);
+        }
+        else
+        {
+            BeginDrawing();
+            rlImGuiBegin();
+        }
         ClearBackground(PINK);
 
-        alk::RenderSystem::Draw();
+        renderSystem->Draw();
         alk::Debug::UI::Draw();
 
-        EndDrawing();
+        if (renderTexture)
+        {
+            EndTextureMode();
+        }
+        else
+        {
+            rlImGuiEnd();
+            EndDrawing();
+        }
         FrameMark;
     }
 
@@ -168,16 +190,21 @@ namespace alk
      */
     void Application::Shutdown()
     {
-        alk::GameLogic::Shutdown();
-        alk::RenderSystem::Shutdown();
-        alk::ScriptSystem::Shutdown();
+        gameLogic->Shutdown();
+        inputSystem->Shutdown();
+        renderSystem->Shutdown();
+        scriptSystem->Shutdown();
+    }
+
+    void Application::Close()
+    {
         CloseWindow();
         rlImGuiShutdown();
     }
 
     /**
      * @brief returns whether the application should close
-     * @return bool 
+     * @return bool
      */
     bool Application::QueryShutdown()
     {

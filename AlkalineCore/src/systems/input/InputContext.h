@@ -6,18 +6,15 @@
 
 namespace alk
 {
-    namespace InputSystem
+    struct InputAction
     {
-        struct InputAction
-        {
-            std::string name;
-            int key;
-        };
+        std::string name;
+        int key;
+    };
 
-        struct InputContext
-        {
-            std::string name;
-            std::map<int, InputAction> actionMap;
-        };
-    }
+    struct InputContext
+    {
+        std::string name;
+        std::map<int, InputAction> actionMap;
+    };
 }
