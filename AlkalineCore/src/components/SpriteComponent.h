@@ -11,8 +11,7 @@ namespace alk
     {
     public:
         std::string path;
-        alk::TextureHandler texHandler;
-        Texture2D texture;
+        TextureHandle texHandle;
         bool visible = true;
         Color color = WHITE;
 

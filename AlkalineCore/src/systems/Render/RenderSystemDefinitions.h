@@ -7,21 +7,14 @@
 
 namespace alk
 {
-    using TextureHandler = unsigned int;
-
-    enum struct RenderType
-    {
-        Sprite,
-        Grid,
-    };
+    using TextureHandle = size_t;
 
     struct RenderSystemData
     {
-        RenderSystemData() {};
         std::vector<alk::EntityId> drawables;
         bool dirtyLayers = false;
-        std::unordered_map<const char*, TextureHandler> loadedHandlers;
-        std::unordered_map<TextureHandler, Texture2D> loadedTextures;
+        std::unordered_map<std::string, size_t> textureHandles;
+        std::vector<Texture2D> loadedTextures;
     };
 
     struct RenderEntry
@@ -29,7 +22,7 @@ namespace alk
         EntityId entityId;
         Vector2 projection; // cached isometric projection
         float sortKey;
-        Texture2D texture;
+        TextureHandle texHandle;
         Color color;
     };
 }

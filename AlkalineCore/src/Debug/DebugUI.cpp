@@ -6,10 +6,14 @@
 
 #include "serialization/SceneSerializer.h"
 
+#include "components/SpriteComponent.h"
+#include "components/TransformComponent.h"
+
 #include "systems/Script/ScriptSystem.h"
 #include "systems/GameLogic/GameLogic.h"
 #include "systems/GameLogic/World.h"
 #include "systems/GameLogic/GameLogicSubsystem.h"
+#include "systems/Render/RenderSystem.h"
 
 namespace alk
 {
@@ -88,6 +92,14 @@ namespace alk
                 if (e.valid)
                 {
                     ImGui::Text(e.name.c_str());
+
+                    auto transform = world.GetComponent<TransformComponent>(e.id);
+                    auto sprite = world.GetComponent<SpriteComponent>(e.id);
+                    if (sprite)
+                    {
+                        ImGui::SameLine();
+                        ImGui::Text("(%.0f)", RenderSystem::CalculateSortKey(transform->position));
+                    }
                 }
                 else
                 {

@@ -5,15 +5,16 @@
 #include "systems/Render/RenderSystemDefinitions.h"
 #include <unordered_map>
 #include <variant>
+#include <map>
+#include <typeindex>
+#include <functional>
 
-#include "components/GridComponent.h"
 #include "entities/Entity.h"
 
 namespace alk
 {
     class Scene;
     class World;
-    class RenderComponent;
     class RenderSubsystem;
     class TransformComponent;
     class SpriteComponent;
@@ -25,7 +26,6 @@ namespace alk
     private:
         std::vector<RenderEntry> renderPool;
         RenderSystemData drawableData;
-        TextureHandler textureHandler = 0;
         Camera2D mainCamera;
 
     public:
@@ -95,17 +95,11 @@ namespace alk
             return drawableData;
         }
 
-        TextureHandler GetNextTextureHandler()
-        {
-            return ++textureHandler;
-        }
-
         static Camera2D*& GetMainCamera();
 
         void AddToRenderPool(alk::EntityId entityId, alk::TransformComponent* transform, alk::SpriteComponent* sprite);
-        void AddToScreen(Entity& entity);
-        void EvaluateAndSortDirtyLayers();
-        void DrawGrid(alk::GridComponent* gridComponent, alk::TransformComponent* transformComponent);
-        TextureHandler LoadRenderSystemTexture(const char* filename);
+        TextureHandle LoadRenderSystemTexture(std::string filename);
+
+        static float CalculateSortKey(const Vector2 position);
     };
 }
