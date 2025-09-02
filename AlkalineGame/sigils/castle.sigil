@@ -11,5 +11,5 @@ return {
             },
         },
     },
-    name = "Castle Sigil",
+    name = "Castle",
 }

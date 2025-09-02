@@ -9,6 +9,15 @@
             "args": [],
             "cwd": "${workspaceRoot}",
             "console": "externalTerminal",
+        },
+        {
+            "name": "Editor",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceRoot}/bin/Debug/AlkalineEditor/AlkalineEditor",
+            "args": [],
+            "cwd": "${workspaceRoot}",
+            "console": "externalTerminal",
         }
     ]
 }

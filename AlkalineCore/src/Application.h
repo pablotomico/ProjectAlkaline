@@ -1,16 +1,29 @@
 #pragma once
 
+// Systems
+#include "systems/Script/ScriptSystem.h"
+#include "systems/GameLogic/GameLogic.h"
+#include "systems/Render/RenderSystem.h"
+#include "systems/Input/InputSystem.h"
+
+#include "raylib/raylib.h"
 #include <string>
+#include <memory>
 
 namespace alk
 {
+    class GameLogic;
+    class ScriptSystem;
+    class RenderSystem;
+    class InputSystem;
+
     class Application
     {
     public:
         Application();
         ~Application();
-    
-        bool Initialize(const std::string& scenePath);
+
+        bool Initialize(const std::string& scenePath, bool initWindow = true);
         int Run();
         void Shutdown();
 
@@ -19,10 +32,16 @@ namespace alk
         int height = 1080;
         int targetFPS = 144;
 
-    private:
         void Update(const float deltaTime);
         void FixedUpdate(const float deltaTime);
-        void Draw();
+        void Draw(RenderTexture2D* renderTexture);
+        void Close();
         bool QueryShutdown();
+
+    private:
+        ScriptSystem scriptSystem;
+        GameLogic gameLogic;
+        RenderSystem renderSystem;
+        InputSystem inputSystem;
     };
 }

@@ -38,16 +38,16 @@ constexpr float fixedUpdateFPS = 60.0f;
 
 // TODO: add categories/channels to log for different systems
 template <typename... Args>
-void _log(char const *prefix, char const *msg, TextColor textColor, Args... args)
+void _log(char const* prefix, char const* msg, TextColor textColor, Args... args)
 {
-    static char const *TextColorTable[TEXT_COLOR_COUNT] =
-        {
-            "\x1b[37m", // TEXT_COLOR_WHITE
-            "\x1b[30m", // TEXT_COLOR_BLACK
-            "\x1b[31m", // TEXT_COLOR_RED
-            "\x1b[32m", // TEXT_COLOR_GREEN
-            "\x1b[33m", // TEXT_COLOR_YELLOW
-        };
+    static char const* TextColorTable[TEXT_COLOR_COUNT] =
+    {
+        "\x1b[37m", // TEXT_COLOR_WHITE
+        "\x1b[30m", // TEXT_COLOR_BLACK
+        "\x1b[31m", // TEXT_COLOR_RED
+        "\x1b[32m", // TEXT_COLOR_GREEN
+        "\x1b[33m", // TEXT_COLOR_YELLOW
+    };
 
     char formatBuffer[8192] = {};
     sprintf_s(formatBuffer, "%s%s %s \033[0m", TextColorTable[textColor], prefix, msg);
@@ -58,13 +58,13 @@ void _log(char const *prefix, char const *msg, TextColor textColor, Args... args
     puts(textBuffer);
 }
 
-#define ALK_LOG(msg, ...) _log("[LOG] ", msg, TEXT_COLOR_WHITE, ##__VA_ARGS__)
-#define ALK_TRACE(msg, ...) _log("[TRACE] ", msg, TEXT_COLOR_GREEN, ##__VA_ARGS__)
-#define ALK_WARN(msg, ...) _log("[WARN] ", msg, TEXT_COLOR_YELLOW, ##__VA_ARGS__)
-#define ALK_ERROR(msg, ...) _log("[ERROR] ", msg, TEXT_COLOR_RED, ##__VA_ARGS__)
-#define ALK_SUCCESS(msg, ...) _log("[TEST][SUCCESS] ", msg, TEXT_COLOR_GREEN, ##__VA_ARGS__)
-#define ALK_FAILURE(msg, ...) _log("[TEST][FAILURE] ", msg, TEXT_COLOR_RED, ##__VA_ARGS__)
-#define ALK_NOT_IMPLEMENTED(msg, ...) _log("[TODO] ", msg, TEXT_COLOR_RED, ##__VA_ARGS__)
+#define ALK_LOG(msg, ...) _log("[LOG]", msg, TEXT_COLOR_WHITE, ##__VA_ARGS__)
+#define ALK_TRACE(msg, ...) _log("[TRACE]", msg, TEXT_COLOR_GREEN, ##__VA_ARGS__)
+#define ALK_WARN(msg, ...) _log("[WARN]", msg, TEXT_COLOR_YELLOW, ##__VA_ARGS__)
+#define ALK_ERROR(msg, ...) _log("[ERROR]", msg, TEXT_COLOR_RED, ##__VA_ARGS__)
+#define ALK_SUCCESS(msg, ...) _log("[TEST][SUCCESS]", msg, TEXT_COLOR_GREEN, ##__VA_ARGS__)
+#define ALK_FAILURE(msg, ...) _log("[TEST][FAILURE]", msg, TEXT_COLOR_RED, ##__VA_ARGS__)
+#define ALK_NOT_IMPLEMENTED(msg, ...) _log("[TODO]", msg, TEXT_COLOR_RED, ##__VA_ARGS__)
 
 #define ALK_ASSERT(x, msg, ...)            \
     {                                      \
@@ -85,4 +85,4 @@ void _log(char const *prefix, char const *msg, TextColor textColor, Args... args
         {                                   \
             ALK_FAILURE(msg, ##__VA_ARGS__);\
         }                                   \
-    }                                       \
+    }                                       

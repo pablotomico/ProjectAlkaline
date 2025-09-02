@@ -6,10 +6,14 @@
 
 #include "serialization/SceneSerializer.h"
 
-#include "systems/ScriptSystem.h"
-#include "systems/GameLogic.h"
-#include "systems/World.h"
-#include "systems/subsystems/GameLogicSubsystem.h"
+#include "components/SpriteComponent.h"
+#include "components/TransformComponent.h"
+
+#include "systems/Script/ScriptSystem.h"
+#include "systems/GameLogic/GameLogic.h"
+#include "systems/GameLogic/World.h"
+#include "systems/GameLogic/GameLogicSubsystem.h"
+#include "systems/Render/RenderSystem.h"
 
 namespace alk
 {
@@ -36,9 +40,6 @@ namespace alk
 
         void UI::Draw()
         {
-
-            rlImGuiBegin();
-
             ImGui::Begin("Debug");
             ImGui::Text("FPS: %d", GetFPS());
 
@@ -70,27 +71,35 @@ namespace alk
             ImGui::End();
 
             ImGui::Begin("Game Logic Subsystems");
-            for (auto system : alk::GameLogic::GetSubsystems())
+            for (auto system : *alk::GameLogic::GetSubsystems())
             {
                 if (system->IsEnabled())
                 {
-                    ImGui::TextColored(ImVec4(1,1,1,1), "%s", system->GetName().c_str());
+                    ImGui::TextColored(ImVec4(1, 1, 1, 1), "%s", system->GetName().c_str());
                 }
                 else
                 {
-                    ImGui::TextColored(ImVec4(1,1,1,0.3f), "%s",system->GetName().c_str());
+                    ImGui::TextColored(ImVec4(1, 1, 1, 0.3f), "%s", system->GetName().c_str());
                 }
             }
             ImGui::End(); // Active Systems
 
             ImGui::Begin("World Outliner");
-            alk::GameLogic::World& world = alk::GameLogic::GetWorld();
+            alk::World& world = alk::GameLogic::GetWorld();
             for (auto& pair : world.GetAllEntities())
             {
-                alk::GameLogic::EntityMeta e = pair.second;
+                alk::EntityMeta e = pair.second;
                 if (e.valid)
                 {
                     ImGui::Text(e.name.c_str());
+
+                    auto transform = world.GetComponent<TransformComponent>(e.id);
+                    auto sprite = world.GetComponent<SpriteComponent>(e.id);
+                    if (sprite)
+                    {
+                        ImGui::SameLine();
+                        ImGui::Text("(%.0f)", RenderSystem::CalculateSortKey(transform->position));
+                    }
                 }
                 else
                 {
@@ -101,16 +110,14 @@ namespace alk
             ImGui::Separator();
             if (ImGui::Button("Test Serialize"))
             {
-                sol::table table = alk::ScriptSystem::GetState().create_table();
-                alk::GameLogic::Scene* scene = alk::GameLogic::GetActiveScene();
+                sol::table table = alk::ScriptSystem::GetState()->create_table();
+                alk::Scene* scene = alk::GameLogic::GetActiveScene();
                 alk::SceneSerializer::SerializeScene(*alk::GameLogic::GetActiveScene(), table);
 
                 alk::ScriptSystem::SaveTableToFile("C:/dev/ProjectAlkaline/AlkalineGame/scenes/testexport.scene", table);
             }
 
             ImGui::End(); // World Outliner
-
-            rlImGuiEnd();
         }
     }
 }

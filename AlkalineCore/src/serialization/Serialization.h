@@ -1,8 +1,8 @@
 #pragma once
 
 #include "sol/sol.hpp"
-#include "systems/ScriptSystem.h"
-#include "systems/World.h"
+#include "systems/Script/ScriptSystem.h"
+#include "systems/GameLogic/World.h"
 #include "entities/Entity.h"
 #include "serialization/SceneSerializer.h"
 
@@ -27,9 +27,8 @@
 // static void SerializeProperty(typeId) // TODO here
 
 #define ALK_COMPONENT_SERIALIZER(ComponentClass, BODY)                                  \
-    static void Serialize(alk::EntityId entityId, alk::GameLogic::World &world, sol::table &componentsTable) \
+    static void Serialize(sol::state& lua, alk::EntityId entityId, alk::World &world, sol::table &componentsTable) \
     {                                                                                   \
-        auto &lua = alk::ScriptSystem::GetState();                                      \
         ComponentClass *component = world.GetComponent<ComponentClass>(entityId);       \
         if (component == nullptr)                                                       \
             return;                                                                     \
@@ -41,7 +40,7 @@ private:                                                                        
     static inline bool isSerializerRegistered = alk::SceneSerializer::RegisterComponentSerializer<ComponentClass>(Serialize);
 
 #define ALK_COMPONENT_DESERIALIZER(ComponentClass, BODY)                              \
-    static void Deserialize(alk::EntityId entityId, alk::GameLogic::World &world, const sol::table &table) \
+    static void Deserialize(alk::EntityId entityId, alk::World &world, const sol::table &table) \
     {                                                                                 \
         world.AddComponent<ComponentClass>(entityId);                                 \
         ComponentClass *component = world.GetComponent<ComponentClass>(entityId);     \

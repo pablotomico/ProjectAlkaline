@@ -3,17 +3,14 @@
 #include <map>
 #include "sol.hpp"
 
-#include "systems/ScriptSystem.h"
+#include "systems/Script/ScriptSystem.h"
 
 #include "serialization/Serialization.h"
 
 namespace alk
 {
-    namespace GameLogic
-    {
-        class Scene;
-        class World;
-    }
+    class Scene;
+    class World;
 
     namespace SceneSerializer
     {
@@ -21,7 +18,7 @@ namespace alk
         // COMPONENT SERIALIZATION / DESERIALIZATION
         // #########################################
             
-        using ComponentSerializerFn = void (*)(EntityId, alk::GameLogic::World&, sol::table&);
+        using ComponentSerializerFn = void (*)(sol::state&, EntityId, alk::World&, sol::table&);
 
         inline std::vector<ComponentSerializerFn>& GetComponentSerializerList()
         {
@@ -36,7 +33,7 @@ namespace alk
             return true;
         }
 
-        using ComponentDeserializerFn = void (*)(EntityId, alk::GameLogic::World&, const sol::table&);
+        using ComponentDeserializerFn = void (*)(EntityId, alk::World&, const sol::table&);
 
         inline std::map<std::string, ComponentDeserializerFn>& GetComponentDeserializerMap()
         {
@@ -55,8 +52,8 @@ namespace alk
         // SCENES SERIALIZATION / DESERIALIZATION
         // ######################################
         
-        void DeserializeScene(alk::GameLogic::Scene& scene, const sol::table& table);
-        void SerializeScene(alk::GameLogic::Scene& scene, sol::table& table);
-        Entity DeserializeEntity(alk::GameLogic::Scene& scene, sol::table& table);
+        void DeserializeScene(alk::Scene& scene, const sol::table& table);
+        void SerializeScene(alk::Scene& scene, sol::table& table);
+        Entity DeserializeEntity(alk::Scene& scene, sol::table& table);
     }
 }

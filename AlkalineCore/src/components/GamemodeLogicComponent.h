@@ -4,33 +4,30 @@
 
 #include "alkaline_lib.h"
 #include "components/BaseComponent.h"
-#include "systems/subsystems/GamemodeLogicSubsystem.h"
+#include "systems/GameLogic/GamemodeLogicSubsystem.h"
 #include "serialization/SceneSerializer.h"
 
 namespace alk
 {
-    namespace GameLogic
+    using StateChangeCallback = std::function<void(EGameState, EGameState, const char*)>;
+
+    class GamemodeLogicComponent : public BaseComponent
     {
-        using StateChangeCallback = std::function<void(EGameState, EGameState, const char*)>;
+        std::vector<StateChangeCallback> stateChangeCallbacks;
+    public:
+        GamemodeLogicComponent() = default;
 
-        class GamemodeLogicComponent : public BaseComponent
+        void RegisterOnStateChangedCallback(const StateChangeCallback& callback)
         {
-            std::vector<StateChangeCallback> stateChangeCallbacks;
-        public:
-            GamemodeLogicComponent() = default;
+            stateChangeCallbacks.push_back(callback);
+        }
 
-            void RegisterOnStateChangedCallback(const StateChangeCallback& callback)
-            {
-                stateChangeCallbacks.push_back(callback);
-            }
+        std::vector<StateChangeCallback> GetStateChangeCallbacks() const
+        {
+            return stateChangeCallbacks;
+        }
 
-            std::vector<StateChangeCallback> GetStateChangeCallbacks() const
-            {
-                return stateChangeCallbacks;
-            }
-
-            ALK_COMPONENT_SERIALIZER(GamemodeLogicComponent, {});
-            ALK_COMPONENT_DESERIALIZER(GamemodeLogicComponent, {});
-        };
-    }
+        ALK_COMPONENT_SERIALIZER(GamemodeLogicComponent, {});
+        ALK_COMPONENT_DESERIALIZER(GamemodeLogicComponent, {});
+    };
 }

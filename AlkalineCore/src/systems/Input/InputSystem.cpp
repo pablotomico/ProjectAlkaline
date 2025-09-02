@@ -1,31 +1,28 @@
 #include "raylib/raylib.h"
 
-#include "systems/InputSystem.h"
-#include "systems/ScriptSystem.h"
-#include "systems/input/InputContext.h"
-#include "InputSystem.h"
+#include "systems/Input/InputSystem.h"
+#include "systems/Script/ScriptSystem.h"
 
-
-void alk::InputSystem::Initialize()
+void alk::InputSystem::Initialize(Scene& scene)
 {
     std::string settingsPath = std::string(GetApplicationDirectory()) + "InputSettings.lua";
     sol::table settings = alk::ScriptSystem::LoadTableFromFile(settingsPath);
 
     sol::table inputContextTable = settings["InputContexts"];
     sol::table inputActionTable = settings["InputActions"];
-    
+
     // IDEA: input action list
     // we don't store a list of input actions which are referenced from the input contexts
     // instead, the actions are defined on each context's actionMap, so can be duplicated if reused
-    
+
     auto& inputContexts = GetInputContexts();
-    
-    for(auto& pair : inputContextTable)
+
+    for (auto& pair : inputContextTable)
     {
         InputContext context;
         context.name = pair.first.as<std::string>();
         sol::table actions = pair.second.as<sol::table>()["actions"];
-        for(auto& p : actions)
+        for (auto& p : actions)
         {
             InputAction inputAction;
             inputAction.name = p.second.as<std::string>();
@@ -39,9 +36,12 @@ void alk::InputSystem::Initialize()
     alk::ScriptSystem::RegisterNotification("OnKeyPressed");
 
     alk::ScriptSystem::CreateNamespace("Input")
-        .AddFunction("LoadInputContext", alk::InputSystem::LoadInputContext)
-        .AddFunction("IsKeyDown", alk::InputSystem::IsKeyDown);
+        .AddFunction("LoadInputContext", &alk::InputSystem::LoadInputContext, this)
+        .AddFunction("IsKeyDown", &alk::InputSystem::IsKeyDown, this);
 }
+
+void alk::InputSystem::Reflect(ScriptSystem& script)
+{}
 
 void alk::InputSystem::Update(const float deltaTime)
 {
@@ -55,6 +55,9 @@ void alk::InputSystem::Update(const float deltaTime)
     }
 }
 
+void alk::InputSystem::Shutdown()
+{}
+
 bool alk::InputSystem::IsKeyDown(int key)
 {
     return ::IsKeyDown(key);
@@ -62,19 +65,17 @@ bool alk::InputSystem::IsKeyDown(int key)
 
 void alk::InputSystem::LoadInputContext(const std::string& name)
 {
-    auto& contexts = alk::InputSystem::GetInputContexts();
+    auto& contexts = GetInputContexts();
     ALK_ASSERT(contexts.contains(name), "[InputSystem] Input Context '%s' doesn't exist", name.c_str());
-    GetActiveInputContext() = &contexts.at(name);
+    currentContext = &contexts.at(name);
 }
 
-alk::InputSystem::InputContext*& alk::InputSystem::GetActiveInputContext()
+alk::InputContext*& alk::InputSystem::GetActiveInputContext()
 {
-    static alk::InputSystem::InputContext* currentContext = nullptr;
     return currentContext;
 }
 
-alk::InputSystem::InputContextMap& alk::InputSystem::GetInputContexts()
+alk::InputContextMap& alk::InputSystem::GetInputContexts()
 {
-    static alk::InputSystem::InputContextMap inputContexts;
     return inputContexts;
 }
