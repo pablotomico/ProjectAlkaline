@@ -3,7 +3,7 @@
 
 namespace alk
 {
-    GameLogicSubsystem::GameLogicSubsystem(std::string name, CoreSystems& coreSystems) : name(name), coreSystems(coreSystems)
+    GameLogicSubsystem::GameLogicSubsystem(std::string name) : name(name)
     {
         ALK_LOG("Registering %s", name.c_str());
         // alk::GameLogic::AddSystem(this);

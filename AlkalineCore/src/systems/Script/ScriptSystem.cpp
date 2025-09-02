@@ -3,7 +3,7 @@
 #include "systems/GameLogic/GameLogic.h"
 #include "components/ScriptComponent.h"
 
-alk::ScriptSystem::ScriptSystem(CoreSystems& coreSystems) : BaseSystem(coreSystems), safe(luaState)
+alk::ScriptSystem::ScriptSystem() : safe(luaState)
 {
     luaState.open_libraries(sol::lib::base, sol::lib::package, sol::lib::string, sol::lib::math, sol::lib::table, sol::lib::debug);
     luaState.set_panic([](lua_State* L) {
@@ -18,10 +18,10 @@ alk::ScriptSystem::ScriptSystem(CoreSystems& coreSystems) : BaseSystem(coreSyste
 
 void alk::ScriptSystem::Initialize(Scene& scene)
 {
-    RegisterNotification("TestNotification");
+    alk::ScriptSystem::RegisterNotification("TestNotification");
 
-    CreateNamespace("System")
-        .AddFunction("ConnectToNotification", &ScriptSystem::RegisterNotificationCallback, this);
+    alk::ScriptSystem::CreateNamespace("System")
+        .AddFunction("ConnectToNotification", ScriptSystem::RegisterNotificationCallback);
 
     auto components = scene.GetWorld().GetComponents<ScriptComponent>();
     for (int i = 0; i < components->Size(); ++i)
@@ -53,7 +53,7 @@ void alk::ScriptSystem::Reflect(ScriptSystem& script)
 
 void alk::ScriptSystem::Update(float deltaTime)
 {
-    for (auto& scriptComponent : *coreSystems.gameLogic->GetWorld().GetComponents<ScriptComponent>())
+    for (auto& scriptComponent : *alk::GameLogic::GetWorld().GetComponents<ScriptComponent>())
     {
         if (scriptComponent.onUpdate)
         {
@@ -84,8 +84,9 @@ alk::NotificationMap*& alk::ScriptSystem::GetNotificationMap()
 
 void alk::ScriptSystem::RegisterNotification(const std::string& notification)
 {
-    ALK_ASSERT(!notificationMap.contains(notification), "[ScriptSystem] Notification already registered: %s", notification.c_str());
-    notificationMap.emplace(notification, std::vector<sol::function>());
+    auto notificationMap = GetNotificationMap();
+    ALK_ASSERT(!notificationMap->contains(notification), "[ScriptSystem] Notification already registered: %s", notification.c_str());
+    notificationMap->emplace(notification, std::vector<sol::function>());
 }
 
 void alk::ScriptSystem::RegisterNotificationCallback(std::string notification, sol::function callback)

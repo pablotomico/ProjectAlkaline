@@ -3,12 +3,10 @@
 #include "systems/Input/InputSystem.h"
 #include "systems/Script/ScriptSystem.h"
 
-alk::InputSystem::InputSystem(CoreSystems& coreSystems) : BaseSystem(coreSystems) {}
-
 void alk::InputSystem::Initialize(Scene& scene)
 {
     std::string settingsPath = std::string(GetApplicationDirectory()) + "InputSettings.lua";
-    sol::table settings = coreSystems.scriptSystem->LoadTableFromFile(settingsPath);
+    sol::table settings = alk::ScriptSystem::LoadTableFromFile(settingsPath);
 
     sol::table inputContextTable = settings["InputContexts"];
     sol::table inputActionTable = settings["InputActions"];
@@ -35,9 +33,9 @@ void alk::InputSystem::Initialize(Scene& scene)
         inputContexts[context.name] = context;
     }
 
-    coreSystems.scriptSystem->RegisterNotification("OnKeyPressed");
+    alk::ScriptSystem::RegisterNotification("OnKeyPressed");
 
-    coreSystems.scriptSystem->CreateNamespace("Input")
+    alk::ScriptSystem::CreateNamespace("Input")
         .AddFunction("LoadInputContext", &alk::InputSystem::LoadInputContext, this)
         .AddFunction("IsKeyDown", &alk::InputSystem::IsKeyDown, this);
 }
@@ -52,7 +50,7 @@ void alk::InputSystem::Update(const float deltaTime)
     {
         if (context && context->actionMap.contains(keycode))
         {
-            coreSystems.scriptSystem->SendNotification("OnKeyPressed", context->actionMap.at(keycode).name);
+            alk::ScriptSystem::SendNotification("OnKeyPressed", context->actionMap.at(keycode).name);
         }
     }
 }

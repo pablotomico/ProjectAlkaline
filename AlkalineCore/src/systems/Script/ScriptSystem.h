@@ -16,7 +16,7 @@ namespace alk
     class ScriptSystem : public BaseSystem
     {
     public:
-        ScriptSystem(CoreSystems& coreSystems);
+        ScriptSystem();
 
         void Initialize(Scene& scene) override;
         void Reflect(ScriptSystem& script) override;
@@ -26,8 +26,8 @@ namespace alk
         static sol::state*& GetState();
         static LuaSafeRunner*& GetSafeRunner();
         static NotificationMap*& GetNotificationMap();
-        void RegisterNotification(const std::string& notification);
-        void RegisterNotificationCallback(std::string notification, sol::function callback);
+        static void RegisterNotification(const std::string& notification);
+        static void RegisterNotificationCallback(std::string notification, sol::function callback);
 
         void AddToPackage(const std::string& path);
         static sol::table LoadTableFromFile(const std::string& filePath);
@@ -66,13 +66,13 @@ namespace alk
             return GetSafeRunner()->CallFunction(fn, std::forward<Args>(args)...);
         }
 
-        inline LuaNamespace CreateNamespace(const std::string& name)
+        inline static LuaNamespace CreateNamespace(const std::string& name)
         {
             return LuaNamespace(*GetState(), name);
         }
 
         template<typename T>
-        LuaUsertype<T> CreateUsertype(const std::string& name)
+        inline static LuaUsertype<T> CreateUsertype(const std::string& name)
         {
             return LuaUsertype<T>(*GetState(), name);
         }

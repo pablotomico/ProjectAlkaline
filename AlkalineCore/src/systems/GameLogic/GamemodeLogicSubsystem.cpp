@@ -9,13 +9,13 @@ namespace alk
 {
     bool GamemodeLogicSubsystem::Initialize()
     {
-        World& world = coreSystems.gameLogic->GetWorld();
+        World& world = alk::GameLogic::GetWorld();
         auto components = world.GetComponents<GamemodeLogicComponent>();
         if (components->Size() == 0) return false;
 
         SetState(EGameState::BUILD);
 
-        coreSystems.scriptSystem->CreateNamespace("GamemodeLogicSubsystem")
+        alk::ScriptSystem::CreateNamespace("GamemodeLogicSubsystem")
             .AddFunction("GetState", &GamemodeLogicSubsystem::GetStateString, this);
 
         return true;
@@ -45,7 +45,7 @@ namespace alk
             EGameState oldState = currentState;
             currentState = newState;
 
-            alk::Scene* activeScene = coreSystems.gameLogic->GetActiveScene();
+            alk::Scene* activeScene = alk::GameLogic::GetActiveScene();
             if (activeScene == nullptr)
             {
                 ALK_LOG("GamemodeLogicSubsystem::SetState: Active scene is null, cannot find gamemode logic components.");

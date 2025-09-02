@@ -216,6 +216,7 @@ project "AlkalineEditor"
       "AlkalineCore/src",
       "AlkalineGame/src",
       "external",
+      "external/lua",
    }
 
    links {

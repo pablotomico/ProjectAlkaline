@@ -13,7 +13,6 @@ namespace alk
     class InputSystem : public BaseSystem
     {
     public:
-        InputSystem(CoreSystems& coreSystems);
         void Initialize(Scene& scene) override;
         void Reflect(ScriptSystem& script) override;
         void Update(const float deltaTime) override;

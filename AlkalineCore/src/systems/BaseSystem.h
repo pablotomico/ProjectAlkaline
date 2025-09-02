@@ -1,7 +1,5 @@
 #pragma once
 
-#include "systems/CoreSystems.h"
-
 #include <string>
 
 namespace alk
@@ -12,13 +10,10 @@ namespace alk
     class BaseSystem
     {
     public:
-        explicit BaseSystem(CoreSystems& cs) : coreSystems(cs) {}
+        BaseSystem() {}
         virtual void Initialize(Scene& scene) {};
         virtual void Reflect(ScriptSystem& script) {};
         virtual void Update(const float deltaTime) {};
         virtual void Shutdown() {};
-
-    protected:
-        CoreSystems& coreSystems;
     };
 }

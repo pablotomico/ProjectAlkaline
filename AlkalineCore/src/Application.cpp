@@ -10,26 +10,11 @@
 #include "Debug/DebugUI.h"
 #include "Tracy.hpp"
 
-// Systems
-#include "systems/Script/ScriptSystem.h"
-#include "systems/GameLogic/GameLogic.h"
-#include "systems/Render/RenderSystem.h"
-#include "systems/Input/InputSystem.h"
-
 #include "serialization/SceneSerializer.h"
 
 namespace alk
 {
     Application::Application() {
-        scriptSystem = std::make_unique<ScriptSystem>(coreSystems);
-        gameLogic = std::make_unique<GameLogic>(coreSystems);
-        renderSystem = std::make_unique<RenderSystem>(coreSystems);
-        inputSystem = std::make_unique<InputSystem>(coreSystems);
-
-        coreSystems.scriptSystem = scriptSystem.get();
-        coreSystems.gameLogic = gameLogic.get();
-        coreSystems.renderSystem = renderSystem.get();
-        coreSystems.inputSystem = inputSystem.get();
     }
 
     Application::~Application() {}
@@ -47,11 +32,11 @@ namespace alk
         std::string gameSettingsPath = std::string(GetApplicationDirectory()) + "GameSettings.lua";
         if (FileExists(gameSettingsPath.c_str()))
         {
-            sol::table gameSettings = scriptSystem->LoadTableFromFile(gameSettingsPath);
+            sol::table gameSettings = scriptSystem.LoadTableFromFile(gameSettingsPath);
             if (gameSettings["ProjectName"].valid())
             {
                 name = gameSettings["ProjectName"];
-                scriptSystem->AddToPackage("/" + name + "/scripts/");
+                scriptSystem.AddToPackage("/" + name + "/scripts/");
             }
             width = gameSettings["DefaultResolution"][1].valid() ? gameSettings["DefaultResolution"][1] : width;
             height = gameSettings["DefaultResolution"][2].valid() ? gameSettings["DefaultResolution"][2] : height;
@@ -69,17 +54,17 @@ namespace alk
         }
 
         // TODO: check file extension using raylib IsFileExtension
-        sol::table sceneTable = scriptSystem->LoadTableFromFile(scenePath);
+        sol::table sceneTable = scriptSystem.LoadTableFromFile(scenePath);
         ALK_ASSERT(sceneTable != sol::lua_nil, "Application::Initialize: Couldn't load scene with path: '%s'", scenePath);
         alk::Scene testScene;
         alk::SceneSerializer::DeserializeScene(testScene, sceneTable);
 
 
         // alk::SceneSerializer::DeserializeScene();
-        gameLogic->Initialize(testScene);
-        scriptSystem->Initialize(testScene);
-        inputSystem->Initialize(testScene);
-        renderSystem->Initialize(testScene);
+        gameLogic.Initialize(testScene);
+        scriptSystem.Initialize(testScene);
+        inputSystem.Initialize(testScene);
+        renderSystem.Initialize(testScene);
 
         ALK_TRACE("APPLICATION INITIALIZED SUCCESSFULLY");
         return true;
@@ -115,13 +100,13 @@ namespace alk
      */
     void Application::Update(const float deltaTime)
     {
-        inputSystem->Update(deltaTime);
-        gameLogic->Update(deltaTime);
-        scriptSystem->Update(deltaTime);
+        inputSystem.Update(deltaTime);
+        gameLogic.Update(deltaTime);
+        scriptSystem.Update(deltaTime);
 
         float cameraSpeed = 300.0f;
         float cameraZoomSpeed = 10.0f;
-        Camera2D* mainCamera = renderSystem->GetMainCamera();
+        Camera2D* mainCamera = renderSystem.GetMainCamera();
         if (IsKeyDown(KEY_A))
         {
             mainCamera->offset.x += deltaTime * cameraSpeed;
@@ -170,7 +155,7 @@ namespace alk
         }
         ClearBackground(PINK);
 
-        renderSystem->Draw();
+        renderSystem.Draw();
         alk::Debug::UI::Draw();
 
         if (renderTexture)
@@ -190,10 +175,10 @@ namespace alk
      */
     void Application::Shutdown()
     {
-        gameLogic->Shutdown();
-        inputSystem->Shutdown();
-        renderSystem->Shutdown();
-        scriptSystem->Shutdown();
+        gameLogic.Shutdown();
+        inputSystem.Shutdown();
+        renderSystem.Shutdown();
+        scriptSystem.Shutdown();
     }
 
     void Application::Close()

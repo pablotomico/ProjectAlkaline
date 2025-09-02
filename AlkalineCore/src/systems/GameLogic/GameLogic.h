@@ -16,7 +16,7 @@
 namespace alk
 {
     class GameLogicSubsystem;
-    using SubsystemFactoryFn = GameLogicSubsystem * (*)(CoreSystems&);
+    using SubsystemFactoryFn = GameLogicSubsystem * (*)();
     using EntityCallback = std::function<void(EntityId)>;
 
     class GameLogic : public BaseSystem
@@ -26,7 +26,7 @@ namespace alk
         std::vector<EntityCallback> callbacks;
         std::unordered_map<std::string, Scene> scenes;
     public:
-        GameLogic(CoreSystems& coreSystems);
+        GameLogic();
         void Initialize(Scene& scene) override;
         void Reflect(ScriptSystem& script) override;
         void Update(const float deltaTime) override;

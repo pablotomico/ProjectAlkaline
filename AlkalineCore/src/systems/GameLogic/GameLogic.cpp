@@ -8,7 +8,7 @@
 #include "components/TransformComponent.h"
 #include "GameLogic.h"
 
-alk::GameLogic::GameLogic(CoreSystems& coreSystems) : BaseSystem(coreSystems)
+alk::GameLogic::GameLogic()
 {
     GetSubsystems() = &subsystems;
     GetSubsystemsMap() = &subsystemsMap;
@@ -26,12 +26,12 @@ void alk::GameLogic::Initialize(Scene& scene)
 {
     for (auto& pair : GetFactoryList())
     {
-        auto system = pair.second(coreSystems);
+        auto system = pair.second();
         AddSubsystem(pair.first, system);
     }
 
-    coreSystems.scriptSystem->CreateUsertype<EntityId>("Entity");
-    coreSystems.scriptSystem->CreateUsertype<Vector2>("Vector")
+    alk::ScriptSystem::CreateUsertype<EntityId>("Entity");
+    alk::ScriptSystem::CreateUsertype<Vector2>("Vector")
         .SetConstructors(
             []() { return Vector2(); },
             [](float x, float y) { return Vector2(x, y); })
@@ -39,7 +39,7 @@ void alk::GameLogic::Initialize(Scene& scene)
         .AddMember("x", &Vector2::x)
         .AddMember("y", &Vector2::y);
 
-    coreSystems.scriptSystem->CreateNamespace("Game")
+    alk::ScriptSystem::CreateNamespace("Game")
         .AddFunction("SpawnSigil", &GameLogic::SpawnSigil, this)
         .AddFunction("GetRandomEntity", &GameLogic::GetRandomEntity, this)
         .AddFunction("GetEntityPosition", &GameLogic::GetEntityPosition, this)
@@ -98,7 +98,7 @@ alk::EntityId alk::GameLogic::GetRandomEntity()
 alk::EntityId alk::GameLogic::SpawnSigil(const std::string& path)
 {
     std::string fullPath = std::string(GetWorkingDirectory()) + "/" + path;
-    sol::table table = coreSystems.scriptSystem->LoadTableFromFile(fullPath);
+    sol::table table = alk::ScriptSystem::LoadTableFromFile(fullPath);
     Entity e = alk::SceneSerializer::DeserializeEntity(*GetActiveScene(), table);
     ALK_LOG("[GameLogic] Spawned '%s' from sigil", e.name.c_str());
     alk::GameLogic::NotifyCallbacks(e.id);

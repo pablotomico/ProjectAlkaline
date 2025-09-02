@@ -1,14 +1,13 @@
 #pragma once
 
 #include "alkaline_lib.h"
-#include "systems/CoreSystems.h"
 #include "systems/GameLogic/GameLogic.h"
 
 // GameLogicSubsystem::GameLogicSubsystem -> This is so it can use the base constructor
 #define ALK_GAMELOGICSUBSYSTEM(T) \
     public: \
         using GameLogicSubsystem::GameLogicSubsystem; \
-        static GameLogicSubsystem* Create(alk::CoreSystems& coreSystems) { return new T(std::string(#T), coreSystems); } \
+        static GameLogicSubsystem* Create() { return new T(std::string(#T)); } \
     private: \
         static inline bool isRegistered = alk::GameLogic::RegisterSystemFactory<T>(Create); \
 
@@ -19,10 +18,9 @@ namespace alk
     protected:
         std::string name;
         bool enabled = false;
-        CoreSystems& coreSystems;
 
     public:
-        GameLogicSubsystem(std::string name, CoreSystems& coreSystems);
+        GameLogicSubsystem(std::string name);
 
         virtual ~GameLogicSubsystem() {}
 

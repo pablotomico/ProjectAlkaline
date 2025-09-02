@@ -1,6 +1,11 @@
 #pragma once
 
-#include "systems/CoreSystems.h"
+// Systems
+#include "systems/Script/ScriptSystem.h"
+#include "systems/GameLogic/GameLogic.h"
+#include "systems/Render/RenderSystem.h"
+#include "systems/Input/InputSystem.h"
+
 #include "raylib/raylib.h"
 #include <string>
 #include <memory>
@@ -34,10 +39,9 @@ namespace alk
         bool QueryShutdown();
 
     private:
-        CoreSystems coreSystems;
-        std::unique_ptr<ScriptSystem> scriptSystem;
-        std::unique_ptr<GameLogic> gameLogic;
-        std::unique_ptr<RenderSystem> renderSystem;
-        std::unique_ptr<InputSystem> inputSystem;
+        ScriptSystem scriptSystem;
+        GameLogic gameLogic;
+        RenderSystem renderSystem;
+        InputSystem inputSystem;
     };
 }

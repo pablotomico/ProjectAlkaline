@@ -14,8 +14,6 @@
 
 namespace alk
 {
-    RenderSystem::RenderSystem(CoreSystems& coreSystems) : BaseSystem(coreSystems) {}
-
     void RenderSystem::Initialize(Scene& scene)
     {
 

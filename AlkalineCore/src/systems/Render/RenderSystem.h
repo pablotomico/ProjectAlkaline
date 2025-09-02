@@ -29,7 +29,6 @@ namespace alk
         Camera2D mainCamera;
 
     public:
-        RenderSystem(CoreSystems& coreSystems);
         void Initialize(Scene& scene) override;
         void Reflect(ScriptSystem& script) override;
         void Update(const float deltaTime) override;
