@@ -1,13 +1,10 @@
 #include "alkaline_lib.h"
 #include "Application.h"
-#include "raylib/raylib.h"
+#include "MapEditor.h"
+
+#include "EditorUtils.h"
 #include "rlImGui/rlImGui.h"
 #include "imgui/imgui.h"
-
-float ScaleToDPIF(float value)
-{
-    return GetWindowScaleDPI().x * value;
-}
 
 void DrawTool(RenderTexture2D& renderTexture);
 
@@ -21,6 +18,10 @@ int main()
     rlImGuiSetup(true);
     alk::Application* application = nullptr;
 
+    bool showMapEditor = true;
+    RenderTexture2D mapEditorTexture = LoadRenderTexture(1280, 720); // TODO: support resize
+    MapEditor mapEditor = MapEditor(showMapEditor, mapEditorTexture);
+
 
     RenderTexture2D renderTexture;
     RenderTexture2D toolTexture = LoadRenderTexture(1280, 720);
@@ -28,7 +29,8 @@ int main()
     bool playing = false;
     bool showGame = false;
     bool ImGuiDemoOpen = false;
-    bool testTool = true;
+    bool testTool = false;
+
     double const fixedTimeStep = 1 / fixedUpdateFPS;
     double nextFixedUpdate = 0;
 
@@ -68,6 +70,7 @@ int main()
                 ImGui::MenuItem("Demo", NULL, &ImGuiDemoOpen, true);
                 ImGui::MenuItem("Game", NULL, &showGame, true);
                 ImGui::MenuItem("Tool", NULL, &testTool, true);
+                ImGui::MenuItem("MapEditor", NULL, &showMapEditor, true);
                 ImGui::EndMenu();
             }
             ImGui::EndMainMenuBar();
@@ -119,6 +122,8 @@ int main()
             ImGui::End();
             ImGui::PopStyleVar();
         }
+
+        if(showMapEditor) mapEditor.Draw();
 
         rlImGuiEnd();
         EndDrawing();
