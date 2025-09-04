@@ -500,7 +500,7 @@ void rlImGuiImage(const Texture* image)
     if (GlobalContext)
         ImGui::SetCurrentContext(GlobalContext);
     
-    ImGui::Image((ImTextureID)image, ImVec2(float(image->width), float(image->height)));
+    ImGui::Image((ImTextureID)image, ImVec2(float(image->width), float(image->height)), ImVec2(0,1), ImVec2(1,0));
 }
 
 bool rlImGuiImageButton(const char* name, const Texture* image)

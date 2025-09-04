@@ -11,18 +11,23 @@ void DrawTool(RenderTexture2D& renderTexture);
 int main()
 {
     ALK_TRACE("THIS WILL BE THE ALKALINE EDITOR");
+    
+    IMGUI_CHECKVERSION();
 
     SetTraceLogLevel(LOG_NONE);
     InitWindow(1920, 1080, "Alkaline Editor v0.1");
     SetTargetFPS(144);
     rlImGuiSetup(true);
+    ImGuiIO& io = ImGui::GetIO();
+    io.ConfigWindowsMoveFromTitleBarOnly = true;
+
     alk::Application* application = nullptr;
 
     bool showMapEditor = true;
     RenderTexture2D mapEditorTexture = LoadRenderTexture(1280, 720); // TODO: support resize
     MapEditor mapEditor = MapEditor(showMapEditor, mapEditorTexture);
 
-
+    
     RenderTexture2D renderTexture;
     RenderTexture2D toolTexture = LoadRenderTexture(1280, 720);
     bool focused = false;
@@ -36,10 +41,10 @@ int main()
 
     while (!WindowShouldClose())
     {
+        float deltaTime = GetFrameTime();
+
         if (application)
         {
-
-            float deltaTime = GetFrameTime();
             application->Update(deltaTime);
 
             double currentTime = GetTime();
@@ -50,6 +55,8 @@ int main()
             }
         }
 
+        BeginDrawing();
+        ClearBackground(BLACK);
         rlImGuiBegin();
         if (showGame && application)
         {
@@ -58,8 +65,6 @@ int main()
 
 
 
-        BeginDrawing();
-        ClearBackground(BLACK);
 
         // ImGui
 
@@ -122,7 +127,12 @@ int main()
             ImGui::PopStyleVar();
         }
 
-        if(showMapEditor) mapEditor.Draw();
+        
+        if(showMapEditor)
+        {
+            mapEditor.Update(deltaTime);
+            mapEditor.Draw();
+        }
 
         rlImGuiEnd();
         EndDrawing();

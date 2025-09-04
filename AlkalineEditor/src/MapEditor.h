@@ -34,11 +34,12 @@ private:
 class MapEditor
 {
 public:
-    MapEditor(bool& show, RenderTexture2D& texture) : show(show), texture(texture), map(10, 10)
+    MapEditor(bool& show, RenderTexture2D& texture) : show(show), texture(texture), map(5, 5)
     {
         ALK_LOG("[MapEditor] Initilizng camera texture %dx%d", texture.texture.width, texture.texture.height);
         camera.target = Vector2(0, 0);
-        camera.offset = Vector2(texture.texture.width * 0.5f, 0);
+        camera.offset = Vector2(0, 0);
+        // camera.offset = Vector2(texture.texture.width * 0.5f, 0);
         camera.rotation = 0.0f;
         camera.zoom = 1.0f;
 
@@ -47,6 +48,7 @@ public:
         ALK_LOG("[MapEditor] test map operator %d", map[1][2]);
     }
 
+    void Update(const float deltaTime);
     void Draw();
 
 private:
