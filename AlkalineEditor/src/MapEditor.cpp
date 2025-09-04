@@ -7,8 +7,7 @@
 void MapEditor::Draw()
 {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
-    ImGui::SetNextWindowSizeConstraints(ImVec2(ScaleToDPIF(1280.0f), ScaleToDPIF(720.0f)), ImVec2(ScaleToDPIF(1280.0f), ScaleToDPIF(720.0f)));
-    ImGui::Begin("Map Editor", &show);
+    ImGui::Begin("Map Editor - View", &show, ImGuiWindowFlags_AlwaysAutoResize);
     BeginTextureMode(texture);
     ClearBackground(DARKGRAY);
     BeginMode2D(camera);
@@ -17,32 +16,45 @@ void MapEditor::Draw()
 
     EndMode2D();
     EndTextureMode();
-    rlImGuiImageRenderTextureFit(&texture, true);
+    
+    rlImGuiImage(&texture.texture);
     ImGui::End();
     ImGui::PopStyleVar();
-    
+
     DrawToolbar();
 }
 
 void MapEditor::DrawGrid()
 {
-    DrawCircle(0, 0, 5, PURPLE);
-    int numHorizontalTiles = (int) ceil(texture.texture.width / tileSize);
-    int numVerticalTiles = (int) ceil(texture.texture.height / (tileSize * 0.5f));
+    DrawMapChunk(map);
+}
 
-    for(int i = 0; i < numHorizontalTiles; i++)
+void MapEditor::DrawMapChunk(const MapChunk& map)
+{
+    Vector2 points[2];
+    float maxWidth = (float) map.width * tileSize;
+    float maxHeight = (float) map.height * tileSize;
+
+    for (float y = 0; y <= maxHeight; y += tileSize)
     {
-        for(int j = 0; j < numVerticalTiles; j++)
-        {
-            // DrawCircle(i * tileSize, j * tileSize * 0.5f, 2, GREEN);
-        }
+        points[0] = Vector2{ 0, y };
+        points[1] = Vector2{ maxWidth, y };
+        ToIso(points, 2);
+        DrawLineEx(points[0], points[1], 1.1f, WHITE);
     }
-    
+    for (float x = 0; x <= maxWidth; x += tileSize)
+    {
+        points[0] = Vector2{ x , 0 };
+        points[1] = Vector2{ x , maxHeight };
+        ToIso(points, 2);
+        DrawLineEx(points[0], points[1], 1.0f, WHITE);
+    }
+
 }
 
 void MapEditor::DrawToolbar()
 {
-    ImGui::Begin("Toolbar");
+    ImGui::Begin("Map Editor - Toolbar");
 
 
     ImGui::End();

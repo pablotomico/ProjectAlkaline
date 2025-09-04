@@ -115,10 +115,9 @@ int main()
         if (testTool)
         {
             ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
-            ImGui::SetNextWindowSizeConstraints(ImVec2(ScaleToDPIF(1280.0f), ScaleToDPIF(720.0f)), ImVec2(ScaleToDPIF(1280.0f), ScaleToDPIF(720.0f)));
-            ImGui::Begin("Tool", &testTool);
+            ImGui::Begin("Tool", &testTool, ImGuiWindowFlags_AlwaysAutoResize);
             DrawTool(toolTexture);
-            rlImGuiImageRenderTextureFit(&toolTexture, true);
+            rlImGuiImage(&toolTexture.texture);
             ImGui::End();
             ImGui::PopStyleVar();
         }

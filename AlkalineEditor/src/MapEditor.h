@@ -5,10 +5,10 @@
 
 #include <vector>
 
-class Map
+class MapChunk
 {
 public:
-    Map(int width, int height) : width(width), height(height)
+    MapChunk(int width, int height) : width(width), height(height)
     {
         tiles.reserve(width + height);
 
@@ -24,9 +24,9 @@ public:
         return &(tiles[i * width]);
     }
 
-private:
     int width;
     int height;
+private:
 
     std::vector<int> tiles;
 };
@@ -51,13 +51,15 @@ public:
 
 private:
     void DrawGrid();
+    void DrawMapChunk(const MapChunk& map);
+    
     void DrawToolbar();
 
     bool& show;
     RenderTexture2D& texture;
     Camera2D camera;
-    Map map;
+    MapChunk map;
 
-    int tileSize = 128;
+    int tileSize = 64;
     int tileSizeHalf;
 };
