@@ -42,9 +42,9 @@ void MapEditor::Draw()
 
     DrawGrid();
 
-    DrawCircle(lastMousePosX, lastMousePosY, 2, PURPLE);
-
+    
     EndMode2D();
+    DrawCircle(lastMousePosX, lastMousePosY, 2, PURPLE);
     EndTextureMode();
 
     rlImGuiImage(&texture.texture);
