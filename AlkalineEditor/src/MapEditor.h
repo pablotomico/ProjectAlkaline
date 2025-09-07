@@ -1,7 +1,7 @@
 #pragma once
 
 #include "alkaline_lib.h"
-#include "raylib/raylib.h"
+#include "EditorUtils.h"
 
 #include <vector>
 
@@ -10,13 +10,12 @@ class MapChunk
 public:
     MapChunk(int width, int height) : width(width), height(height)
     {
-        tiles.reserve(width + height);
+        Init();
+    }
 
-        for (int i = 0; i < tiles.capacity(); i++)
-        {
-            tiles.push_back(i);
-        }
-        
+    MapChunk(int size) : width(size), height(size)
+    {
+        Init();
     }
 
     int* operator[](size_t i)
@@ -24,9 +23,22 @@ public:
         return &(tiles[i * width]);
     }
 
+    size_t Size() const
+    {
+        return tiles.size();
+    }
+
     int width;
     int height;
 private:
+    void Init()
+    {
+        tiles.reserve(width + height);
+
+        for (int i = 0; i < tiles.capacity(); i++) {
+            tiles.push_back(i);
+        }
+    }
 
     std::vector<int> tiles;
 };
@@ -34,7 +46,7 @@ private:
 class MapEditor
 {
 public:
-    MapEditor(bool& show, RenderTexture2D& texture) : show(show), texture(texture), map(5, 5)
+    MapEditor(bool& show, RenderTexture2D& texture) : show(show), texture(texture), map(10)
     {
         ALK_LOG("[MapEditor] Initilizng camera texture %dx%d", texture.texture.width, texture.texture.height);
         camera.target = Vector2(0, 0);

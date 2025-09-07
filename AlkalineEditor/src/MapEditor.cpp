@@ -34,7 +34,9 @@ void MapEditor::Draw()
 
     static int lastMousePosX = 0;
     static int lastMousePosY = 0;
-
+    static Vector2 mouseWorldPos{ 0, 0 };
+    static Vector2i tilePressed{ -1, -1 };
+    static Vector2 points[5];
 
     BeginTextureMode(texture);
     ClearBackground(DARKGRAY);
@@ -42,9 +44,16 @@ void MapEditor::Draw()
 
     DrawGrid();
 
+    //ALK_LOG("MouseWorldPos: (%d, %d)(%f, %f)\n", lastMousePosX, lastMousePosY, mouseWorldPos.x, mouseWorldPos.y);
+    //DrawCircleV(mouseWorldPos, 2, GREEN);
+
+    if (tilePressed.x >= 0 && tilePressed.y >= 0 && tilePressed.x < map.width && tilePressed.y < map.height)
+    {
+        DrawLineStrip(points, 5, BEIGE);
+    }
     
     EndMode2D();
-    DrawCircle(lastMousePosX, lastMousePosY, 2, PURPLE);
+    //DrawCircle(lastMousePosX, lastMousePosY, 2, PURPLE);
     EndTextureMode();
 
     rlImGuiImage(&texture.texture);
@@ -57,7 +66,7 @@ void MapEditor::Draw()
             camera.target.x -= mouseDelta.x;
             camera.target.y -= mouseDelta.y;
         }
-        else if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
+        //else if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
         {
             ImVec2 windowPos = ImGui::GetWindowPos();
             ImVec2 contentMin = ImGui::GetWindowContentRegionMin();  // top-left inside window
@@ -65,7 +74,16 @@ void MapEditor::Draw()
 
             lastMousePosX = (int) (mouse.x - (windowPos.x + contentMin.x));
             lastMousePosY = (int) (mouse.y - (windowPos.y + contentMin.y));
-            // ALK_LOG("Mouse on texture: (%d, %d)\n", lastMousePosX, lastMousePosY);
+            mouseWorldPos = GetScreenToWorld2D({ (float)lastMousePosX, (float)lastMousePosY }, camera);
+            Vector2 test = ToCart(mouseWorldPos);
+            tilePressed = ToMapCoord(test, tileSize);
+            points[0] = { (float) tilePressed.x * tileSize, (float)tilePressed.y * tileSize };
+            points[1] = { (float)(tilePressed.x + 1) * tileSize, (float)tilePressed.y * tileSize };
+            points[2] = { (float)(tilePressed.x + 1) * tileSize, (float)(tilePressed.y + 1) * tileSize };
+            points[3] = { (float)tilePressed.x * tileSize, (float)(tilePressed.y + 1) * tileSize };
+            points[4] = { (float) tilePressed.x * tileSize, (float)tilePressed.y * tileSize };
+            ToIso(points, 5);
+            //ALK_LOG("Mouse on texture: (%d, %d)\n", coord.x, coord.y);
         }
 
     }
@@ -101,6 +119,8 @@ void MapEditor::DrawMapChunk(const MapChunk& map)
         ToIso(points, 2);
         DrawLineEx(points[0], points[1], 1.0f, WHITE);
     }
+
+
 }
 
 void MapEditor::DrawToolbar()
