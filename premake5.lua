@@ -2,7 +2,6 @@
 workspace "Alkaline"
    architecture "x64"
    startproject "AlkalineClient"
-   location "build/projects"
    configurations { "Debug", "Release" }
 
    filter "action:vs*"
@@ -14,11 +13,13 @@ targetpath = "bin/" .. outputpath .. "/%{prj.name}"
 objpath = "bin-int/" .. outputpath .. "/%{prj.name}"
 
 -- ImGui + rlImGui static library
+group "Vendor"
 project "imgui_rl"
+   location "build/projects"
    kind "StaticLib"
    language "C++"
    cppdialect "C++20"
-   staticruntime "on"
+   -- staticruntime "on"
 
    targetdir(targetpath)
    objdir(objpath)
@@ -51,11 +52,12 @@ project "imgui_rl"
 
 group "Core"
 project "AlkalineCore"
+   location "build/projects"
    -- location "AlkalineCore"
    kind "StaticLib"
    language "C++"
    cppdialect "C++20"
-   staticruntime "on"
+   -- staticruntime "on"
 
    targetdir(targetpath)
    objdir(objpath)
@@ -93,20 +95,24 @@ project "AlkalineCore"
       linkoptions { "/NODEFAULTLIB:LIBCMT" }
 
    filter "configurations:Debug"
+      runtime "Debug"
       symbols "on"
       defines { "ALK_DEBUG" }
       -- buildoptions { "/Bt+", "/d2cgsummary" }
 
    filter "configurations:Release"
+      runtime "Release"
       optimize "on"
+      defines { "ALK_DEBUG" }
 
 group "Game"
 project "AlkalineGame"
+   location "build/projects"
    -- location "AlkalineGame"
    kind "StaticLib"
    language "C++"
    cppdialect "C++20"
-   staticruntime "on"
+   -- staticruntime "on"
 
    targetdir(targetpath)
    objdir(objpath)
@@ -138,19 +144,23 @@ project "AlkalineGame"
       -- linkoptions { "/NODEFAULTLIB:LIBCMT" }
 
    filter "configurations:Debug"
+      runtime "Debug"
       symbols "on"
       defines { "ALK_DEBUG", "TRACY_ENABLE" }
       
    filter "configurations:Release"
+      runtime "Release"
       optimize "on"
+      defines { "ALK_DEBUG", "TRACY_ENABLE" }
 
 group "Applications"
 project "AlkalineClient"
+   location "build/projects"
    -- location "AlkalineClient"
    kind "ConsoleApp"
    language "C++"
    cppdialect "C++20"
-   staticruntime "on"
+   -- staticruntime "off"
 
    targetdir(targetpath)
    objdir(objpath)
@@ -188,19 +198,22 @@ project "AlkalineClient"
       postbuildcommands { "{COPYDIR} %[AlkalineGame/config/] %[" .. targetpath .. "/]" }
 
    filter "configurations:Debug"
+      runtime "Debug"
       symbols "on"
       linkoptions { "/WHOLEARCHIVE:AlkalineGame" }
       defines { "ALK_DEBUG", "TRACY_ENABLE" }
       
    filter "configurations:Release"
+      runtime "Release"
       optimize "on"
+      defines { "ALK_DEBUG", "TRACY_ENABLE" }
 
 project "AlkalineEditor"
-   -- location "AlkalineEditor"
+   location "build/projects"
    kind "ConsoleApp"
    language "C++"
    cppdialect "C++20"
-   staticruntime "on"
+   -- staticruntime "off"
 
    targetdir(targetpath)
    objdir(objpath)
@@ -236,6 +249,13 @@ project "AlkalineEditor"
       postbuildcommands { "{COPYDIR} %[AlkalineGame/config/] %[" .. targetpath .. "/]" }
 
    filter "configurations:Debug"
+      runtime "Debug"
       symbols "on"
       linkoptions { "/WHOLEARCHIVE:AlkalineGame" }
       defines { "ALK_DEBUG", "TRACY_ENABLE" }
+
+   filter "configurations:Release"
+      runtime "Release"
+      linkoptions { "/WHOLEARCHIVE:AlkalineGame" }
+      defines { "ALK_DEBUG", "TRACY_ENABLE" }
+

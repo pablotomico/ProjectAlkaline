@@ -38,7 +38,8 @@ namespace alk
                 {
                     return sol::protected_function_result();
                 }
-                return func(std::forward<Args>(args)...);
+                sol::protected_function_result res = func(std::forward<Args>(args)...);
+                return res;
                 }).valid();
         }
 

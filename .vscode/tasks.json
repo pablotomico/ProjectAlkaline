@@ -18,6 +18,15 @@
                 "kind": "build",
                 "isDefault": false
             }
+        },
+        {
+            "label": "Build-Release",
+            "type": "shell",
+            "command": "build/build_premake.bat",
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
         }
     ]
 }
