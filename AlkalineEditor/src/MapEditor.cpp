@@ -187,9 +187,16 @@ void MapEditor::DrawToolbar()
     }
 
     EndTextureMode();
+
+    if (ImGui::Button("Reload Spritesheet")) {
+        UnloadTexture(spritesheet.texture);
+        UnloadRenderTexture(spritesheet.renderTexture);
+        spritesheet.texture = LoadTexture("assets/spritesheets/Grass.png");
+        spritesheet.renderTexture = LoadRenderTexture(spritesheet.texture.width, spritesheet.texture.height);
+    }
+
     rlImGuiImage(&spritesheet.renderTexture.texture);
     ImVec2 textureMin = ImGui::GetItemRectMin();
-
 
     if (ImGui::IsItemHovered()) {
         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
@@ -213,7 +220,5 @@ void MapEditor::DrawToolbar()
         }
 
     }
-
-
     ImGui::End();
 }
