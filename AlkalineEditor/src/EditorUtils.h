@@ -13,6 +13,11 @@ inline float ScaleToDPIF(float value)
     return GetWindowScaleDPI().x * value;
 }
 
+inline Vector2 ToIso(Vector2 point)
+{
+    return { point.x - point.y, (point.x + point.y) / 2 };
+}
+
 inline void ToIso(Vector2* points, int pointCount)
 {
     for (int i = 0; i < pointCount; i++)

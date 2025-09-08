@@ -33,14 +33,31 @@ public:
 private:
     void Init()
     {
-        tiles.reserve(width + height);
+        tiles.reserve(width * height);
 
         for (int i = 0; i < tiles.capacity(); i++) {
-            tiles.push_back(i);
+            tiles.push_back(-1);
         }
     }
 
     std::vector<int> tiles;
+};
+
+struct SpriteSheet
+{
+    int tileSize = 64;
+    int rows = 1;
+    int columns = 4;
+    Vector2i tileSelected;
+    Texture2D texture;
+    RenderTexture2D renderTexture;
+    Rectangle rec;
+
+    Rectangle operator[](int i) const
+    {
+        Vector2i tile = Vector2i(i % columns, i / columns);
+        return Rectangle(tile.x * tileSize, tile.y * tileSize, tileSize, tileSize);
+    }
 };
 
 class MapEditor
@@ -57,6 +74,10 @@ public:
 
         tileSizeHalf = tileSize / 2;
 
+        spritesheet.tileSelected = Vector2i(0, 0);
+        spritesheet.texture = LoadTexture("assets/spritesheets/Grass.png");
+        spritesheet.renderTexture = LoadRenderTexture(spritesheet.texture.width, spritesheet.texture.height);
+
         ALK_LOG("[MapEditor] test map operator %d", map[1][2]);
     }
 
@@ -65,7 +86,7 @@ public:
 
 private:
     void DrawGrid();
-    void DrawMapChunk(const MapChunk& map);
+    void DrawMapChunk(MapChunk& map) const;
     
     void DrawToolbar();
 
@@ -73,7 +94,8 @@ private:
     RenderTexture2D& texture;
     Camera2D camera;
     MapChunk map;
+    SpriteSheet spritesheet;
 
-    int tileSize = 64;
+    int tileSize = 32;
     int tileSizeHalf;
 };
