@@ -209,12 +209,12 @@ void MapEditor::DrawToolbar()
             spritesheet.tileSelected = ToMapCoord(position, spritesheet.tileSize);
             position.x = spritesheet.tileSelected.x * spritesheet.tileSize;
             position.y = spritesheet.tileSelected.y * spritesheet.tileSize;
+            spritesheet.rec = Rectangle(position.x, position.y, spritesheet.tileSize, spritesheet.tileSize);
             hoverPoints[0] = { (float)spritesheet.tileSelected.x * spritesheet.tileSize, (float)spritesheet.tileSelected.y * spritesheet.tileSize };
             hoverPoints[1] = { (float)(spritesheet.tileSelected.x + 1) * spritesheet.tileSize, (float)spritesheet.tileSelected.y * spritesheet.tileSize };
             hoverPoints[2] = { (float)(spritesheet.tileSelected.x + 1) * spritesheet.tileSize, (float)(spritesheet.tileSelected.y + 1) * spritesheet.tileSize };
             hoverPoints[3] = { (float)spritesheet.tileSelected.x * spritesheet.tileSize, (float)(spritesheet.tileSelected.y + 1) * spritesheet.tileSize };
             hoverPoints[4] = { (float)spritesheet.tileSelected.x * spritesheet.tileSize, (float)spritesheet.tileSelected.y * spritesheet.tileSize };
-            spritesheet.rec = Rectangle(position.x, position.y, spritesheet.tileSize, spritesheet.tileSize);
             ALK_LOG("Mouse on texture: (%.3f, %.3f)\n", position.x, position.y);
             ALK_LOG("Mouse on texture: (%d, %d)\n", spritesheet.tileSelected.x, spritesheet.tileSelected.y);
         }

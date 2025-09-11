@@ -56,14 +56,14 @@ struct SpriteSheet
     Rectangle operator[](int i) const
     {
         Vector2i tile = Vector2i(i % columns, i / columns);
-        return Rectangle(tile.x * tileSize, tile.y * tileSize, tileSize, tileSize);
+        return Rectangle((float)tile.x * tileSize, (float)tile.y * tileSize, tileSize, tileSize);
     }
 };
 
 class MapEditor
 {
 public:
-    MapEditor(bool& show, RenderTexture2D& texture) : show(show), texture(texture), map(10)
+    MapEditor(bool& show, RenderTexture2D& texture) : show(show), texture(texture), map(30)
     {
         ALK_LOG("[MapEditor] Initilizng camera texture %dx%d", texture.texture.width, texture.texture.height);
         camera.target = Vector2(0, 0);
@@ -75,6 +75,7 @@ public:
         tileSizeHalf = tileSize / 2;
 
         spritesheet.tileSelected = Vector2i(0, 0);
+        spritesheet.rec = Rectangle(0, 0, spritesheet.tileSize, spritesheet.tileSize);
         spritesheet.texture = LoadTexture("assets/spritesheets/Grass.png");
         spritesheet.renderTexture = LoadRenderTexture(spritesheet.texture.width, spritesheet.texture.height);
 
